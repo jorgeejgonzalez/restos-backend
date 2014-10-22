@@ -5,6 +5,7 @@ import idisoft.restos.entities.Sede;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 @SuppressWarnings("serial")
@@ -80,16 +81,32 @@ public class SedeJSON implements Serializable{
 		this.direccionFisica=sede.getDireccionFisica();
 		this.email=sede.getEmail();
 		this.telefono=sede.getTelefono();
-		if(sede.getMenus()==null)
-		{
-			this.menus=null;
-		}
-		else if(sede.getMenus().size()==0)
-		{
-			this.menus=null;
-		}
-			
+					
 		this.restaurante=null;
+		
+		if(sede.getMenus()!=null)
+		{
+			if(sede.getMenus().size()>0)
+			{
+				Iterator<Menu> iterator=sede.getMenus().iterator();
+				while(iterator.hasNext())
+				{
+					Menu m=iterator.next();
+					MenuJSON mj=new MenuJSON();
+					mj.parseMenuFromSede(m);
+					this.menus.add(mj);
+				}
+			}
+			else
+			{
+				this.menus=null;
+			}
+			
+		}
+		else 
+		{
+			this.menus=null;
+		}
 	}
 	
 	public void parseSede(Sede sede)

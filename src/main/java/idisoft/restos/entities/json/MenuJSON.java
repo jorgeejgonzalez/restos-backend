@@ -6,6 +6,7 @@ import idisoft.restos.entities.Menu;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 @SuppressWarnings("serial")
@@ -64,15 +65,14 @@ public class MenuJSON implements Serializable{
 		this.estatus=menu.getEstatus();
 		this.sede=null;
 		
-		this.elementosMenu=null;
-		
 		if(menu.getElementosMenu()!=null)
 		{
 			if(menu.getElementosMenu().size()>0)
 			{
-				for(int i=0; i<menu.getElementosMenu().size();++i)
+				Iterator<ElementoMenu> iterator=menu.getElementosMenu().iterator();
+				while(iterator.hasNext())
 				{
-					ElementoMenu em=menu.getElementosMenu().iterator().next();
+					ElementoMenu em=iterator.next();
 					ElementoMenuJSON emj=new ElementoMenuJSON();
 					emj.parseElementoFromMenu(em);
 					this.elementosMenu.add(emj);

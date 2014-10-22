@@ -5,6 +5,7 @@ import idisoft.restos.entities.Sede;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 @SuppressWarnings("serial")
@@ -71,9 +72,10 @@ public class RestauranteJSON implements Serializable {
 		{
 			if(restaurante.getSedes().size()>0)
 			{
-				for(int i=0;i<restaurante.getSedes().size();++i)
+				Iterator<Sede> iterator=restaurante.getSedes().iterator();
+				while(iterator.hasNext())
 				{
-					Sede sede=restaurante.getSedes().iterator().next();
+					Sede sede=iterator.next();
 					SedeJSON s=new SedeJSON();
 					s.parseSedeFromRestaurante(sede);
 					this.sedes.add(s);
