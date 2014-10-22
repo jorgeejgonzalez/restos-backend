@@ -1,0 +1,121 @@
+package idisoft.restos.entities;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+
+@SuppressWarnings("serial")
+@Entity
+@Table(name="sedes")
+public class Sede implements Serializable{
+	
+	@Id
+	@NotNull
+	@Size(min=10,max=10)
+	@Pattern(regexp="[J,V,E,G][0-9]*",message="debe cumplir el formato de rif sin guiones")	
+	@Column
+	private String rif;
+	
+	@NotNull
+	@Size(min=6,max=50)
+	@Column
+	private String nombre;
+	
+	@NotNull
+	@Email
+	@Column
+	private String email;
+	
+	@NotNull
+	@Column
+	private String direccionFisica;
+	
+	@NotNull
+	@Size(min=11,max=11)
+	@Pattern(regexp="[0-9]*",message="solo acepta numeros")
+	@Column
+	private String telefono;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@NotNull
+	@JoinColumn(name="restaurante")
+	private Restaurante restaurante;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sede")
+	private Set<Menu> menus = new HashSet<Menu>(0);
+	
+	public String getRif() {
+		return rif;
+	}
+	public void setRif(String rif) {
+		this.rif = rif;
+	}
+	
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	public String getDireccionFisica() {
+		return direccionFisica;
+	}
+	public void setDireccionFisica(String direccionFisica) {
+		this.direccionFisica = direccionFisica;
+	}
+	
+	public String getTelefono() {
+		return telefono;
+	}
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
+	
+	public Restaurante getRestaurante() {
+		return restaurante;
+	}
+	public void setRestaurante(Restaurante restaurante) {
+		this.restaurante = restaurante;
+	}
+	
+	public Set<Menu> getMenus() {
+		return menus;
+	}
+	public void setMenus(Set<Menu> menus) {
+		this.menus = menus;
+	}
+	public Set<ConstraintViolation<Sede>> validarInstancia()
+	{
+		ValidatorFactory factory= Validation.buildDefaultValidatorFactory();
+		Validator validator=factory.getValidator();
+		return validator.validate(this);
+	}
+	
+
+}

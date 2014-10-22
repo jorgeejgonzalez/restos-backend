@@ -1,0 +1,130 @@
+package idisoft.restos.entities.json;
+
+import idisoft.restos.entities.Sede;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+
+@SuppressWarnings("serial")
+public class SedeJSON implements Serializable{
+
+	private String rif;
+	
+	private String nombre;
+	
+	private String email;
+	
+	private String direccionFisica;
+	
+	private String telefono;
+	
+	private RestauranteJSON restaurante;
+	
+	private Set<MenuJSON> menus = new HashSet<MenuJSON>(0);
+	
+	public String getRif() {
+		return rif;
+	}
+	public void setRif(String rif) {
+		this.rif = rif;
+	}
+	
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	public String getDireccionFisica() {
+		return direccionFisica;
+	}
+	public void setDireccionFisica(String direccionFisica) {
+		this.direccionFisica = direccionFisica;
+	}
+	
+	public String getTelefono() {
+		return telefono;
+	}
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
+	
+	public RestauranteJSON getRestaurante() {
+		return restaurante;
+	}
+	public void setRestaurante(RestauranteJSON restaurante) {
+		this.restaurante = restaurante;
+	}
+	
+	public Set<MenuJSON> getMenus() {
+		return menus;
+	}
+	public void setMenus(Set<MenuJSON> menus) {
+		this.menus = menus;
+	}
+	
+	public void parseSedeFromRestaurante(Sede sede)
+	{
+		this.rif=sede.getRif();
+		this.nombre=sede.getNombre();
+		this.direccionFisica=sede.getDireccionFisica();
+		this.email=sede.getEmail();
+		this.telefono=sede.getTelefono();
+		if(sede.getMenus()==null)
+		{
+			this.menus=null;
+		}
+		else if(sede.getMenus().size()==0)
+		{
+			this.menus=null;
+		}
+			
+		this.restaurante=null;
+	}
+	
+	public void parseSede(Sede sede)
+	{
+		this.rif=sede.getRif();
+		this.nombre=sede.getNombre();
+		this.direccionFisica=sede.getDireccionFisica();
+		this.email=sede.getEmail();
+		this.telefono=sede.getTelefono();
+		if(sede.getMenus()==null)
+		{
+			this.menus=null;
+		}
+		else if(sede.getMenus().size()==0)
+		{
+			this.menus=null;
+		}
+		this.restaurante=new RestauranteJSON();
+		this.restaurante.parseRestauranteFromSede(sede.getRestaurante());
+	}
+}
