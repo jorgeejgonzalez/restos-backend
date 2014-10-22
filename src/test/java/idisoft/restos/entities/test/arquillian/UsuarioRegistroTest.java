@@ -1,10 +1,7 @@
 package idisoft.restos.entities.test.arquillian;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import idisoft.restos.data.UsuarioRepository;
-import idisoft.restos.entities.TipoUsuario;
-import idisoft.restos.entities.Usuario;
 import idisoft.restos.services.UsuarioRegistro;
 
 import java.util.logging.Logger;

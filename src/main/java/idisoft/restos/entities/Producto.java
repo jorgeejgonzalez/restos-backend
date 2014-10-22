@@ -70,5 +70,17 @@ public class Producto implements Serializable{
 	public void setPrecio(float precio) {
 		this.precio = precio;
 	}
+	public CategoriaProducto getCategoria() {
+		return categoria;
+	}
+	public void setCategoria(CategoriaProducto categoria) {
+		this.categoria = categoria;
+	}
+	public TipoProducto getTipo() {
+		return tipo;
+	}
+	public void setTipo(TipoProducto tipo) {
+		this.tipo = tipo;
+	}
 
 }
