@@ -1,28 +1,11 @@
 package idisoft.restos.entities.json;
 
+import idisoft.restos.entities.Menu;
 import idisoft.restos.entities.Sede;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.Email;
 
 @SuppressWarnings("serial")
 public class SedeJSON implements Serializable{
@@ -116,15 +99,32 @@ public class SedeJSON implements Serializable{
 		this.direccionFisica=sede.getDireccionFisica();
 		this.email=sede.getEmail();
 		this.telefono=sede.getTelefono();
-		if(sede.getMenus()==null)
-		{
-			this.menus=null;
-		}
-		else if(sede.getMenus().size()==0)
-		{
-			this.menus=null;
-		}
+		
 		this.restaurante=new RestauranteJSON();
 		this.restaurante.parseRestauranteFromSede(sede.getRestaurante());
+		
+		if(sede.getMenus()!=null)
+		{
+			if(sede.getMenus().size()>0)
+			{
+				for(int i=0; i<sede.getMenus().size();++i)
+				{
+					Menu m=sede.getMenus().iterator().next();
+					MenuJSON mj=new MenuJSON();
+					mj.parseMenuFromSede(m);
+					this.menus.add(mj);
+				}
+			}
+			else
+			{
+				this.menus=null;
+			}
+			
+		}
+		else 
+		{
+			this.menus=null;
+		}
+		
 	}
 }

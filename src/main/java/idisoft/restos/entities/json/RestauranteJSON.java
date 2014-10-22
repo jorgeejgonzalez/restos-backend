@@ -84,6 +84,10 @@ public class RestauranteJSON implements Serializable {
 				this.sedes=null;
 			}
 		}
+		else
+		{
+			this.sedes=null;
+		}
 	}
 	
 	public void parseRestauranteFromSede(Restaurante restaurante)

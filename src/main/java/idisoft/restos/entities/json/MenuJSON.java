@@ -1,17 +1,12 @@
 package idisoft.restos.entities.json;
 
+import idisoft.restos.entities.ElementoMenu;
 import idisoft.restos.entities.EstatusMenu;
+import idisoft.restos.entities.Menu;
 
 import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @SuppressWarnings("serial")
 
@@ -24,6 +19,8 @@ public class MenuJSON implements Serializable{
 	private EstatusMenu estatus;
 	
 	private SedeJSON sede;
+	
+	private Set<ElementoMenuJSON> elementosMenu = new HashSet<ElementoMenuJSON>(0);
 	
 	public int getId() {
 		return id;
@@ -44,6 +41,54 @@ public class MenuJSON implements Serializable{
 	}
 	public void setEstatus(EstatusMenu estatus) {
 		this.estatus = estatus;
+	}
+	
+	public SedeJSON getSede() {
+		return sede;
+	}
+	public void setSede(SedeJSON sede) {
+		this.sede = sede;
+	}
+	
+	public Set<ElementoMenuJSON> getElementosMenu() {
+		return elementosMenu;
+	}
+	public void setElementosMenu(Set<ElementoMenuJSON> elementosMenu) {
+		this.elementosMenu = elementosMenu;
+	}
+	
+	public void parseMenuFromSede(Menu menu)
+	{
+		this.id=menu.getId();
+		this.nombre=menu.getNombre();
+		this.estatus=menu.getEstatus();
+		this.sede=null;
+		
+		this.elementosMenu=null;
+		
+		if(menu.getElementosMenu()!=null)
+		{
+			if(menu.getElementosMenu().size()>0)
+			{
+				for(int i=0; i<menu.getElementosMenu().size();++i)
+				{
+					ElementoMenu em=menu.getElementosMenu().iterator().next();
+					ElementoMenuJSON emj=new ElementoMenuJSON();
+					emj.parseElementoFromMenu(em);
+					this.elementosMenu.add(emj);
+				}
+			}
+			else
+			{
+				this.elementosMenu=null;
+			}
+			
+		}
+		else 
+		{
+			this.elementosMenu=null;
+		}
+		
 	}
 	
 }
