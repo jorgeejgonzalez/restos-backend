@@ -18,11 +18,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 
+import idisoft.restos.data.ProductoRepository;
 import idisoft.restos.data.RestauranteRepository;
 import idisoft.restos.data.UsuarioRepository;
 import idisoft.restos.entities.*;
+import idisoft.restos.entities.json.CategoriaProductoJSON;
+import idisoft.restos.entities.json.ProductoJSON;
 import idisoft.restos.entities.json.RestauranteJSON;
 import idisoft.restos.entities.json.SedeJSON;
+import idisoft.restos.entities.json.TipoProductoJSON;
 import idisoft.restos.services.UsuarioRegistro;
 
 @Path("/test")
@@ -36,6 +40,9 @@ public class TestRest {
 	
 	@Inject 
 	private RestauranteRepository restauranteRepository;
+	
+	@Inject
+	private ProductoRepository productoRepository;
 
 	@Inject
 	UsuarioRegistro registration;
@@ -196,6 +203,63 @@ public class TestRest {
 		
 		return  retorno;
 		 
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/productos")	
+	public List<ProductoJSON> getProductos()
+	{
+		List<Producto> lista=(List<Producto>)productoRepository.findAllProductos();
+		
+		List<ProductoJSON> retorno=new ArrayList<ProductoJSON>();
+		
+		for(int i=0; i<lista.size();++i)
+		{
+			ProductoJSON p=new ProductoJSON();
+			p.parseProducto(lista.get(i));
+			retorno.add(p);
+		}
+		
+		return  retorno;
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/productos/tipos")	
+	public List<TipoProductoJSON> getTiposProductos()
+	{
+		List<TipoProducto> lista=(List<TipoProducto>)productoRepository.findAllTiposProductos();
+		
+		List<TipoProductoJSON> retorno=new ArrayList<TipoProductoJSON>();
+		
+		for(int i=0; i<lista.size();++i)
+		{
+			TipoProductoJSON tp=new TipoProductoJSON();
+			tp.parseTipo(lista.get(i));
+			retorno.add(tp);
+		}
+		
+		return  retorno;
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/productos/categorias")	
+	public List<CategoriaProductoJSON> getCategoriasProductos()
+	{
+		List<CategoriaProducto> lista=(List<CategoriaProducto>)productoRepository.findAllCategoriasProductos();
+		
+		List<CategoriaProductoJSON> retorno=new ArrayList<CategoriaProductoJSON>();
+		
+		for(int i=0; i<lista.size();++i)
+		{
+			CategoriaProductoJSON cp=new CategoriaProductoJSON();
+			cp.parseCategoria(lista.get(i));
+			retorno.add(cp);
+		}
+		
+		return  retorno;
 	}
 	
 	@GET
