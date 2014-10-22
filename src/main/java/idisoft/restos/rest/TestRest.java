@@ -17,6 +17,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import idisoft.restos.data.ProductoRepository;
 import idisoft.restos.data.RestauranteRepository;
@@ -121,49 +122,66 @@ public class TestRest {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/generausuario")
-	public String GenerarUsuario(Usuario r)
+	public Response GenerarUsuario(Usuario r)
 	{
+		Response.ResponseBuilder builder = null;
+		
+		builder = Response.ok();
+		builder.header("Access-Control-Allow-Origin", "*");
+		builder.header("Access-Control-Allow-Headers", "origin, conent-type, accept, authorization");
+        builder.header("Access-Control-Allow-Credentials", "true");
+        builder.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+        builder.header("Access-Control-Max-Age", "1209600");
+		
+		
 		Set<ConstraintViolation<Usuario>> violaciones=r.validarInstancia();
 		
 		if(violaciones.size()==0)
 		{
+			String msg="";
+			
 			logger.log(Level.INFO,"constraints pasados "+ r.getCedula());
 			
 			if(usuarioRepository.findByCedula(r.getCedula())!=null)
 			{
 				logger.log(Level.SEVERE,"usuario ya existe "+ r.getCedula());				
-				return "Usuario ya existe";
+				msg= "Usuario ya existe";
 			}
 			
 			if(usuarioRepository.findByEmail(r.getEmail())!=null)
 			{
 				logger.log(Level.SEVERE,"email ya existe "+ r.getCedula());				
-				return "email ya existe";
+				msg= "email ya existe";
 			}
 			
 			try
 			{
 				registration.registrarUsuario(r);			
-				return "usuario registrado";
+				msg= "usuario registrado";
 			}
 			
 			catch(Exception ex)
 			{
 				logger.log(Level.SEVERE,"Excepcion disparada: "+ ex.getMessage());
-				return "Excepcion disparada: "+ ex.getMessage();
+				msg= "Excepcion disparada: "+ ex.getMessage();
 			}
+			
+			builder.entity(msg);
 			
 		}
 		else
 		{
-			String msg="";
+			String msgs="";
 			for(int i=0;i<violaciones.size();i++)
 			{
-				msg+=violaciones.iterator().next().getMessage();
+				msgs+=violaciones.iterator().next().getMessage();
 			}
-			logger.log(Level.SEVERE,msg);
-			return msg;
+			logger.log(Level.SEVERE,msgs);
+			builder.entity(msgs);
 		}
+		
+		return builder.build();
+		
 	}
 	
 	@GET
