@@ -18,6 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import idisoft.restos.data.ProductoRepository;
 import idisoft.restos.data.RestauranteRepository;
@@ -126,14 +127,6 @@ public class TestRest {
 	{
 		Response.ResponseBuilder builder = null;
 		
-		builder = Response.ok();
-		builder.header("Access-Control-Allow-Origin", "*");
-		builder.header("Access-Control-Allow-Headers", "origin, conent-type, accept, authorization");
-        builder.header("Access-Control-Allow-Credentials", "true");
-        builder.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
-        builder.header("Access-Control-Max-Age", "1209600");
-		
-		
 		Set<ConstraintViolation<Usuario>> violaciones=r.validarInstancia();
 		
 		if(violaciones.size()==0)
@@ -146,26 +139,30 @@ public class TestRest {
 			{
 				logger.log(Level.SEVERE,"usuario ya existe "+ r.getCedula());				
 				msg= "Usuario ya existe";
+				builder=Response.status(Status.CONFLICT);
 			}
-			
-			if(usuarioRepository.findByEmail(r.getEmail())!=null)
+			else if(usuarioRepository.findByEmail(r.getEmail())!=null)
 			{
 				logger.log(Level.SEVERE,"email ya existe "+ r.getCedula());				
 				msg= "email ya existe";
+				builder=Response.status(Status.CONFLICT);
 			}
-			
-			try
+			else
 			{
-				registration.registrarUsuario(r);			
-				msg= "usuario registrado";
+				try
+				{
+					registration.registrarUsuario(r);			
+					msg= "usuario registrado";
+					builder = Response.ok();
+				}
+				
+				catch(Exception ex)
+				{
+					logger.log(Level.SEVERE,"Excepcion disparada: "+ ex.getMessage());
+					msg= "Excepcion disparada: "+ ex.getMessage();
+					builder=Response.status(Status.INTERNAL_SERVER_ERROR);
+				}
 			}
-			
-			catch(Exception ex)
-			{
-				logger.log(Level.SEVERE,"Excepcion disparada: "+ ex.getMessage());
-				msg= "Excepcion disparada: "+ ex.getMessage();
-			}
-			
 			builder.entity(msg);
 			
 		}
@@ -177,8 +174,15 @@ public class TestRest {
 				msgs+=violaciones.iterator().next().getMessage();
 			}
 			logger.log(Level.SEVERE,msgs);
+			builder=Response.status(Status.INTERNAL_SERVER_ERROR);
 			builder.entity(msgs);
 		}
+		
+		builder.header("Access-Control-Allow-Origin", "*");
+		builder.header("Access-Control-Allow-Headers", "origin, conent-type, accept, authorization");
+        builder.header("Access-Control-Allow-Credentials", "true");
+        builder.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+        builder.header("Access-Control-Max-Age", "1209600");
 		
 		return builder.build();
 		
