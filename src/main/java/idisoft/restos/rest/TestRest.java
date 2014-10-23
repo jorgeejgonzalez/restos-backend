@@ -30,6 +30,7 @@ import idisoft.restos.entities.json.ProductoJSON;
 import idisoft.restos.entities.json.RestauranteJSON;
 import idisoft.restos.entities.json.SedeJSON;
 import idisoft.restos.entities.json.TipoProductoJSON;
+import idisoft.restos.entities.json.UsuarioJSON;
 import idisoft.restos.services.UsuarioRegistro;
 
 
@@ -109,9 +110,52 @@ public class TestRest {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/usuarios")	
-	public List<Usuario> getUsuarios()
+	public Response getUsuarios()
 	{
-		return usuarioRepository.findAll(); 
+		//return usuarioRepository.findAll(); 
+		Response.ResponseBuilder builder = null;
+		
+		List<Usuario> usuarios=usuarioRepository.findAll();
+		
+		if(usuarios!=null)
+		{
+			if(usuarios.size()>0)
+			{
+				List<UsuarioJSON> usuariosjson=new ArrayList<UsuarioJSON>();
+				Iterator<Usuario> iterator=usuarios.iterator();
+				
+				builder=Response.status(Status.OK);
+				
+				while(iterator.hasNext())
+				{
+					UsuarioJSON usj=new UsuarioJSON();
+					usj.parseUsuario(iterator.next());
+					usuariosjson.add(usj);
+				}
+				
+				builder.entity(usuariosjson);
+				
+			}
+			else
+			{
+				builder=Response.status(Status.NOT_FOUND);			
+			}
+		}
+		else
+		{
+			builder=Response.status(Status.NOT_FOUND);			
+		}
+		
+		
+		builder.header("Access-Control-Allow-Origin", "*");
+		builder.header("Access-Control-Allow-Headers", "origin, conent-type, accept, authorization");
+        builder.header("Access-Control-Allow-Credentials", "true");
+        builder.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+        builder.header("Access-Control-Max-Age", "1209600");
+		
+		builder.type(MediaType.APPLICATION_JSON);
+		
+		return builder.build();
 	}	
 	
 	@GET
