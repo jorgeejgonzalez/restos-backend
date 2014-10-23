@@ -3,6 +3,7 @@ package idisoft.restos.rest;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -30,6 +31,8 @@ import idisoft.restos.entities.json.RestauranteJSON;
 import idisoft.restos.entities.json.SedeJSON;
 import idisoft.restos.entities.json.TipoProductoJSON;
 import idisoft.restos.services.UsuarioRegistro;
+
+
 
 @Path("/test")
 public class TestRest {
@@ -164,25 +167,31 @@ public class TestRest {
 				}
 			}
 			builder.entity(msg);
-			
 		}
 		else
 		{
-			String msgs="";
-			for(int i=0;i<violaciones.size();i++)
+			List<String> msgs=new ArrayList<String>();
+			Iterator<ConstraintViolation<Usuario>> iterator=violaciones.iterator(); 
+			while(iterator.hasNext())
 			{
-				msgs+=violaciones.iterator().next().getMessage();
+				String msg=iterator.next().getMessage();
+				logger.log(Level.SEVERE,msg);
+				msgs.add(msg);
 			}
-			logger.log(Level.SEVERE,msgs);
+			
 			builder=Response.status(Status.INTERNAL_SERVER_ERROR);
 			builder.entity(msgs);
+			
 		}
+		
 		
 		builder.header("Access-Control-Allow-Origin", "*");
 		builder.header("Access-Control-Allow-Headers", "origin, conent-type, accept, authorization");
         builder.header("Access-Control-Allow-Credentials", "true");
         builder.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
         builder.header("Access-Control-Max-Age", "1209600");
+		
+		builder.type(MediaType.APPLICATION_JSON);
 		
 		return builder.build();
 		
