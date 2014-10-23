@@ -56,7 +56,7 @@ public class Usuario implements Serializable {
 	
 	@Id
 	@NotNull(message="usuario.cedula: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
-	@Size(min=8,max=9,message="usuario.cedula: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "8 y 11")
+	@Size(min=8,max=9,message="usuario.cedula: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "8 y 9")
 	@Pattern(regexp="[V,E][0-9]*",message="usuario.cedula: "+ConstantesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO)
 	@Column
 	private String cedula;
@@ -65,7 +65,7 @@ public class Usuario implements Serializable {
 	private String direccion;
 	
 	@NotNull(message="usuario.telefono: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
-	@Size(min=11,max=11,message="usuario.telefono: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ " 11 y 11")
+	@Size(min=11,max=11,message="usuario.telefono: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "11 y 11")
 	@Pattern(regexp="[0-9]*",message="usuario.telefono: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NUMERICO)
 	@Column
 	private String telefono;
