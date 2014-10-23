@@ -1,5 +1,7 @@
 package idisoft.restos.entities;
 
+import idisoft.restos.util.ConstantesEntidades;
+
 import java.io.Serializable;
 import java.util.Set;
 
@@ -25,46 +27,46 @@ import org.hibernate.validator.constraints.Email;
 @Table(name = "usuarios",catalog="restos")
 public class Usuario implements Serializable {
 	
-	@NotNull
-	@Size(min=6,max=20)
+	@NotNull(message="usuario.login: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
+	@Size(min=6,max=20,message="usuario.login: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "6 y 20")
 	@Column
 	private String login;		
 	
-	@NotNull
-	@Size(min=8,max=20)
+	@NotNull(message="usuario.password: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
+	@Size(min=8,max=20,message="usuario.password: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "8 y 20")
 	@Column(name="clave")
 	private String password;
 	
-	@NotNull
+	@NotNull(message="usuario.tipo: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
 	@Column
 	private TipoUsuario tipo;
 	
-	@NotNull
-	@Email
+	@NotNull(message="usuario.email: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
+	@Email(message="usuario.email: "+ConstantesEntidades.VALIDACION_STRING_FORMATO_EMAIL)
 	@Column
 	private String email;
 	
-	@NotNull
+	@NotNull(message="usuario.nombre: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
 	@Column
 	private String nombre;
 	
-	@NotNull
+	@NotNull(message="usuario.apellido: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
 	@Column
 	private String apellido;
 	
 	@Id
-	@NotNull
-	@Size(min=8,max=9)
-	@Pattern(regexp="[V,E][0-9]*",message="debe seguir formato de cedula venezolana")
+	@NotNull(message="usuario.cedula: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
+	@Size(min=8,max=9,message="usuario.cedula: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "8 y 11")
+	@Pattern(regexp="[V,E][0-9]*",message="usuario.cedula: "+ConstantesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO)
 	@Column
 	private String cedula;
 	
 	@Column
 	private String direccion;
 	
-	@NotNull
-	@Size(min=11,max=11)
-	@Pattern(regexp="[0-9]*",message="solo acepta numeros")
+	@NotNull(message="usuario.telefono: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
+	@Size(min=11,max=11,message="usuario.telefono: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ " 11 y 11")
+	@Pattern(regexp="[0-9]*",message="usuario.telefono: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NUMERICO)
 	@Column
 	private String telefono;
 	
