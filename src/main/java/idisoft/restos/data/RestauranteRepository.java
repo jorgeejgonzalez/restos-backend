@@ -2,7 +2,7 @@ package idisoft.restos.data;
 
 import java.util.List;
 
-import idisoft.restos.entities.Restaurante;
+import idisoft.restos.entities.Empresa;
 import idisoft.restos.entities.Sede;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -11,15 +11,15 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class RestauranteRepository extends Repository {
 	
-	public Restaurante findRestauranteByRif(String rif)
+	public Empresa findRestauranteByRif(String rif)
 	{
-		return (Restaurante)findByStringKey(Restaurante.class, rif);
+		return (Empresa)findByStringKey(Empresa.class, rif);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Restaurante> findAllRestaurantes()
+	public List<Empresa> findAllRestaurantes()
 	{
-		return (List<Restaurante>)findAll(Restaurante.class,"rif");
+		return (List<Empresa>)findAll(Empresa.class,"rif");
 	}	
 	
 	public Sede findSedeByRif(String rif)

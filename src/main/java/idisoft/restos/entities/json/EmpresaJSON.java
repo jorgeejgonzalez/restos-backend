@@ -1,6 +1,6 @@
 package idisoft.restos.entities.json;
 
-import idisoft.restos.entities.Restaurante;
+import idisoft.restos.entities.Empresa;
 import idisoft.restos.entities.Sede;
 
 import java.io.Serializable;
@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 @SuppressWarnings("serial")
-public class RestauranteJSON implements Serializable {
+public class EmpresaJSON implements Serializable {
 	
 	private String rif;
 	
@@ -19,12 +19,12 @@ public class RestauranteJSON implements Serializable {
 	
 	private Set<SedeJSON> sedes = new HashSet<SedeJSON>(0);
 		
-	public RestauranteJSON()
+	public EmpresaJSON()
 	{
 		
 	}
 	
-	public RestauranteJSON(String rif,
+	public EmpresaJSON(String rif,
 			String razonsocial,
 			String direccionfiscal)
 	{
@@ -63,7 +63,7 @@ public class RestauranteJSON implements Serializable {
 		this.sedes = sedes;
 	}
 
-	public void parseRestaurante(Restaurante restaurante)
+	public void parseEmpresa(Empresa restaurante)
 	{
 		this.rif=restaurante.getRif();
 		this.razonSocial=restaurante.getRazonSocial();
@@ -92,7 +92,7 @@ public class RestauranteJSON implements Serializable {
 		}
 	}
 	
-	public void parseRestauranteFromSede(Restaurante restaurante)
+	public void parseEmpresaFromSede(Empresa restaurante)
 	{
 		this.rif=restaurante.getRif();
 		this.razonSocial=restaurante.getRazonSocial();

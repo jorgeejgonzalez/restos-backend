@@ -21,7 +21,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings("serial")
 @Entity
 @Table(name="restaurantes")
-public class Restaurante implements Serializable {
+public class Empresa implements Serializable {
 	
 	@Id
 	@NotNull
@@ -40,15 +40,15 @@ public class Restaurante implements Serializable {
 	@Column(name="direccionfiscal")
 	private String direccionFiscal;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurante")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "empresa")
 	private Set<Sede> sedes = new HashSet<Sede>(0);
 		
-	public Restaurante()
+	public Empresa()
 	{
 		
 	}
 	
-	public Restaurante(String rif,
+	public Empresa(String rif,
 			String razonsocial,
 			String direccionfiscal)
 	{
@@ -87,7 +87,7 @@ public class Restaurante implements Serializable {
 		this.sedes = sedes;
 	}
 
-	public Set<ConstraintViolation<Restaurante>> validarInstancia()
+	public Set<ConstraintViolation<Empresa>> validarInstancia()
 	{
 		ValidatorFactory factory= Validation.buildDefaultValidatorFactory();
 		Validator validator=factory.getValidator();

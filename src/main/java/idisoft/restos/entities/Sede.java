@@ -56,8 +56,8 @@ public class Sede implements Serializable{
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
-	@JoinColumn(name="restaurante")
-	private Restaurante restaurante;
+	@JoinColumn(name="empresa")
+	private Empresa empresa;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sede")
 	private Set<Menu> menus = new HashSet<Menu>(0);
@@ -97,11 +97,11 @@ public class Sede implements Serializable{
 		this.telefono = telefono;
 	}
 	
-	public Restaurante getRestaurante() {
-		return restaurante;
+	public Empresa getEmpresa() {
+		return empresa;
 	}
-	public void setRestaurante(Restaurante restaurante) {
-		this.restaurante = restaurante;
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
 	}
 	
 	public Set<Menu> getMenus() {

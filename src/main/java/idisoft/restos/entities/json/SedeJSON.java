@@ -21,7 +21,7 @@ public class SedeJSON implements Serializable{
 	
 	private String telefono;
 	
-	private RestauranteJSON restaurante;
+	private EmpresaJSON empresa;
 	
 	private Set<MenuJSON> menus = new HashSet<MenuJSON>(0);
 	
@@ -60,11 +60,11 @@ public class SedeJSON implements Serializable{
 		this.telefono = telefono;
 	}
 	
-	public RestauranteJSON getRestaurante() {
-		return restaurante;
+	public EmpresaJSON getRestaurante() {
+		return empresa;
 	}
-	public void setRestaurante(RestauranteJSON restaurante) {
-		this.restaurante = restaurante;
+	public void setRestaurante(EmpresaJSON restaurante) {
+		this.empresa = restaurante;
 	}
 	
 	public Set<MenuJSON> getMenus() {
@@ -82,7 +82,7 @@ public class SedeJSON implements Serializable{
 		this.email=sede.getEmail();
 		this.telefono=sede.getTelefono();
 					
-		this.restaurante=null;
+		this.empresa=null;
 		
 		if(sede.getMenus()!=null)
 		{
@@ -117,8 +117,8 @@ public class SedeJSON implements Serializable{
 		this.email=sede.getEmail();
 		this.telefono=sede.getTelefono();
 		
-		this.restaurante=new RestauranteJSON();
-		this.restaurante.parseRestauranteFromSede(sede.getRestaurante());
+		this.empresa=new EmpresaJSON();
+		this.empresa.parseEmpresaFromSede(sede.getEmpresa());
 		
 		if(sede.getMenus()!=null)
 		{

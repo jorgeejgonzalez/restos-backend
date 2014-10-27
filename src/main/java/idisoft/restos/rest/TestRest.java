@@ -27,7 +27,7 @@ import idisoft.restos.data.UsuarioRepository;
 import idisoft.restos.entities.*;
 import idisoft.restos.entities.json.CategoriaProductoJSON;
 import idisoft.restos.entities.json.ProductoJSON;
-import idisoft.restos.entities.json.RestauranteJSON;
+import idisoft.restos.entities.json.EmpresaJSON;
 import idisoft.restos.entities.json.SedeJSON;
 import idisoft.restos.entities.json.TipoProductoJSON;
 import idisoft.restos.entities.json.UsuarioJSON;
@@ -244,16 +244,16 @@ public class TestRest {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/restaurantes")	
-	public List<RestauranteJSON> getRestaurantes()
+	public List<EmpresaJSON> getRestaurantes()
 	{
-		List<Restaurante> lista=(List<Restaurante>)restauranteRepository.findAllRestaurantes();
+		List<Empresa> lista=(List<Empresa>)restauranteRepository.findAllRestaurantes();
 		
-		List<RestauranteJSON> retorno=new ArrayList<RestauranteJSON>();
+		List<EmpresaJSON> retorno=new ArrayList<EmpresaJSON>();
 		
 		for(int i=0; i<lista.size();++i)
 		{
-			RestauranteJSON r=new RestauranteJSON();
-			r.parseRestaurante(lista.get(i));
+			EmpresaJSON r=new EmpresaJSON();
+			r.parseEmpresa(lista.get(i));
 			retorno.add(r);
 		}
 		

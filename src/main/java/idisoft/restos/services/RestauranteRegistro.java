@@ -1,6 +1,6 @@
 package idisoft.restos.services;
 
-import idisoft.restos.entities.Restaurante;
+import idisoft.restos.entities.Empresa;
 
 import java.util.logging.Logger;
 
@@ -17,7 +17,7 @@ public class RestauranteRegistro {
 	@Inject
 	EntityManager em;
 	
-	public void registrarRestaurante(Restaurante restaurante) throws Exception
+	public void registrarRestaurante(Empresa restaurante) throws Exception
 	{
 		log.info("Registrando a " + restaurante.getRif()+ " "+restaurante.getRazonSocial());
 		em.persist(restaurante);
