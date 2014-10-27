@@ -108,7 +108,7 @@ public class TestRest {
 	}
 	
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)	
 	@Path("/usuarios")	
 	public Response getUsuarios()
 	{
@@ -350,22 +350,13 @@ public class TestRest {
 		cliente.setEmail("aqui@aqui");
 		cliente.setTelefono("123456789");
 		
-		Sede local=new Sede();
-		
-		local.setNombre("Bibas Cafe");
-		local.setEmail("tato@bibas");
-		local.setDireccionFisica("Al lado del bellas artes");
-		local.setTelefono("1234567890");
-		
 		Date fecha=new Date(System.currentTimeMillis());
 		Time hora =new Time(System.currentTimeMillis());
-		
 		
 		String direccionEntrega="san francisco";
 		String telefonoEntrega="04140675922";
 		
 		EstatusPedido estatus=EstatusPedido.PENDIENTE;
-		
 				
 		float subTotal=100.0f;
 		float porcentajeIVA=14.0f;
@@ -374,7 +365,6 @@ public class TestRest {
 		
 		Pedido p=new Pedido();
 		p.setCliente(cliente);
-		p.setLocal(local);
 		p.setDireccionEntrega(direccionEntrega);
 		p.setTelefonoEntrega(telefonoEntrega);
 		p.setEstatus(estatus);

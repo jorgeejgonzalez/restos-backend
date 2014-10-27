@@ -1,22 +1,68 @@
 package idisoft.restos.entities;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Pedido {
-	
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@SuppressWarnings("serial")
+@Entity
+@Table(name="pedidos",catalog="restos")
+public class Pedido implements Serializable{
+		
+	@Id
+	@Column
 	private int id;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="cliente")
 	private Usuario cliente;
-	private Sede local;
+	
+	@Column(name="direccionentrega")
 	private String direccionEntrega;
+	
+	@Column(name="telefonoentrega")
 	private String telefonoEntrega;	
+	
+	@Column
 	private Date fecha;
+	
+	@Column
 	private Time hora;
+	
+	@Column(name="subtotal")
 	private float subTotal;
+	
+	@Column(name="porcentajeiva")
 	private float porcentajeIVA;
+	
+	@Column(name="montoiva")
 	private float montoIVA;
-	private float Total;
+	
+	@Column
+	private float total;
+	
+	@Column
 	private EstatusPedido estatus;
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "pedidos_elementos", catalog = "restos", joinColumns = { 
+			@JoinColumn(name = "pedido", nullable = false, updatable = false) }, 
+			inverseJoinColumns = { @JoinColumn(name = "elemento", 
+					nullable = false, updatable = false) })
+	private Set<ElementoMenu> elementos=new HashSet<ElementoMenu>(0);
 	
 	public int getId() {
 		return id;
@@ -32,13 +78,7 @@ public class Pedido {
 		this.cliente = cliente;
 	}
 	
-	public Sede getLocal() {
-		return local;
-	}
-	public void setLocal(Sede local) {
-		this.local = local;
-	}
-	
+		
 	public String getDireccionEntrega() {
 		return direccionEntrega;
 	}
@@ -89,10 +129,10 @@ public class Pedido {
 	}
 	
 	public float getTotal() {
-		return Total;
+		return total;
 	}
 	public void setTotal(float total) {
-		Total = total;
+		this.total = total;
 	}
 	
 	public EstatusPedido getEstatus() {
