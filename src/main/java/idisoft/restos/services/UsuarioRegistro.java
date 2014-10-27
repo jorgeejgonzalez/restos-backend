@@ -22,5 +22,11 @@ public class UsuarioRegistro {
 		log.info("Registrando a " + usuario.getNombre()+ " "+usuario.getApellido());
 		em.persist(usuario);
 	}
+	
+	public void actualizarUsuario(Usuario usuario) throws Exception
+	{
+		log.info("Actualizando el Usuario " + usuario.getCedula());
+		em.merge(usuario);
+	}
 
 }
