@@ -1,6 +1,6 @@
 package idisoft.restos.util;
 
-public abstract class ConstantesEntidades {
+public abstract class MensajesEntidades {
 	
 	public static final String HIDE_PASSSWORD="*********";
 	

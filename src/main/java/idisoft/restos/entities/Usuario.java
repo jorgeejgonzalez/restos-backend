@@ -1,6 +1,6 @@
 package idisoft.restos.entities;
 
-import idisoft.restos.util.ConstantesEntidades;
+import idisoft.restos.util.MensajesEntidades;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -27,46 +27,46 @@ import org.hibernate.validator.constraints.Email;
 @Table(name = "usuarios",catalog="restos")
 public class Usuario implements Serializable {
 	
-	@NotNull(message="usuario.login: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
-	@Size(min=6,max=20,message="usuario.login: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "6 y 20")
+	@NotNull(message="usuario.login: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO)
+	@Size(min=6,max=20,message="usuario.login: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "6 y 20")
 	@Column
 	private String login;		
 	
-	@NotNull(message="usuario.password: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
-	@Size(min=8,max=20,message="usuario.password: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "8 y 20")
+	@NotNull(message="usuario.password: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO)
+	@Size(min=8,max=20,message="usuario.password: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "8 y 20")
 	@Column(name="clave")
 	private String password;
 	
-	@NotNull(message="usuario.tipo: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
+	@NotNull(message="usuario.tipo: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO)
 	@Column
 	private TipoUsuario tipo;
 	
-	@NotNull(message="usuario.email: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
-	@Email(message="usuario.email: "+ConstantesEntidades.VALIDACION_STRING_FORMATO_EMAIL)
+	@NotNull(message="usuario.email: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO)
+	@Email(message="usuario.email: "+MensajesEntidades.VALIDACION_STRING_FORMATO_EMAIL)
 	@Column
 	private String email;
 	
-	@NotNull(message="usuario.nombre: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
+	@NotNull(message="usuario.nombre: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO)
 	@Column
 	private String nombre;
 	
-	@NotNull(message="usuario.apellido: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
+	@NotNull(message="usuario.apellido: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO)
 	@Column
 	private String apellido;
 	
 	@Id
-	@NotNull(message="usuario.cedula: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
-	@Size(min=8,max=9,message="usuario.cedula: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "8 y 9")
-	@Pattern(regexp="[V,E][0-9]*",message="usuario.cedula: "+ConstantesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO)
+	@NotNull(message="usuario.cedula: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO)
+	@Size(min=8,max=9,message="usuario.cedula: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "8 y 9")
+	@Pattern(regexp="[V,E][0-9]*",message="usuario.cedula: "+MensajesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO)
 	@Column
 	private String cedula;
 	
 	@Column
 	private String direccion;
 	
-	@NotNull(message="usuario.telefono: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NULO)
-	@Size(min=11,max=11,message="usuario.telefono: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "11 y 11")
-	@Pattern(regexp="[0-9]*",message="usuario.telefono: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NUMERICO)
+	@NotNull(message="usuario.telefono: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO)
+	@Size(min=11,max=11,message="usuario.telefono: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "11 y 11")
+	@Pattern(regexp="[0-9]*",message="usuario.telefono: "+MensajesEntidades.VALIDACION_STRING_VALOR_NUMERICO)
 	@Column
 	private String telefono;
 	

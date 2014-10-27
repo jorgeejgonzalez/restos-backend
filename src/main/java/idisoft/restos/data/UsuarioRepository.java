@@ -21,6 +21,11 @@ public class UsuarioRepository extends Repository {
 		return (Usuario)findSingleByString(Usuario.class, "email", email);
 	}
 	
+	public Usuario findByLogin(String login)
+	{
+		return (Usuario)findSingleByString(Usuario.class, "login", login);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Usuario> findAll()
 	{

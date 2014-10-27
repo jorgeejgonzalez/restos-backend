@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import idisoft.restos.entities.TipoUsuario;
 import idisoft.restos.entities.Usuario;
-import idisoft.restos.util.ConstantesEntidades;
+import idisoft.restos.util.MensajesEntidades;
 
 @SuppressWarnings("serial")
 public class UsuarioJSON implements Serializable{
@@ -105,7 +105,7 @@ public class UsuarioJSON implements Serializable{
 	{
 		this.cedula=usuario.getCedula();
 		this.login =usuario.getLogin();
-		this.password=ConstantesEntidades.HIDE_PASSSWORD;
+		this.password=MensajesEntidades.HIDE_PASSSWORD;
 		this.email=usuario.getEmail();
 		this.nombre=usuario.getNombre();
 		this.apellido=usuario.getApellido();
