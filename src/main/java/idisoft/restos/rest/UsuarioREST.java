@@ -19,6 +19,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -137,6 +138,66 @@ public class UsuarioREST {
 		return builder.build();
 	}
 	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_FUNCION_DISPONIBILIDAD_EMAIL)
+	public Response disponibilidadEmail(Usuario usuario)
+	{
+		Response.ResponseBuilder builder = null;
+		
+		if(repositorio.findByEmail(usuario.getEmail())==null)
+		{
+			builder=Response.status(Status.OK);
+			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_EMAIL_DISPONIBLE);
+		}
+		else
+		{
+			builder=Response.status(Status.CONFLICT);
+			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_EMAIL_DUPLICADO);
+		}
+		
+		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);		
+		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS_VALUE);
+        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS_VALUE);
+        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS_VALUE);
+        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE,ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE_VALUE);
+		
+		builder.type(MediaType.APPLICATION_JSON);
+		
+		return builder.build();
+	}
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_FUNCION_DISPONIBILIDAD_LOGIN)
+	public Response disponibilidadLogin(Usuario usuario)
+	{
+		Response.ResponseBuilder builder = null;
+		
+		if(repositorio.findByLogin(usuario.getLogin())==null)
+		{
+			builder=Response.status(Status.OK);
+			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_DISPONIBLE);
+		}
+		else
+		{
+			builder=Response.status(Status.CONFLICT);
+			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_DUPLICADO);
+		}
+		
+		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);		
+		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS_VALUE);
+        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS_VALUE);
+        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS_VALUE);
+        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE,ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE_VALUE);
+		
+		builder.type(MediaType.APPLICATION_JSON);
+		
+		return builder.build();
+	
+	}
 	
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -155,6 +216,11 @@ public class UsuarioREST {
 			if(repositorio.findByCedula(usuario.getCedula())!=null)
 			{
 				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_DUPLICADA;
+				builder=Response.status(Status.CONFLICT);
+			}
+			else if(repositorio.findByLogin(usuario.getLogin())!=null)
+			{
+				msg= ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_DUPLICADO;
 				builder=Response.status(Status.CONFLICT);
 			}
 			else if(repositorio.findByEmail(usuario.getEmail())!=null)
@@ -179,6 +245,156 @@ public class UsuarioREST {
 				}
 			}
 			builder.entity(msg);
+		}
+		else
+		{
+			List<String> msgs=new ArrayList<String>();
+			Iterator<ConstraintViolation<Usuario>> iterator=violaciones.iterator(); 
+			while(iterator.hasNext())
+			{
+				String msg=iterator.next().getMessage();
+				logger.log(Level.SEVERE,msg);
+				msgs.add(msg);
+			}
+			
+			builder=Response.status(Status.INTERNAL_SERVER_ERROR);
+			builder.entity(msgs);
+			
+		}
+		
+		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);		
+		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS_VALUE);
+        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS_VALUE);
+        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS_VALUE);
+        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE,ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE_VALUE);
+		
+		builder.type(MediaType.APPLICATION_JSON);
+		
+		return builder.build();
+	}
+	
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_FUNCION_ACTUALIZAR)
+	public Response actualizarUsuario(@PathParam("cedula") String cedula, Usuario usuario)
+	{
+		Response.ResponseBuilder builder = null;
+		
+		Set<ConstraintViolation<Usuario>> violaciones=usuario.validarInstancia();
+		
+		if(violaciones.size()==0)
+		{
+			String msg="";
+			Usuario retorno=repositorio.findByCedula(cedula);
+			if(retorno==null)
+			{
+				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+				builder=Response.status(Status.NOT_FOUND);
+			}
+			else 
+			{
+				try
+				{
+					retorno.setNombre(usuario.getNombre());
+					retorno.setApellido(usuario.getApellido());
+					retorno.setDireccion(usuario.getDireccion());
+					retorno.setTelefono(usuario.getTelefono());
+					retorno.setTipo(usuario.getTipo());
+					retorno.setLogin(usuario.getLogin());
+					retorno.setEmail(usuario.getEmail());
+					
+					registro.actualizarUsuario(retorno);			
+					
+					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ACTUALIZADA;
+					
+					builder = Response.ok();
+				}
+				
+				catch(Exception ex)
+				{
+					msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
+				
+					logger.log(Level.SEVERE,msg);					
+					
+					builder=Response.status(Status.INTERNAL_SERVER_ERROR);
+				}
+			}
+			
+			builder.entity(msg);
+			
+		}
+		else
+		{
+			List<String> msgs=new ArrayList<String>();
+			Iterator<ConstraintViolation<Usuario>> iterator=violaciones.iterator(); 
+			while(iterator.hasNext())
+			{
+				String msg=iterator.next().getMessage();
+				logger.log(Level.SEVERE,msg);
+				msgs.add(msg);
+			}
+			
+			builder=Response.status(Status.INTERNAL_SERVER_ERROR);
+			builder.entity(msgs);
+			
+		}
+		
+		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);		
+		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS_VALUE);
+        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS_VALUE);
+        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS_VALUE);
+        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE,ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE_VALUE);
+		
+		builder.type(MediaType.APPLICATION_JSON);
+		
+		return builder.build();
+	}
+	
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_FUNCION_ACTUALIZAR_PASSWORD)
+	public Response actualizarPasswordUsuario(@PathParam("cedula") String cedula, Usuario usuario)
+	{
+		Response.ResponseBuilder builder = null;
+		
+		Set<ConstraintViolation<Usuario>> violaciones=usuario.validarInstancia();
+		
+		if(violaciones.size()==0)
+		{
+			String msg="";
+			Usuario retorno=repositorio.findByCedula(cedula);
+			if(retorno==null)
+			{
+				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+				builder=Response.status(Status.NOT_FOUND);
+			}
+			else 
+			{
+				try
+				{
+					retorno.setPassword(usuario.getPassword());
+					
+					registro.actualizarUsuario(retorno);			
+					
+					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ACTUALIZADA;
+					
+					builder = Response.ok();
+				}
+				
+				catch(Exception ex)
+				{
+					msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
+				
+					logger.log(Level.SEVERE,msg);					
+					
+					builder=Response.status(Status.INTERNAL_SERVER_ERROR);
+				}
+			}
+			
+			builder.entity(msg);
+			
 		}
 		else
 		{

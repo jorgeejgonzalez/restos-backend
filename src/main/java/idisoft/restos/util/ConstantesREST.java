@@ -30,9 +30,16 @@ public class ConstantesREST {
 	
 	public static final String REST_USUARIOS="/usuarios";
 	public static final String REST_USUARIOS_FUNCION_LISTAR="/";
-	public static final String REST_USUARIOS_FUNCION_LOGIN="/login";
+	public static final String REST_USUARIOS_FUNCION_LOGIN="/entrada";
 	public static final String REST_USUARIOS_FUNCION_CREAR="/";
+	public static final String REST_USUARIOS_FUNCION_ACTUALIZAR="/{cedula:[V,E][0-9]*}";
+	public static final String REST_USUARIOS_FUNCION_ACTUALIZAR_PASSWORD="/{cedula:[V,E][0-9]*}/password";
+	public static final String REST_USUARIOS_FUNCION_DISPONIBILIDAD_EMAIL="/email";
+	public static final String REST_USUARIOS_FUNCION_DISPONIBILIDAD_LOGIN="/login";
 	public static final String REST_USUARIOS_MENSAJE_LOGIN_FALLIDO="Autenticacion fallida";
+	public static final String REST_USUARIOS_MENSAJE_LOGIN_DISPONIBLE="Login no se encuentra registrado en el sistema";
+	public static final String REST_USUARIOS_MENSAJE_LOGIN_DUPLICADO="Login ya se encuentra registrado en el sistema";
+	public static final String REST_USUARIOS_MENSAJE_EMAIL_DISPONIBLE="Email no se encuentra registrado en el sistema";
 	public static final String REST_USUARIOS_MENSAJE_EMAIL_DUPLICADO="Email ya se encuentra registrado en el sistema";
 	
 	
@@ -41,7 +48,7 @@ public class ConstantesREST {
 	 */
 	public static final String REST_MENSAJE_EXCEPCION_GENERICA="Se disparo una excepcion: ";
 	public static final String REST_MENSAJE_ENTIDAD_REGISTRADA="Registro agregado exitosamente";
-	public static final String REST_MENSAJE_ENTIDAD_ACTUALIZADA="Registro actualizada exitosamente";
+	public static final String REST_MENSAJE_ENTIDAD_ACTUALIZADA="Registro actualizado exitosamente";
 	public static final String REST_MENSAJE_ENTIDAD_NULA="Registro no se encuentra en sistema";
 	public static final String REST_MENSAJE_ENTIDAD_DUPLICADA="Registro ya existe en sistema";
 	public static final String REST_MENSAJE_LISTA_VACIA="Lista no devolvio valores";

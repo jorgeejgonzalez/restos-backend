@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -24,7 +25,14 @@ import org.hibernate.validator.constraints.Email;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "usuarios",catalog="restos")
+@Table(
+		name = "usuarios",catalog="restos",
+		uniqueConstraints=
+		{
+				@UniqueConstraint(columnNames="email"),
+				@UniqueConstraint(columnNames="login")
+		}
+)
 public class Usuario implements Serializable {
 	
 	@NotNull(message="usuario.login: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO)
