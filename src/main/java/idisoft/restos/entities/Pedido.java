@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table(name="pedidos",catalog="restos")
-public class Pedido implements Serializable{
+public class Pedido extends Registro implements Serializable{
 		
 	@Id
 	@Column
@@ -62,7 +62,7 @@ public class Pedido implements Serializable{
 			@JoinColumn(name = "pedido", nullable = false, updatable = false) }, 
 			inverseJoinColumns = { @JoinColumn(name = "elemento", 
 					nullable = false, updatable = false) })
-	private Set<ElementoMenu> elementos=new HashSet<ElementoMenu>(0);
+	private Set<ElementoCatalogo> elementos=new HashSet<ElementoCatalogo>(0);
 	
 	public int getId() {
 		return id;

@@ -2,34 +2,34 @@ package idisoft.restos.data;
 
 import java.util.List;
 
-import idisoft.restos.entities.ElementoMenu;
-import idisoft.restos.entities.Menu;
+import idisoft.restos.entities.ElementoCatalogo;
+import idisoft.restos.entities.Catalogo;
 
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class MenuRepository extends Repository {
 	
-	public Menu findMenuById(int id)
+	public Catalogo findMenuById(int id)
 	{
-		return (Menu)findByIntKey(Menu.class, id);
+		return (Catalogo)findByIntKey(Catalogo.class, id);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Menu> findAllMenus()
+	public List<Catalogo> findAllMenus()
 	{
-		return (List<Menu>)findAll(Menu.class, "id");
+		return (List<Catalogo>)findAll(Catalogo.class, "id");
 	}
 	
-	public ElementoMenu findElementoById(int id)
+	public ElementoCatalogo findElementoById(int id)
 	{
-		return (ElementoMenu)findByIntKey(ElementoMenu.class, id);
+		return (ElementoCatalogo)findByIntKey(ElementoCatalogo.class, id);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ElementoMenu> findAllElementosMenus()
+	public List<ElementoCatalogo> findAllElementosMenus()
 	{
-		return (List<ElementoMenu>)findAll(ElementoMenu.class, "id");
+		return (List<ElementoCatalogo>)findAll(ElementoCatalogo.class, "id");
 	}
 
 }

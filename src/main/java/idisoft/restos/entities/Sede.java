@@ -25,7 +25,7 @@ import org.hibernate.validator.constraints.Email;
 @SuppressWarnings("serial")
 @Entity
 @Table(name="sedes")
-public class Sede implements Serializable{
+public class Sede extends Registro implements Serializable{
 	
 	@Id
 	@NotNull
@@ -60,7 +60,7 @@ public class Sede implements Serializable{
 	private Empresa empresa;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sede")
-	private Set<Menu> menus = new HashSet<Menu>(0);
+	private Set<Catalogo> menus = new HashSet<Catalogo>(0);
 	
 	public String getRif() {
 		return rif;
@@ -104,10 +104,10 @@ public class Sede implements Serializable{
 		this.empresa = empresa;
 	}
 	
-	public Set<Menu> getMenus() {
+	public Set<Catalogo> getMenus() {
 		return menus;
 	}
-	public void setMenus(Set<Menu> menus) {
+	public void setMenus(Set<Catalogo> menus) {
 		this.menus = menus;
 	}
 	public Set<ConstraintViolation<Sede>> validarInstancia()

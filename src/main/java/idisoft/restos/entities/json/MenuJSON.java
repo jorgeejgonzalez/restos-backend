@@ -1,8 +1,8 @@
 package idisoft.restos.entities.json;
 
-import idisoft.restos.entities.ElementoMenu;
-import idisoft.restos.entities.EstatusMenu;
-import idisoft.restos.entities.Menu;
+import idisoft.restos.entities.ElementoCatalogo;
+import idisoft.restos.entities.EstatusCatalogo;
+import idisoft.restos.entities.Catalogo;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -17,7 +17,7 @@ public class MenuJSON implements Serializable{
 	
 	private String nombre;
 	
-	private EstatusMenu estatus;
+	private EstatusCatalogo estatus;
 	
 	private SedeJSON sede;
 	
@@ -37,10 +37,10 @@ public class MenuJSON implements Serializable{
 		this.nombre = nombre;
 	}
 	
-	public EstatusMenu getEstatus() {
+	public EstatusCatalogo getEstatus() {
 		return estatus;
 	}
-	public void setEstatus(EstatusMenu estatus) {
+	public void setEstatus(EstatusCatalogo estatus) {
 		this.estatus = estatus;
 	}
 	
@@ -58,7 +58,7 @@ public class MenuJSON implements Serializable{
 		this.elementosMenu = elementosMenu;
 	}
 	
-	public void parseMenuFromSede(Menu menu)
+	public void parseMenuFromSede(Catalogo menu)
 	{
 		this.id=menu.getId();
 		this.nombre=menu.getNombre();
@@ -69,10 +69,10 @@ public class MenuJSON implements Serializable{
 		{
 			if(menu.getElementosMenu().size()>0)
 			{
-				Iterator<ElementoMenu> iterator=menu.getElementosMenu().iterator();
+				Iterator<ElementoCatalogo> iterator=menu.getElementosMenu().iterator();
 				while(iterator.hasNext())
 				{
-					ElementoMenu em=iterator.next();
+					ElementoCatalogo em=iterator.next();
 					ElementoMenuJSON emj=new ElementoMenuJSON();
 					emj.parseElementoFromMenu(em);
 					this.elementosMenu.add(emj);

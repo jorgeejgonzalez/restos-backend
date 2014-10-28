@@ -1,6 +1,6 @@
 package idisoft.restos.entities;
 
-public enum EstatusMenu {
+public enum EstatusCatalogo {
 	NODISPONIBLE, 
 	DISPONIBLE, 
 	ENPROMOCION

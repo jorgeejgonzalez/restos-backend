@@ -1,6 +1,6 @@
 package idisoft.restos.entities.json;
 
-import idisoft.restos.entities.Menu;
+import idisoft.restos.entities.Catalogo;
 import idisoft.restos.entities.Sede;
 
 import java.io.Serializable;
@@ -88,10 +88,10 @@ public class SedeJSON implements Serializable{
 		{
 			if(sede.getMenus().size()>0)
 			{
-				Iterator<Menu> iterator=sede.getMenus().iterator();
+				Iterator<Catalogo> iterator=sede.getMenus().iterator();
 				while(iterator.hasNext())
 				{
-					Menu m=iterator.next();
+					Catalogo m=iterator.next();
 					MenuJSON mj=new MenuJSON();
 					mj.parseMenuFromSede(m);
 					this.menus.add(mj);
@@ -126,7 +126,7 @@ public class SedeJSON implements Serializable{
 			{
 				for(int i=0; i<sede.getMenus().size();++i)
 				{
-					Menu m=sede.getMenus().iterator().next();
+					Catalogo m=sede.getMenus().iterator().next();
 					MenuJSON mj=new MenuJSON();
 					mj.parseMenuFromSede(m);
 					this.menus.add(mj);

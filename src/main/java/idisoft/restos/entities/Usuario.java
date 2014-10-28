@@ -33,7 +33,7 @@ import org.hibernate.validator.constraints.Email;
 				@UniqueConstraint(columnNames="login")
 		}
 )
-public class Usuario implements Serializable {
+public class Usuario extends Registro implements Serializable {
 	
 	@NotNull(message="usuario.login: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO)
 	@Size(min=6,max=20,message="usuario.login: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "6 y 20")

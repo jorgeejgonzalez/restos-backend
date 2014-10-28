@@ -20,8 +20,8 @@ import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name="restaurantes")
-public class Empresa implements Serializable {
+@Table(name="empresas")
+public class Empresa extends Registro implements Serializable {
 	
 	@Id
 	@NotNull

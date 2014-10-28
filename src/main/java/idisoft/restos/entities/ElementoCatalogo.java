@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -13,12 +15,12 @@ import javax.validation.constraints.NotNull;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name="menus_elementos")
-public class ElementoMenu implements Serializable {
+@Table(name="catalogo_elementos")
+public class ElementoCatalogo extends Registro implements Serializable {
 	
 	@Id
-	@NotNull
-	@Column(name="idmenus_elementos")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
 	private int id;
 	
 	@NotNull
@@ -35,7 +37,7 @@ public class ElementoMenu implements Serializable {
 	
 	@NotNull
 	@Column
-	private EstatusMenu estatus;
+	private EstatusCatalogo estatus;
 	
 	@NotNull
 	@Column
@@ -44,7 +46,7 @@ public class ElementoMenu implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
 	@JoinColumn(name="menu")
-	private Menu menu;
+	private Catalogo menu;
 	
 	public int getId() {
 		return id;
@@ -74,10 +76,10 @@ public class ElementoMenu implements Serializable {
 		this.precio = precio;
 	}
 	
-	public EstatusMenu getEstatus() {
+	public EstatusCatalogo getEstatus() {
 		return estatus;
 	}
-	public void setEstatus(EstatusMenu estatus) {
+	public void setEstatus(EstatusCatalogo estatus) {
 		this.estatus = estatus;
 	}
 	
@@ -88,10 +90,10 @@ public class ElementoMenu implements Serializable {
 		this.unidades = unidades;
 	}
 	
-	public Menu getMenu() {
+	public Catalogo getMenu() {
 		return menu;
 	}
-	public void setMenu(Menu menu) {
+	public void setMenu(Catalogo menu) {
 		this.menu = menu;
 	}
 	

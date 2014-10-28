@@ -16,8 +16,8 @@ import javax.validation.constraints.NotNull;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name="menus")
-public class Menu implements Serializable{
+@Table(name="catalogos")
+public class Catalogo extends Registro implements Serializable{
 	
 	@Id
 	@NotNull
@@ -30,7 +30,7 @@ public class Menu implements Serializable{
 	
 	@NotNull
 	@Column
-	private EstatusMenu estatus;
+	private EstatusCatalogo estatus;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
@@ -38,7 +38,7 @@ public class Menu implements Serializable{
 	private Sede sede;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "menu")
-	private Set<ElementoMenu> elementosMenu = new HashSet<ElementoMenu>(0);
+	private Set<ElementoCatalogo> elementosMenu = new HashSet<ElementoCatalogo>(0);
 	
 	public int getId() {
 		return id;
@@ -54,10 +54,10 @@ public class Menu implements Serializable{
 		this.nombre = nombre;
 	}
 	
-	public EstatusMenu getEstatus() {
+	public EstatusCatalogo getEstatus() {
 		return estatus;
 	}
-	public void setEstatus(EstatusMenu estatus) {
+	public void setEstatus(EstatusCatalogo estatus) {
 		this.estatus = estatus;
 	}
 	
@@ -68,10 +68,10 @@ public class Menu implements Serializable{
 		this.sede = sede;
 	}
 	
-	public Set<ElementoMenu> getElementosMenu() {
+	public Set<ElementoCatalogo> getElementosMenu() {
 		return elementosMenu;
 	}
-	public void setElementosMenu(Set<ElementoMenu> elementosMenu) {
+	public void setElementosMenu(Set<ElementoCatalogo> elementosMenu) {
 		this.elementosMenu = elementosMenu;
 	}
 	

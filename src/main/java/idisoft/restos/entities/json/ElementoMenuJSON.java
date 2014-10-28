@@ -1,7 +1,7 @@
 package idisoft.restos.entities.json;
 
-import idisoft.restos.entities.ElementoMenu;
-import idisoft.restos.entities.EstatusMenu;
+import idisoft.restos.entities.ElementoCatalogo;
+import idisoft.restos.entities.EstatusCatalogo;
 
 import java.io.Serializable;
 
@@ -16,7 +16,7 @@ public class ElementoMenuJSON implements Serializable {
 	
 	private float precio;
 	
-	private EstatusMenu estatus;
+	private EstatusCatalogo estatus;
 	
 	private int unidades;
 		
@@ -54,11 +54,11 @@ public class ElementoMenuJSON implements Serializable {
 		this.precio = precio;
 	}
 
-	public EstatusMenu getEstatus() {
+	public EstatusCatalogo getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(EstatusMenu estatus) {
+	public void setEstatus(EstatusCatalogo estatus) {
 		this.estatus = estatus;
 	}
 
@@ -78,7 +78,7 @@ public class ElementoMenuJSON implements Serializable {
 		this.menu = menu;
 	}
 	
-	public void parseElementoFromMenu(ElementoMenu elementomenu)
+	public void parseElementoFromMenu(ElementoCatalogo elementomenu)
 	{
 		this.id=elementomenu.getId();
 		this.nombre=elementomenu.getNombre();
