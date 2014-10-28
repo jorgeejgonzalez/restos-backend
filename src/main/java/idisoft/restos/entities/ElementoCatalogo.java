@@ -45,8 +45,8 @@ public class ElementoCatalogo extends Registro implements Serializable {
 		
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
-	@JoinColumn(name="menu")
-	private Catalogo menu;
+	@JoinColumn(name="catalogo")
+	private Catalogo catalogo;
 	
 	public int getId() {
 		return id;
@@ -91,10 +91,10 @@ public class ElementoCatalogo extends Registro implements Serializable {
 	}
 	
 	public Catalogo getMenu() {
-		return menu;
+		return catalogo;
 	}
 	public void setMenu(Catalogo menu) {
-		this.menu = menu;
+		this.catalogo = menu;
 	}
 	
 }

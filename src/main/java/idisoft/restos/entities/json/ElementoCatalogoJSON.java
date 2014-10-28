@@ -6,7 +6,7 @@ import idisoft.restos.entities.EstatusCatalogo;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class ElementoMenuJSON implements Serializable {
+public class ElementoCatalogoJSON implements Serializable {
 	
 	private int id;
 	
@@ -20,7 +20,7 @@ public class ElementoMenuJSON implements Serializable {
 	
 	private int unidades;
 		
-	private MenuJSON menu;
+	private CatalogoJSON menu;
 
 	public int getId() {
 		return id;
@@ -70,11 +70,11 @@ public class ElementoMenuJSON implements Serializable {
 		this.unidades = unidades;
 	}
 
-	public MenuJSON getMenu() {
+	public CatalogoJSON getMenu() {
 		return menu;
 	}
 
-	public void setMenu(MenuJSON menu) {
+	public void setMenu(CatalogoJSON menu) {
 		this.menu = menu;
 	}
 	

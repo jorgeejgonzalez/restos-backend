@@ -77,7 +77,7 @@ public class EmpresaJSON implements Serializable {
 				{
 					Sede sede=iterator.next();
 					SedeJSON s=new SedeJSON();
-					s.parseSedeFromRestaurante(sede);
+					s.parseSedeFromEmpresa(sede);
 					this.sedes.add(s);
 				}
 			}

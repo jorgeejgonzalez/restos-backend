@@ -23,7 +23,7 @@ public class SedeJSON implements Serializable{
 	
 	private EmpresaJSON empresa;
 	
-	private Set<MenuJSON> menus = new HashSet<MenuJSON>(0);
+	private Set<CatalogoJSON> catalogos = new HashSet<CatalogoJSON>(0);
 	
 	public String getRif() {
 		return rif;
@@ -60,21 +60,21 @@ public class SedeJSON implements Serializable{
 		this.telefono = telefono;
 	}
 	
-	public EmpresaJSON getRestaurante() {
+	public EmpresaJSON getEmpresa() {
 		return empresa;
 	}
-	public void setRestaurante(EmpresaJSON restaurante) {
-		this.empresa = restaurante;
+	public void setEmpresa(EmpresaJSON empresa) {
+		this.empresa = empresa;
 	}
 	
-	public Set<MenuJSON> getMenus() {
-		return menus;
+	public Set<CatalogoJSON> getCatalogos() {
+		return catalogos;
 	}
-	public void setMenus(Set<MenuJSON> menus) {
-		this.menus = menus;
+	public void setCatalogos(Set<CatalogoJSON> catalogos) {
+		this.catalogos = catalogos;
 	}
 	
-	public void parseSedeFromRestaurante(Sede sede)
+	public void parseSedeFromEmpresa(Sede sede)
 	{
 		this.rif=sede.getRif();
 		this.nombre=sede.getNombre();
@@ -92,20 +92,20 @@ public class SedeJSON implements Serializable{
 				while(iterator.hasNext())
 				{
 					Catalogo m=iterator.next();
-					MenuJSON mj=new MenuJSON();
-					mj.parseMenuFromSede(m);
-					this.menus.add(mj);
+					CatalogoJSON mj=new CatalogoJSON();
+					mj.parseCatalogoFromSede(m);
+					this.catalogos.add(mj);
 				}
 			}
 			else
 			{
-				this.menus=null;
+				this.catalogos=null;
 			}
 			
 		}
 		else 
 		{
-			this.menus=null;
+			this.catalogos=null;
 		}
 	}
 	
@@ -127,20 +127,20 @@ public class SedeJSON implements Serializable{
 				for(int i=0; i<sede.getMenus().size();++i)
 				{
 					Catalogo m=sede.getMenus().iterator().next();
-					MenuJSON mj=new MenuJSON();
-					mj.parseMenuFromSede(m);
-					this.menus.add(mj);
+					CatalogoJSON mj=new CatalogoJSON();
+					mj.parseCatalogoFromSede(m);
+					this.catalogos.add(mj);
 				}
 			}
 			else
 			{
-				this.menus=null;
+				this.catalogos=null;
 			}
 			
 		}
 		else 
 		{
-			this.menus=null;
+			this.catalogos=null;
 		}
 		
 	}

@@ -11,7 +11,7 @@ import java.util.Set;
 
 @SuppressWarnings("serial")
 
-public class MenuJSON implements Serializable{
+public class CatalogoJSON implements Serializable{
 	
 	private int id;
 	
@@ -21,7 +21,7 @@ public class MenuJSON implements Serializable{
 	
 	private SedeJSON sede;
 	
-	private Set<ElementoMenuJSON> elementosMenu = new HashSet<ElementoMenuJSON>(0);
+	private Set<ElementoCatalogoJSON> elementosCatalogo = new HashSet<ElementoCatalogoJSON>(0);
 	
 	public int getId() {
 		return id;
@@ -51,42 +51,42 @@ public class MenuJSON implements Serializable{
 		this.sede = sede;
 	}
 	
-	public Set<ElementoMenuJSON> getElementosMenu() {
-		return elementosMenu;
+	public Set<ElementoCatalogoJSON> getElementosCatalogo() {
+		return elementosCatalogo;
 	}
-	public void setElementosMenu(Set<ElementoMenuJSON> elementosMenu) {
-		this.elementosMenu = elementosMenu;
+	public void setElementosCatalogo(Set<ElementoCatalogoJSON> elementosMenu) {
+		this.elementosCatalogo = elementosMenu;
 	}
 	
-	public void parseMenuFromSede(Catalogo menu)
+	public void parseCatalogoFromSede(Catalogo menu)
 	{
 		this.id=menu.getId();
 		this.nombre=menu.getNombre();
 		this.estatus=menu.getEstatus();
 		this.sede=null;
 		
-		if(menu.getElementosMenu()!=null)
+		if(menu.getElementosCatalogo()!=null)
 		{
-			if(menu.getElementosMenu().size()>0)
+			if(menu.getElementosCatalogo().size()>0)
 			{
-				Iterator<ElementoCatalogo> iterator=menu.getElementosMenu().iterator();
+				Iterator<ElementoCatalogo> iterator=menu.getElementosCatalogo().iterator();
 				while(iterator.hasNext())
 				{
 					ElementoCatalogo em=iterator.next();
-					ElementoMenuJSON emj=new ElementoMenuJSON();
+					ElementoCatalogoJSON emj=new ElementoCatalogoJSON();
 					emj.parseElementoFromMenu(em);
-					this.elementosMenu.add(emj);
+					this.elementosCatalogo.add(emj);
 				}
 			}
 			else
 			{
-				this.elementosMenu=null;
+				this.elementosCatalogo=null;
 			}
 			
 		}
 		else 
 		{
-			this.elementosMenu=null;
+			this.elementosCatalogo=null;
 		}
 		
 	}

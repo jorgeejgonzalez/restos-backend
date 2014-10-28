@@ -37,8 +37,8 @@ public class Catalogo extends Registro implements Serializable{
 	@JoinColumn(name="sede")
 	private Sede sede;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "menu")
-	private Set<ElementoCatalogo> elementosMenu = new HashSet<ElementoCatalogo>(0);
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "catalogo")
+	private Set<ElementoCatalogo> elementosCatalogo = new HashSet<ElementoCatalogo>(0);
 	
 	public int getId() {
 		return id;
@@ -68,11 +68,11 @@ public class Catalogo extends Registro implements Serializable{
 		this.sede = sede;
 	}
 	
-	public Set<ElementoCatalogo> getElementosMenu() {
-		return elementosMenu;
+	public Set<ElementoCatalogo> getElementosCatalogo() {
+		return elementosCatalogo;
 	}
-	public void setElementosMenu(Set<ElementoCatalogo> elementosMenu) {
-		this.elementosMenu = elementosMenu;
+	public void setElementosCatalogo(Set<ElementoCatalogo> elementosCatalogo) {
+		this.elementosCatalogo = elementosCatalogo;
 	}
 	
 }
