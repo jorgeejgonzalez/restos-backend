@@ -36,6 +36,7 @@ public class ConstantesREST {
 	public static final String REST_USUARIOS_FUNCION_CREAR="/nuevo";
 	public static final String REST_USUARIOS_FUNCION_ACTUALIZAR="/{cedula:[V,E][0-9]*}";
 	public static final String REST_USUARIOS_FUNCION_ACTUALIZAR_PASSWORD=REST_USUARIOS_FUNCION_ACTUALIZAR+"/password";
+	public static final String REST_USUARIOS_FUNCION_ACTIVAR=REST_USUARIOS_FUNCION_ACTUALIZAR+"/activar";
 	public static final String REST_USUARIOS_FUNCION_ELIMINAR="/{cedula:[V,E][0-9]*}";
 	public static final String REST_USUARIOS_FUNCION_DISPONIBILIDAD_EMAIL="/disponible/email";
 	public static final String REST_USUARIOS_FUNCION_DISPONIBILIDAD_LOGIN="/disponible/login";
@@ -44,6 +45,24 @@ public class ConstantesREST {
 	public static final String REST_USUARIOS_MENSAJE_LOGIN_DUPLICADO="Login ya se encuentra registrado en el sistema";
 	public static final String REST_USUARIOS_MENSAJE_EMAIL_DISPONIBLE="Email no se encuentra registrado en el sistema";
 	public static final String REST_USUARIOS_MENSAJE_EMAIL_DUPLICADO="Email ya se encuentra registrado en el sistema";
+	
+	
+	/*
+	 * REST de manejo de productos
+	 */
+	
+	public static final String REST_PRODUCTOS="/productos";
+	public static final String REST_PRODUCTOS_FUNCION_LISTAR="/";
+	public static final String REST_PRODUCTOS_FUNCION_LISTAR_INACTIVOS=REST_PRODUCTOS_FUNCION_LISTAR+"inactivos";
+	public static final String REST_PRODUCTOS_FUNCION_LISTAR_ELIMINADOS=REST_PRODUCTOS_FUNCION_LISTAR+"eliminados";
+	public static final String REST_PRODUCTOS_FUNCION_CREAR="/nuevo";
+	public static final String REST_PRODUCTOS_FUNCION_ACTUALIZAR="/{id:[0-9]*}";
+	public static final String REST_PRODUCTOS_FUNCION_ELIMINAR="/{id:[0-9]*}";
+	
+	public static final String REST_PRODUCTOS_CATEGORIAS="/categorias";
+	public static final String REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR="/";
+	public static final String REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR_INACTIVOS=REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR+"inactivos";
+	public static final String REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR_ELIMINADOS=REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR+"eliminados";
 	
 	
 	/*
@@ -59,3 +78,4 @@ public class ConstantesREST {
 	public static final String REST_MENSAJE_LISTA_NULA="Lista de valores es nula";
 
 }
+

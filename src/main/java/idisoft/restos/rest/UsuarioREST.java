@@ -29,7 +29,6 @@ import javax.ws.rs.core.Response.Status;
 @Path(ConstantesREST.REST_USUARIOS)
 public class UsuarioREST extends RestService{
 	
-	
 	@Inject
 	private UsuarioRepository repositorio;
 	
@@ -428,6 +427,52 @@ public class UsuarioREST extends RestService{
 			try
 			{
 				retorno.setEstatusRegistro(EstatusRegistro.ELIMINADO);
+
+				registro.actualizarUsuario(retorno);
+
+				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ELIMINADA;
+
+				builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
+
+			}
+			catch(Exception ex)
+			{
+				msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
+				logger.log(Level.SEVERE,msg);
+				builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
+				
+			}
+			
+			builder.entity(msg);
+			
+		}
+				
+		return builder.build();
+	}
+	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_FUNCION_ACTIVAR)
+	public Response activarUsuario(@PathParam("cedula") String cedula)
+	{
+		Response.ResponseBuilder builder = null;
+		String msg="";
+		Usuario retorno=repositorio.findByCedula(cedula);
+		if(retorno==null)
+		{
+			msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
+		}
+		else if(retorno.getEstatusRegistro()==EstatusRegistro.ELIMINADO)
+		{
+			msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
+		}
+		else
+		{
+			try
+			{
+				retorno.setEstatusRegistro(EstatusRegistro.ACTIVO);
 
 				registro.actualizarUsuario(retorno);
 
