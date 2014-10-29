@@ -1,6 +1,7 @@
 package idisoft.restos.entities;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,13 +12,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(name="productos",catalog="restos")
-public class Producto extends Registro implements Serializable{
+public class Producto implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -46,6 +51,9 @@ public class Producto extends Registro implements Serializable{
 	@NotNull
 	@JoinColumn(name="tipo")
 	private TipoProducto tipo;
+	
+	@Column(name="estatus_registro")
+	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
 	
 	public int getId() {
 		return id;
@@ -83,6 +91,19 @@ public class Producto extends Registro implements Serializable{
 	}
 	public void setTipo(TipoProducto tipo) {
 		this.tipo = tipo;
+	}
+	public EstatusRegistro getEstatusRegistro() {
+		return estatusRegistro;
+	}
+	public void setEstatusRegistro(EstatusRegistro estatusRegistro) {
+		this.estatusRegistro = estatusRegistro;
+	}
+	
+	public Set<ConstraintViolation<Producto>> validarInstancia()
+	{
+		ValidatorFactory factory= Validation.buildDefaultValidatorFactory();
+		Validator validator=factory.getValidator();
+		return validator.validate(this);
 	}
 
 }

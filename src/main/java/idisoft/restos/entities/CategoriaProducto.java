@@ -12,13 +12,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(name="categorias_productos",catalog="restos")
-public class CategoriaProducto extends Registro implements Serializable{
+public class CategoriaProducto implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -29,6 +33,9 @@ public class CategoriaProducto extends Registro implements Serializable{
 	@Size(min=5,max=50)
 	@Column
 	private String nombre;
+	
+	@Column(name="estatus_registro")
+	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "categoria")
 	private Set<Producto> productos = new HashSet<Producto>(0);
@@ -49,12 +56,27 @@ public class CategoriaProducto extends Registro implements Serializable{
 		this.nombre = nombre;
 	}
 
+	public EstatusRegistro getEstatusRegistro() {
+		return estatusRegistro;
+	}
+
+	public void setEstatusRegistro(EstatusRegistro estatusRegistro) {
+		this.estatusRegistro = estatusRegistro;
+	}
+
 	public Set<Producto> getProductos() {
 		return productos;
 	}
 
 	public void setProductos(Set<Producto> productos) {
 		this.productos = productos;
+	}
+	
+	public Set<ConstraintViolation<CategoriaProducto>> validarInstancia()
+	{
+		ValidatorFactory factory= Validation.buildDefaultValidatorFactory();
+		Validator validator=factory.getValidator();
+		return validator.validate(this);
 	}
 
 }
