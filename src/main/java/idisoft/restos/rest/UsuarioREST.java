@@ -418,6 +418,11 @@ public class UsuarioREST extends RestService{
 			msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
 			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
 		}
+		else if(retorno.getEstatusRegistro()==EstatusRegistro.ELIMINADO)
+		{
+			msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
+		}
 		else
 		{
 			try
@@ -442,7 +447,7 @@ public class UsuarioREST extends RestService{
 			builder.entity(msg);
 			
 		}
-	
+				
 		return builder.build();
 	}
 

@@ -33,12 +33,12 @@ public class ConstantesREST {
 	public static final String REST_USUARIOS_FUNCION_LISTAR_INACTIVOS=REST_USUARIOS_FUNCION_LISTAR+"inactivos";
 	public static final String REST_USUARIOS_FUNCION_LISTAR_ELIMINADOS=REST_USUARIOS_FUNCION_LISTAR+"eliminados";
 	public static final String REST_USUARIOS_FUNCION_LOGIN="/entrada";
-	public static final String REST_USUARIOS_FUNCION_CREAR="/";
+	public static final String REST_USUARIOS_FUNCION_CREAR="/nuevo";
 	public static final String REST_USUARIOS_FUNCION_ACTUALIZAR="/{cedula:[V,E][0-9]*}";
 	public static final String REST_USUARIOS_FUNCION_ACTUALIZAR_PASSWORD=REST_USUARIOS_FUNCION_ACTUALIZAR+"/password";
 	public static final String REST_USUARIOS_FUNCION_ELIMINAR="/{cedula:[V,E][0-9]*}";
-	public static final String REST_USUARIOS_FUNCION_DISPONIBILIDAD_EMAIL="/email";
-	public static final String REST_USUARIOS_FUNCION_DISPONIBILIDAD_LOGIN="/login";
+	public static final String REST_USUARIOS_FUNCION_DISPONIBILIDAD_EMAIL="/disponible/email";
+	public static final String REST_USUARIOS_FUNCION_DISPONIBILIDAD_LOGIN="/disponible/login";
 	public static final String REST_USUARIOS_MENSAJE_LOGIN_FALLIDO="Autenticacion fallida";
 	public static final String REST_USUARIOS_MENSAJE_LOGIN_DISPONIBLE="Login no se encuentra registrado en el sistema";
 	public static final String REST_USUARIOS_MENSAJE_LOGIN_DUPLICADO="Login ya se encuentra registrado en el sistema";
