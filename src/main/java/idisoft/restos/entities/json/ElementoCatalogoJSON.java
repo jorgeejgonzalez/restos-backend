@@ -18,7 +18,7 @@ public class ElementoCatalogoJSON implements Serializable {
 	
 	private EstatusCatalogo estatus;
 	
-	private CatalogoJSON menu;
+	private CatalogoJSON catalogo;
 
 	public int getId() {
 		return id;
@@ -60,22 +60,22 @@ public class ElementoCatalogoJSON implements Serializable {
 		this.estatus = estatus;
 	}
 
-	public CatalogoJSON getMenu() {
-		return menu;
+	public CatalogoJSON getCatalogo() {
+		return catalogo;
 	}
 
-	public void setMenu(CatalogoJSON menu) {
-		this.menu = menu;
+	public void setCatalogo(CatalogoJSON catalogo) {
+		this.catalogo = catalogo;
 	}
 	
-	public void parseElementoFromMenu(ElementoCatalogo elementomenu)
+	public void parseElementoFromCatalogo(ElementoCatalogo elementocatalogo)
 	{
-		this.id=elementomenu.getId();
-		this.nombre=elementomenu.getNombre();
-		this.descripcion=elementomenu.getDescripcion();
-		this.precio=elementomenu.getPrecio();
-		this.estatus=elementomenu.getEstatus();
-		this.menu=null;
+		this.id=elementocatalogo.getId();
+		this.nombre=elementocatalogo.getNombre();
+		this.descripcion=elementocatalogo.getDescripcion();
+		this.precio=elementocatalogo.getPrecio();
+		this.estatus=elementocatalogo.getEstatus();
+		this.catalogo=null;
 	}
 
 }

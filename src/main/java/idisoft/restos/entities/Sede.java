@@ -66,7 +66,7 @@ public class Sede extends Registro implements Serializable{
 	private Empresa empresa;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sede")
-	private Set<Catalogo> menus = new HashSet<Catalogo>(0);
+	private Set<Catalogo> catalogos = new HashSet<Catalogo>(0);
 		
 	public int getId() {
 		return id;
@@ -117,11 +117,11 @@ public class Sede extends Registro implements Serializable{
 		this.empresa = empresa;
 	}
 	
-	public Set<Catalogo> getMenus() {
-		return menus;
+	public Set<Catalogo> getCatalogos() {
+		return catalogos;
 	}
-	public void setMenus(Set<Catalogo> menus) {
-		this.menus = menus;
+	public void setCatalogos(Set<Catalogo> catalogos) {
+		this.catalogos = catalogos;
 	}
 	public Set<ConstraintViolation<Sede>> validarInstancia()
 	{

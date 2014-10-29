@@ -84,11 +84,11 @@ public class SedeJSON implements Serializable{
 					
 		this.empresa=null;
 		
-		if(sede.getMenus()!=null)
+		if(sede.getCatalogos()!=null)
 		{
-			if(sede.getMenus().size()>0)
+			if(sede.getCatalogos().size()>0)
 			{
-				Iterator<Catalogo> iterator=sede.getMenus().iterator();
+				Iterator<Catalogo> iterator=sede.getCatalogos().iterator();
 				while(iterator.hasNext())
 				{
 					Catalogo m=iterator.next();
@@ -120,13 +120,13 @@ public class SedeJSON implements Serializable{
 		this.empresa=new EmpresaJSON();
 		this.empresa.parseEmpresaFromSede(sede.getEmpresa());
 		
-		if(sede.getMenus()!=null)
+		if(sede.getCatalogos()!=null)
 		{
-			if(sede.getMenus().size()>0)
+			if(sede.getCatalogos().size()>0)
 			{
-				for(int i=0; i<sede.getMenus().size();++i)
+				for(int i=0; i<sede.getCatalogos().size();++i)
 				{
-					Catalogo m=sede.getMenus().iterator().next();
+					Catalogo m=sede.getCatalogos().iterator().next();
 					CatalogoJSON mj=new CatalogoJSON();
 					mj.parseCatalogoFromSede(m);
 					this.catalogos.add(mj);

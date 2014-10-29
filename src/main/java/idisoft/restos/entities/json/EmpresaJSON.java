@@ -63,16 +63,16 @@ public class EmpresaJSON implements Serializable {
 		this.sedes = sedes;
 	}
 
-	public void parseEmpresa(Empresa restaurante)
+	public void parseEmpresa(Empresa empresa)
 	{
-		this.rif=restaurante.getRif();
-		this.razonSocial=restaurante.getRazonSocial();
-		this.direccionFiscal=restaurante.getDireccionFiscal();
-		if(restaurante.getSedes()!=null)
+		this.rif=empresa.getRif();
+		this.razonSocial=empresa.getRazonSocial();
+		this.direccionFiscal=empresa.getDireccionFiscal();
+		if(empresa.getSedes()!=null)
 		{
-			if(restaurante.getSedes().size()>0)
+			if(empresa.getSedes().size()>0)
 			{
-				Iterator<Sede> iterator=restaurante.getSedes().iterator();
+				Iterator<Sede> iterator=empresa.getSedes().iterator();
 				while(iterator.hasNext())
 				{
 					Sede sede=iterator.next();
@@ -92,11 +92,11 @@ public class EmpresaJSON implements Serializable {
 		}
 	}
 	
-	public void parseEmpresaFromSede(Empresa restaurante)
+	public void parseEmpresaFromSede(Empresa empresa)
 	{
-		this.rif=restaurante.getRif();
-		this.razonSocial=restaurante.getRazonSocial();
-		this.direccionFiscal=restaurante.getDireccionFiscal();
+		this.rif=empresa.getRif();
+		this.razonSocial=empresa.getRazonSocial();
+		this.direccionFiscal=empresa.getDireccionFiscal();
 		this.sedes=null;
 	}
 	

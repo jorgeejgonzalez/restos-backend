@@ -74,7 +74,7 @@ public class CatalogoJSON implements Serializable{
 				{
 					ElementoCatalogo em=iterator.next();
 					ElementoCatalogoJSON emj=new ElementoCatalogoJSON();
-					emj.parseElementoFromMenu(em);
+					emj.parseElementoFromCatalogo(em);
 					this.elementosCatalogo.add(emj);
 				}
 			}
