@@ -3,14 +3,18 @@ package idisoft.restos.rest;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 import idisoft.restos.data.ProductoRepository;
+import idisoft.restos.entities.EstatusRegistro;
 import idisoft.restos.entities.Producto;
 import idisoft.restos.entities.json.ProductoJSON;
+import idisoft.restos.services.ProductoRegistry;
 import idisoft.restos.util.ConstantesREST;
 
 import javax.inject.Inject;
+import javax.validation.ConstraintViolation;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
@@ -27,6 +31,9 @@ public class ProductoREST extends RestService {
 	
 	@Inject
 	private ProductoRepository repositorio; 
+	
+	@Inject
+	private ProductoRegistry registro;
 	
 	public Response.ResponseBuilder listarProductos(List<Producto> productos, String funcion)
 	{
@@ -118,10 +125,54 @@ public class ProductoREST extends RestService {
 	@Path(ConstantesREST.REST_PRODUCTOS_FUNCION_CREAR)
 	public Response crearProducto(Producto producto)
 	{
-		/*
-		 * TO-DO: Implement function
-		 */
-		return null;
+		Response.ResponseBuilder builder = null;
+		
+		Set<ConstraintViolation<Producto>> violaciones=producto.validarInstancia();
+		
+		if(violaciones.size()==0)
+		{
+			String msg="";
+			
+			if(repositorio.findProductoById(producto.getId())!=null)
+			{
+				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_DUPLICADA;
+				builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
+			}
+			else
+			{
+				try
+				{
+					producto.setEstatusRegistro(EstatusRegistro.INACTIVO);
+					registro.registrar(producto);			
+					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_REGISTRADA;
+					builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
+				}
+				catch(Exception ex)
+				{
+					msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
+					logger.log(Level.SEVERE,msg);					
+					builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
+				}
+			}
+			builder.entity(msg);
+		}
+		else
+		{
+			List<String> msgs=new ArrayList<String>();
+			Iterator<ConstraintViolation<Producto>> iterator=violaciones.iterator(); 
+			while(iterator.hasNext())
+			{
+				String msg=iterator.next().getMessage();
+				logger.log(Level.SEVERE,msg);
+				msgs.add(msg);
+			}
+			
+			builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
+			builder.entity(msgs);
+			
+		}
+		
+		return builder.build();
 	}
 	
 	
