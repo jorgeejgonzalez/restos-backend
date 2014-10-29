@@ -60,10 +60,14 @@ public class ConstantesREST {
 	public static final String REST_PRODUCTOS_FUNCION_ELIMINAR="/{id:[0-9]*}";
 	
 	public static final String REST_PRODUCTOS_CATEGORIAS="/categorias";
-	public static final String REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR="/";
+	public static final String REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR=REST_PRODUCTOS_CATEGORIAS+"/";
 	public static final String REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR_INACTIVOS=REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR+"inactivos";
 	public static final String REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR_ELIMINADOS=REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR+"eliminados";
 	
+	public static final String REST_PRODUCTOS_TIPOS="/tipos";
+	public static final String REST_PRODUCTOS_TIPOS_FUNCION_LISTAR=REST_PRODUCTOS_TIPOS+"/";
+	public static final String REST_PRODUCTOS_TIPOS_FUNCION_LISTAR_INACTIVOS=REST_PRODUCTOS_TIPOS_FUNCION_LISTAR+"inactivos";
+	public static final String REST_PRODUCTOS_TIPOS_FUNCION_LISTAR_ELIMINADOS=REST_PRODUCTOS_TIPOS_FUNCION_LISTAR+"eliminados";
 	
 	/*
 	 * Mensajes genericos para el uso de mensajes en log

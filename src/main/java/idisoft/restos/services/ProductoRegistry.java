@@ -1,7 +1,6 @@
 package idisoft.restos.services;
 
 import idisoft.restos.entities.Producto;
-import idisoft.restos.entities.Usuario;
 
 import javax.ejb.Stateless;
 

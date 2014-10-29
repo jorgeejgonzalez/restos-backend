@@ -50,6 +50,21 @@ public class ProductoRepository extends Repository implements ListRecords {
 		return (List<CategoriaProducto>)findAll(CategoriaProducto.class, "id");		
 	}
 	
+	public List<CategoriaProducto> findAllCategoriasProductosActive()
+	{
+		return (List<CategoriaProducto>)findAllFiltered(CategoriaProducto.class, "id",EstatusRegistro.ACTIVO);		
+	}
+	
+	public List<CategoriaProducto> findAllCategoriasProductosInactive()
+	{
+		return (List<CategoriaProducto>)findAllFiltered(CategoriaProducto.class, "id",EstatusRegistro.INACTIVO);
+	}
+	
+	public List<CategoriaProducto> findAllCategoriasProductosDeleted()
+	{
+		return (List<CategoriaProducto>)findAllFiltered(CategoriaProducto.class, "id",EstatusRegistro.ELIMINADO);
+	}
+	
 	public TipoProducto findTipoProductoById(int id)
 	{
 		return (TipoProducto)findByIntKey(TipoProducto.class, id);
@@ -58,6 +73,21 @@ public class ProductoRepository extends Repository implements ListRecords {
 	public List<TipoProducto> findAllTiposProductos()
 	{
 		return (List<TipoProducto>)findAll(TipoProducto.class, "id");		
+	}
+	
+	public List<TipoProducto> findAllTiposProductosActive()
+	{
+		return (List<TipoProducto>)findAllFiltered(TipoProducto.class, "id",EstatusRegistro.ACTIVO);		
+	}
+	
+	public List<TipoProducto> findAllTiposProductosInactive()
+	{
+		return (List<TipoProducto>)findAllFiltered(TipoProducto.class, "id",EstatusRegistro.INACTIVO);
+	}
+	
+	public List<TipoProducto> findAllTiposProductosDeleted()
+	{
+		return (List<TipoProducto>)findAllFiltered(TipoProducto.class, "id",EstatusRegistro.ELIMINADO);
 	}
 
 }

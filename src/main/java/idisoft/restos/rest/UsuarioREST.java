@@ -287,7 +287,7 @@ public class UsuarioREST extends RestService{
 			if(retorno==null)
 			{
 				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
-				builder=Response.status(Status.NOT_FOUND);
+				builder= this.builderProvider(Status.NOT_FOUND,MediaType.APPLICATION_JSON);
 			}
 			else 
 			{

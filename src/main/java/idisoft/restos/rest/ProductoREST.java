@@ -7,9 +7,13 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import idisoft.restos.data.ProductoRepository;
+import idisoft.restos.entities.CategoriaProducto;
 import idisoft.restos.entities.EstatusRegistro;
 import idisoft.restos.entities.Producto;
+import idisoft.restos.entities.TipoProducto;
+import idisoft.restos.entities.json.CategoriaProductoJSON;
 import idisoft.restos.entities.json.ProductoJSON;
+import idisoft.restos.entities.json.TipoProductoJSON;
 import idisoft.restos.services.ProductoRegistry;
 import idisoft.restos.util.ConstantesREST;
 
@@ -35,7 +39,7 @@ public class ProductoREST extends RestService {
 	@Inject
 	private ProductoRegistry registro;
 	
-	public Response.ResponseBuilder listarProductos(List<Producto> productos, String funcion)
+	private Response.ResponseBuilder listarProductos(List<Producto> productos, String funcion)
 	{
 		Response.ResponseBuilder builder = null;
 		
@@ -56,6 +60,90 @@ public class ProductoREST extends RestService {
 				}
 				
 				builder.entity(productosjson);
+				
+			}
+			else
+			{
+				String msg=funcion+": "+ConstantesREST.REST_MENSAJE_LISTA_VACIA;
+				builder=this.builderProvider(Status.NOT_FOUND,MediaType.APPLICATION_JSON);
+				builder.entity(msg);
+				logger.log(Level.WARNING,msg);
+			}
+		}
+		else
+		{
+			String msg=funcion+": "+ConstantesREST.REST_MENSAJE_LISTA_NULA;
+			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);			
+			builder.entity(msg);
+			logger.log(Level.SEVERE,msg);
+		}
+		
+		return builder;
+	}
+	
+	private Response.ResponseBuilder listarCategoriasProductos(List<CategoriaProducto> categorias, String funcion)
+	{
+		Response.ResponseBuilder builder = null;
+		
+		if(categorias!=null)
+		{
+			if(categorias.size()>0)
+			{
+				List<CategoriaProductoJSON> categoriasjson=new ArrayList<CategoriaProductoJSON>();
+				Iterator<CategoriaProducto> iterator=categorias.iterator();
+				
+				builder=this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
+				
+				while(iterator.hasNext())
+				{
+					CategoriaProductoJSON cpj=new CategoriaProductoJSON();
+					cpj.parseCategoria(iterator.next());
+					categoriasjson.add(cpj);
+				}
+				
+				builder.entity(categoriasjson);
+				
+			}
+			else
+			{
+				String msg=funcion+": "+ConstantesREST.REST_MENSAJE_LISTA_VACIA;
+				builder=this.builderProvider(Status.NOT_FOUND,MediaType.APPLICATION_JSON);
+				builder.entity(msg);
+				logger.log(Level.WARNING,msg);
+			}
+		}
+		else
+		{
+			String msg=funcion+": "+ConstantesREST.REST_MENSAJE_LISTA_NULA;
+			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);			
+			builder.entity(msg);
+			logger.log(Level.SEVERE,msg);
+		}
+		
+		return builder;
+	}
+	
+	private Response.ResponseBuilder listarTiposProductos(List<TipoProducto> tipos, String funcion)
+	{
+		Response.ResponseBuilder builder = null;
+		
+		if(tipos!=null)
+		{
+			if(tipos.size()>0)
+			{
+				List<TipoProductoJSON> tiposjson=new ArrayList<TipoProductoJSON>();
+				Iterator<TipoProducto> iterator=tipos.iterator();
+				
+				builder=this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
+				
+				while(iterator.hasNext())
+				{
+					TipoProductoJSON tpj=new TipoProductoJSON();
+					tpj.parseTipo(iterator.next());
+					tiposjson.add(tpj);
+				}
+				
+				builder.entity(tiposjson);
 				
 			}
 			else
@@ -142,7 +230,7 @@ public class ProductoREST extends RestService {
 			{
 				try
 				{
-					producto.setEstatusRegistro(EstatusRegistro.INACTIVO);
+					producto.setEstatusRegistro(EstatusRegistro.ACTIVO);
 					registro.registrar(producto);			
 					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_REGISTRADA;
 					builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
@@ -182,10 +270,59 @@ public class ProductoREST extends RestService {
 	@Path(ConstantesREST.REST_PRODUCTOS_FUNCION_ACTUALIZAR)
 	public Response actualizarProducto(@PathParam("id") int id, Producto producto)
 	{
-		/*
-		 * TO-DO: implement function
-		 */	
-		return null;
+		Response.ResponseBuilder builder = null;
+		
+		Set<ConstraintViolation<Producto>> violaciones=producto.validarInstancia();
+		
+		if(violaciones.size()==0)
+		{
+			String msg="";
+			
+			Producto retorno=repositorio.findProductoById(id);
+			
+			if(retorno==null)
+			{
+				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+				builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
+			}
+			else
+			{
+				try
+				{
+					retorno.setNombre(producto.getNombre());
+					retorno.setDescripcion(producto.getDescripcion());
+					retorno.setPrecio(producto.getPrecio());
+					
+					registro.actualizar(retorno);
+					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ACTUALIZADA;
+					builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
+				}
+				catch(Exception ex)
+				{
+					msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
+					logger.log(Level.SEVERE,msg);					
+					builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
+				}
+			}
+			builder.entity(msg);
+		}
+		else
+		{
+			List<String> msgs=new ArrayList<String>();
+			Iterator<ConstraintViolation<Producto>> iterator=violaciones.iterator(); 
+			while(iterator.hasNext())
+			{
+				String msg=iterator.next().getMessage();
+				logger.log(Level.SEVERE,msg);
+				msgs.add(msg);
+			}
+			
+			builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
+			builder.entity(msgs);
+			
+		}
+		
+		return builder.build();
 	}
 	
 	@DELETE
@@ -194,10 +331,124 @@ public class ProductoREST extends RestService {
 	@Path(ConstantesREST.REST_PRODUCTOS_FUNCION_ELIMINAR)
 	public Response eliminarProducto(@PathParam("id") int id)
 	{
-		/*
-		 * TO-DO: implement function
-		 */	
-		return null;
+		Response.ResponseBuilder builder = null;
+		
+		String msg="";
+		Producto retorno=repositorio.findProductoById(id);
+		
+		if(retorno==null)
+		{
+			msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+			builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
+		}
+		else
+		{
+			try
+			{
+				retorno.setEstatusRegistro(EstatusRegistro.ELIMINADO);
+				registro.actualizar(retorno);
+				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_REGISTRADA;
+				builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
+			}
+			catch(Exception ex)
+			{
+				msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
+				logger.log(Level.SEVERE,msg);
+				builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
+			}			
+		}
+		
+		builder.entity(msg);
+		
+		return builder.build();
 	}
+	
+		
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR)
+	public Response listarCategoriasProductosActivos()
+	{
+		Response.ResponseBuilder builder = null;
+		
+		List<CategoriaProducto> categorias=repositorio.findAllCategoriasProductosActive();
+		
+		builder=listarCategoriasProductos(categorias, ConstantesREST.REST_PRODUCTOS+ConstantesREST.REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR);
+		
+		return builder.build();
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR_INACTIVOS)
+	public Response listarCategoriasProductosInactivos()
+	{
+		Response.ResponseBuilder builder = null;
+		
+		List<CategoriaProducto> categorias=repositorio.findAllCategoriasProductosInactive();
+		
+		builder=listarCategoriasProductos(categorias, ConstantesREST.REST_PRODUCTOS+ConstantesREST.REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR_INACTIVOS);
+		
+		return builder.build();
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR_ELIMINADOS)
+	public Response listarCategoriasProductosEliminados()
+	{
+		Response.ResponseBuilder builder = null;
+		
+		List<CategoriaProducto> categorias=repositorio.findAllCategoriasProductosDeleted();
+		
+		builder=listarCategoriasProductos(categorias, ConstantesREST.REST_PRODUCTOS+ConstantesREST.REST_PRODUCTOS_CATEGORIAS_FUNCION_LISTAR_ELIMINADOS);
+		
+		return builder.build();
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_PRODUCTOS_TIPOS_FUNCION_LISTAR)
+	public Response listarTiposProductosActivos()
+	{
+		Response.ResponseBuilder builder = null;
+		
+		List<TipoProducto> tipos=repositorio.findAllTiposProductosActive();
+		
+		builder=listarTiposProductos(tipos, ConstantesREST.REST_PRODUCTOS+ConstantesREST.REST_PRODUCTOS_TIPOS_FUNCION_LISTAR);
+		
+		return builder.build();
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_PRODUCTOS_TIPOS_FUNCION_LISTAR_INACTIVOS)
+	public Response listarTiposProductosInactivos()
+	{
+		Response.ResponseBuilder builder = null;
+		
+		List<TipoProducto> tipos=repositorio.findAllTiposProductosInactive();
+		
+		builder=listarTiposProductos(tipos, ConstantesREST.REST_PRODUCTOS+ConstantesREST.REST_PRODUCTOS_TIPOS_FUNCION_LISTAR_INACTIVOS);
+		
+		return builder.build();
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_PRODUCTOS_TIPOS_FUNCION_LISTAR_ELIMINADOS)
+	public Response listarTiposProductosEliminados()
+	{
+		Response.ResponseBuilder builder = null;
+		
+		List<TipoProducto> tipos=repositorio.findAllTiposProductosDeleted();
+		
+		builder=listarTiposProductos(tipos, ConstantesREST.REST_PRODUCTOS+ConstantesREST.REST_PRODUCTOS_TIPOS_FUNCION_LISTAR_ELIMINADOS);
+		
+		return builder.build();
+	}
+	
+	
 
 }
