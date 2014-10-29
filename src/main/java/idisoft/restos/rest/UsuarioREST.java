@@ -237,6 +237,7 @@ public class UsuarioREST extends RestService{
 			{
 				try
 				{
+					usuario.setEstatusRegistro(EstatusRegistro.INACTIVO);
 					registro.registrarUsuario(usuario);			
 					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_REGISTRADA;
 					builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);

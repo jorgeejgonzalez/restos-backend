@@ -111,6 +111,29 @@ public abstract class Repository {
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected List findListByStringAndStatus(Class c, String attribute,String value, EstatusRegistro status)
+	{
+		CriteriaBuilder cb=em.getCriteriaBuilder();
+		CriteriaQuery criteria=cb.createQuery(c);		
+		Root root=criteria.from(c);		
+		Predicate condition1=cb.equal(root.get(attribute), value);
+		Predicate condition2=cb.equal(root.get("estatusRegistro"), status);
+		Predicate conditionsQuery=cb.and(condition1,condition2);
+		
+		criteria.select(root).where(conditionsQuery);
+		
+		try
+		{
+			return em.createQuery(criteria).getResultList();
+		}
+		catch(NoResultException ex)
+		{
+			//TO-DO
+			return null;
+		}
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected List findAll(Class c, String order)
 	{
 		CriteriaBuilder cb=em.getCriteriaBuilder();
