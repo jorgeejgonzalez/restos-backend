@@ -28,6 +28,7 @@ public class ProductoRegistry extends Registry {
 	
 	public void adjuntarTipo(TipoProducto tipo, Producto producto) throws Exception
 	{
+		producto.setTipo(tipo);
 		tipo.getProductos().add(producto);
 		merge(tipo,"Agregando el producto "+producto.getId() + " al tipo "+ tipo.getId());
 	}
