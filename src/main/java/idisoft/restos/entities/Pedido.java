@@ -10,12 +10,15 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @SuppressWarnings("serial")
 @Entity
@@ -23,33 +26,38 @@ import javax.persistence.Table;
 public class Pedido extends Registro implements Serializable{
 		
 	@Id
-	@Column
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
 	private int id;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="cliente")
 	private Usuario cliente;
 	
-	@Column(name="direccionentrega")
+	@NotNull
+	@Column(name="direccion_entrega")
 	private String direccionEntrega;
 	
-	@Column(name="telefonoentrega")
+	@NotNull
+	@Column(name="telefono_entrega")
 	private String telefonoEntrega;	
 	
+	@NotNull
 	@Column
 	private Date fecha;
 	
+	@NotNull
 	@Column
 	private Time hora;
 	
-	@Column(name="subtotal")
+	@Column(name="sub_total")
 	private float subTotal;
 	
-	@Column(name="porcentajeiva")
-	private float porcentajeIVA;
+	@Column(name="iva_porcentaje")
+	private float ivaPorcentaje;
 	
-	@Column(name="montoiva")
-	private float montoIVA;
+	@Column(name="iva_monto")
+	private float ivaMonto;
 	
 	@Column
 	private float total;
@@ -114,18 +122,18 @@ public class Pedido extends Registro implements Serializable{
 		this.subTotal = subTotal;
 	}
 	
-	public float getPorcentajeIVA() {
-		return porcentajeIVA;
+	public float getIvaPorcentaje() {
+		return ivaPorcentaje;
 	}
-	public void setPorcentajeIVA(float porcentajeIVA) {
-		this.porcentajeIVA = porcentajeIVA;
+	public void setIvaPorcentaje(float ivaporcentaje) {
+		this.ivaPorcentaje = ivaporcentaje;
 	}
 	
-	public float getMontoIVA() {
-		return montoIVA;
+	public float getIvaMonto() {
+		return ivaMonto;
 	}
-	public void setMontoIVA(float montoIVA) {
-		this.montoIVA = montoIVA;
+	public void setIvaMonto(float ivamonto) {
+		this.ivaMonto = ivamonto;
 	}
 	
 	public float getTotal() {
@@ -140,6 +148,13 @@ public class Pedido extends Registro implements Serializable{
 	}
 	public void setEstatus(EstatusPedido estatus) {
 		this.estatus = estatus;
+	}
+	
+	public Set<ElementoCatalogo> getElementos() {
+		return elementos;
+	}
+	public void setElementos(Set<ElementoCatalogo> elementos) {
+		this.elementos = elementos;
 	}
 
 }

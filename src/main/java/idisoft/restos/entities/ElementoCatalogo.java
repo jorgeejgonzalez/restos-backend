@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name="catalogo_elementos")
+@Table(name="catalogo_elementos",catalog="restos")
 public class ElementoCatalogo extends Registro implements Serializable {
 	
 	@Id
@@ -38,10 +38,6 @@ public class ElementoCatalogo extends Registro implements Serializable {
 	@NotNull
 	@Column
 	private EstatusCatalogo estatus;
-	
-	@NotNull
-	@Column
-	private int unidades;
 		
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
@@ -83,18 +79,11 @@ public class ElementoCatalogo extends Registro implements Serializable {
 		this.estatus = estatus;
 	}
 	
-	public int getUnidades() {
-		return unidades;
-	}
-	public void setUnidades(int unidades) {
-		this.unidades = unidades;
-	}
-	
-	public Catalogo getMenu() {
+	public Catalogo getCatalogo() {
 		return catalogo;
 	}
-	public void setMenu(Catalogo menu) {
-		this.catalogo = menu;
+	public void setCatalogo(Catalogo catalogo) {
+		this.catalogo = catalogo;
 	}
 	
 }

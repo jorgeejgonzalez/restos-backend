@@ -7,6 +7,8 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,10 +26,14 @@ import org.hibernate.validator.constraints.Email;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name="sedes")
+@Table(name="sedes", catalog="restos")
 public class Sede extends Registro implements Serializable{
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
+	private int id;
+	
 	@NotNull
 	@Size(min=10,max=10)
 	@Pattern(regexp="[J,V,E,G][0-9]*",message="debe cumplir el formato de rif sin guiones")	
@@ -45,7 +51,7 @@ public class Sede extends Registro implements Serializable{
 	private String email;
 	
 	@NotNull
-	@Column
+	@Column(name="direccion_fisica")
 	private String direccionFisica;
 	
 	@NotNull
@@ -61,6 +67,13 @@ public class Sede extends Registro implements Serializable{
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sede")
 	private Set<Catalogo> menus = new HashSet<Catalogo>(0);
+		
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 	public String getRif() {
 		return rif;

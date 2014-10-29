@@ -20,7 +20,7 @@ import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name="empresas")
+@Table(name="empresas",catalog="restos")
 public class Empresa extends Registro implements Serializable {
 	
 	@Id
@@ -32,12 +32,12 @@ public class Empresa extends Registro implements Serializable {
 	
 	@NotNull
 	@Size(min=10,max=100)
-	@Column(name="razonsocial")
+	@Column(name="razon_social")
 	private String razonSocial;
 	
 	@NotNull
 	@Size(min=10,max=100)
-	@Column(name="direccionfiscal")
+	@Column(name="direccion_fiscal")
 	private String direccionFiscal;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "empresa")

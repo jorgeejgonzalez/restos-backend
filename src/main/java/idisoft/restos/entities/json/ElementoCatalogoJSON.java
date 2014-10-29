@@ -18,8 +18,6 @@ public class ElementoCatalogoJSON implements Serializable {
 	
 	private EstatusCatalogo estatus;
 	
-	private int unidades;
-		
 	private CatalogoJSON menu;
 
 	public int getId() {
@@ -62,14 +60,6 @@ public class ElementoCatalogoJSON implements Serializable {
 		this.estatus = estatus;
 	}
 
-	public int getUnidades() {
-		return unidades;
-	}
-
-	public void setUnidades(int unidades) {
-		this.unidades = unidades;
-	}
-
 	public CatalogoJSON getMenu() {
 		return menu;
 	}
@@ -84,7 +74,6 @@ public class ElementoCatalogoJSON implements Serializable {
 		this.nombre=elementomenu.getNombre();
 		this.descripcion=elementomenu.getDescripcion();
 		this.precio=elementomenu.getPrecio();
-		this.unidades=elementomenu.getUnidades();
 		this.estatus=elementomenu.getEstatus();
 		this.menu=null;
 	}

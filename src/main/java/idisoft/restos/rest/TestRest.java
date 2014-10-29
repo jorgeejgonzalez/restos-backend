@@ -371,8 +371,8 @@ public class TestRest {
 		p.setHora(hora);
 		p.setFecha(fecha);		
 		p.setSubTotal(subTotal);
-		p.setPorcentajeIVA(porcentajeIVA);
-		p.setMontoIVA(montoIVA);
+		p.setIvaPorcentaje(porcentajeIVA);
+		p.setIvaMonto(montoIVA);
 		p.setTotal(total);
 		
 		return p;
