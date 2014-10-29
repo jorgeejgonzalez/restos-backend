@@ -33,7 +33,7 @@ import org.hibernate.validator.constraints.Email;
 				@UniqueConstraint(columnNames="login")
 		}
 )
-public class Usuario extends Registro implements Serializable {
+public class Usuario implements Serializable {
 	
 	@NotNull(message="usuario.login: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO)
 	@Size(min=6,max=20,message="usuario.login: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "6 y 20")
@@ -78,6 +78,9 @@ public class Usuario extends Registro implements Serializable {
 	@Column
 	private String telefono;
 	
+	@Column(name="estatus_registro")
+	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
+	
 	public Usuario()
 	{	
 	}
@@ -100,7 +103,7 @@ public class Usuario extends Registro implements Serializable {
 		this.apellido=apellido;
 		this.cedula=cedula;
 		this.direccion=direccion;
-		this.telefono=telefono;
+		this.telefono=telefono;		
 	}
 		
 	public String getLogin() {
@@ -175,6 +178,14 @@ public class Usuario extends Registro implements Serializable {
 		this.telefono = telefono;
 	}
 	
+	public EstatusRegistro getEstatusRegistro() {
+		return estatusRegistro;
+	}
+
+	public void setEstatusRegistro(EstatusRegistro estatusRegistro) {
+		this.estatusRegistro = estatusRegistro;
+	}
+
 	public Set<ConstraintViolation<Usuario>> validarInstancia()
 	{
 		ValidatorFactory factory= Validation.buildDefaultValidatorFactory();

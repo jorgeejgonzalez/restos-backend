@@ -1,5 +1,6 @@
 package idisoft.restos.services;
 
+import idisoft.restos.entities.EstatusRegistro;
 import idisoft.restos.entities.Usuario;
 
 import java.util.logging.Logger;
@@ -20,6 +21,7 @@ public class UsuarioRegistro {
 	public void registrarUsuario(Usuario usuario) throws Exception
 	{
 		log.info("Registrando a " + usuario.getNombre()+ " "+usuario.getApellido());
+		usuario.setEstatusRegistro(EstatusRegistro.INACTIVO);
 		em.persist(usuario);
 	}
 	

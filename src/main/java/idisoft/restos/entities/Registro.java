@@ -5,7 +5,7 @@ import javax.persistence.Column;
 public abstract class Registro {
 	
 	@Column(name="estatus_registro")
-	private EstatusRegistro estatusRegistro;
+	protected EstatusRegistro estatusRegistro;
 
 	public EstatusRegistro getEstatusRegistro() {
 		return estatusRegistro;

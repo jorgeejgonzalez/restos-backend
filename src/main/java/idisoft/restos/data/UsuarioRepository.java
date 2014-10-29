@@ -2,13 +2,14 @@ package idisoft.restos.data;
 
 import java.util.List;
 
+import idisoft.restos.entities.EstatusRegistro;
 import idisoft.restos.entities.Usuario;
 
 import javax.enterprise.context.ApplicationScoped;
 
 
 @ApplicationScoped
-public class UsuarioRepository extends Repository {
+public class UsuarioRepository extends Repository implements ListRecords{
 	
 	
 	public Usuario findByCedula(String cedula)
@@ -30,6 +31,24 @@ public class UsuarioRepository extends Repository {
 	public List<Usuario> findAll()
 	{
 		return findAll(Usuario.class, "cedula");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Usuario> findAllActive()
+	{
+		return findAllFiltered(Usuario.class, "cedula", EstatusRegistro.ACTIVO);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Usuario> findAllInactive()
+	{
+		return findAllFiltered(Usuario.class, "cedula", EstatusRegistro.INACTIVO);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Usuario> findAllDeleted()
+	{
+		return findAllFiltered(Usuario.class, "cedula", EstatusRegistro.ELIMINADO);
 	}
 	
 	

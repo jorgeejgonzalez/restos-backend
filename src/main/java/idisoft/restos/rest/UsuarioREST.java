@@ -1,6 +1,7 @@
 package idisoft.restos.rest;
 
 import idisoft.restos.data.UsuarioRepository;
+import idisoft.restos.entities.EstatusRegistro;
 import idisoft.restos.entities.Usuario;
 import idisoft.restos.entities.json.UsuarioJSON;
 import idisoft.restos.services.UsuarioRegistro;
@@ -11,11 +12,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -26,25 +27,18 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 @Path(ConstantesREST.REST_USUARIOS)
-public class UsuarioREST {
+public class UsuarioREST extends RestService{
 	
-	@Inject
-	private Logger logger;
 	
 	@Inject
 	private UsuarioRepository repositorio;
 	
 	@Inject
-	UsuarioRegistro registro;
+	private UsuarioRegistro registro;
 	
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path(ConstantesREST.REST_USUARIOS_FUNCION_LISTAR)
-	public Response listarUsuarios()
+	private Response.ResponseBuilder listarUsuarios(List<Usuario> usuarios, String funcion)
 	{
 		Response.ResponseBuilder builder = null;
-		
-		List<Usuario> usuarios=repositorio.findAll();
 		
 		if(usuarios!=null)
 		{
@@ -53,7 +47,7 @@ public class UsuarioREST {
 				List<UsuarioJSON> usuariosjson=new ArrayList<UsuarioJSON>();
 				Iterator<Usuario> iterator=usuarios.iterator();
 				
-				builder=Response.status(Status.OK);
+				builder=this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
 				
 				while(iterator.hasNext())
 				{
@@ -67,27 +61,62 @@ public class UsuarioREST {
 			}
 			else
 			{
-				String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LISTAR+": "+ConstantesREST.REST_MENSAJE_LISTA_VACIA;
-				builder=Response.status(Status.NOT_FOUND);
+				String msg=funcion+": "+ConstantesREST.REST_MENSAJE_LISTA_VACIA;
+				builder=this.builderProvider(Status.NOT_FOUND,MediaType.APPLICATION_JSON);
 				builder.entity(msg);
 				logger.log(Level.WARNING,msg);
 			}
 		}
 		else
 		{
-			String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LISTAR+": "+ConstantesREST.REST_MENSAJE_LISTA_NULA;
-			builder=Response.status(Status.NOT_FOUND);			
+			String msg=funcion+": "+ConstantesREST.REST_MENSAJE_LISTA_NULA;
+			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);			
 			builder.entity(msg);
 			logger.log(Level.SEVERE,msg);
 		}
 		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE,ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE_VALUE);
+		return builder;
+	
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_FUNCION_LISTAR)
+	public Response listarUsuariosActivos()
+	{
+		Response.ResponseBuilder builder = null;
 		
-		builder.type(MediaType.APPLICATION_JSON);
+		List<Usuario> usuarios=repositorio.findAllActive();
+		
+		builder=listarUsuarios(usuarios, ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LISTAR);
+		
+		return builder.build();
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_FUNCION_LISTAR_INACTIVOS)
+	public Response listarUsuariosInActivos()
+	{
+		Response.ResponseBuilder builder = null;
+		
+		List<Usuario> usuarios=repositorio.findAllInactive();
+		
+		builder=listarUsuarios(usuarios, ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LISTAR_INACTIVOS);
+		
+		return builder.build();
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_FUNCION_LISTAR_ELIMINADOS)
+	public Response listarUsuariosEliminados()
+	{
+		Response.ResponseBuilder builder = null;
+		
+		List<Usuario> usuarios=repositorio.findAllInactive();
+		
+		builder=listarUsuarios(usuarios, ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LISTAR_ELIMINADOS);
 		
 		return builder.build();
 	}
@@ -108,13 +137,13 @@ public class UsuarioREST {
 				UsuarioJSON retornoJSON=new UsuarioJSON();
 				retornoJSON.parseUsuario(retorno);
 				
-				builder=Response.status(Status.OK);
+				builder=this.builderProvider(Status.OK,MediaType.APPLICATION_JSON);
 				builder.entity(retornoJSON);
 			}
 			else
 			{
 				String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LOGIN+": "+ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_FALLIDO;
-				builder=Response.status(Status.NOT_FOUND);
+				builder=this.builderProvider(Status.NOT_FOUND,MediaType.APPLICATION_JSON);
 				builder.entity(msg);
 				logger.log(Level.WARNING,msg);
 			}
@@ -122,18 +151,10 @@ public class UsuarioREST {
 		else
 		{
 			String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LOGIN+": "+ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
-			builder=Response.status(Status.NOT_FOUND);			
+			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);		
 			builder.entity(msg);
 			logger.log(Level.SEVERE,msg);
 		}
-		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE,ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE_VALUE);
-		
-		builder.type(MediaType.APPLICATION_JSON);
 		
 		return builder.build();
 	}
@@ -148,22 +169,14 @@ public class UsuarioREST {
 		
 		if(repositorio.findByEmail(usuario.getEmail())==null)
 		{
-			builder=Response.status(Status.OK);
+			builder=this.builderProvider(Status.OK,MediaType.APPLICATION_JSON);
 			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_EMAIL_DISPONIBLE);
 		}
 		else
 		{
-			builder=Response.status(Status.CONFLICT);
+			builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
 			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_EMAIL_DUPLICADO);
 		}
-		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE,ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE_VALUE);
-		
-		builder.type(MediaType.APPLICATION_JSON);
 		
 		return builder.build();
 	}
@@ -178,22 +191,14 @@ public class UsuarioREST {
 		
 		if(repositorio.findByLogin(usuario.getLogin())==null)
 		{
-			builder=Response.status(Status.OK);
+			builder=this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
 			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_DISPONIBLE);
 		}
 		else
 		{
-			builder=Response.status(Status.CONFLICT);
+			builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
 			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_DUPLICADO);
 		}
-		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE,ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE_VALUE);
-		
-		builder.type(MediaType.APPLICATION_JSON);
 		
 		return builder.build();
 	
@@ -216,17 +221,17 @@ public class UsuarioREST {
 			if(repositorio.findByCedula(usuario.getCedula())!=null)
 			{
 				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_DUPLICADA;
-				builder=Response.status(Status.CONFLICT);
+				builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
 			}
 			else if(repositorio.findByLogin(usuario.getLogin())!=null)
 			{
 				msg= ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_DUPLICADO;
-				builder=Response.status(Status.CONFLICT);
+				builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
 			}
 			else if(repositorio.findByEmail(usuario.getEmail())!=null)
 			{
 				msg= ConstantesREST.REST_USUARIOS_MENSAJE_EMAIL_DUPLICADO;
-				builder=Response.status(Status.CONFLICT);
+				builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
 			}
 			else
 			{
@@ -234,14 +239,14 @@ public class UsuarioREST {
 				{
 					registro.registrarUsuario(usuario);			
 					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_REGISTRADA;
-					builder = Response.ok();
+					builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
 				}
 				
 				catch(Exception ex)
 				{
 					msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
 					logger.log(Level.SEVERE,msg);					
-					builder=Response.status(Status.INTERNAL_SERVER_ERROR);
+					builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
 				}
 			}
 			builder.entity(msg);
@@ -257,18 +262,10 @@ public class UsuarioREST {
 				msgs.add(msg);
 			}
 			
-			builder=Response.status(Status.INTERNAL_SERVER_ERROR);
+			builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
 			builder.entity(msgs);
 			
 		}
-		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE,ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE_VALUE);
-		
-		builder.type(MediaType.APPLICATION_JSON);
 		
 		return builder.build();
 	}
@@ -308,7 +305,7 @@ public class UsuarioREST {
 					
 					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ACTUALIZADA;
 					
-					builder = Response.ok();
+					builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
 				}
 				
 				catch(Exception ex)
@@ -317,7 +314,7 @@ public class UsuarioREST {
 				
 					logger.log(Level.SEVERE,msg);					
 					
-					builder=Response.status(Status.INTERNAL_SERVER_ERROR);
+					builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
 				}
 			}
 			
@@ -335,18 +332,10 @@ public class UsuarioREST {
 				msgs.add(msg);
 			}
 			
-			builder=Response.status(Status.INTERNAL_SERVER_ERROR);
+			builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
 			builder.entity(msgs);
 			
 		}
-		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE,ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE_VALUE);
-		
-		builder.type(MediaType.APPLICATION_JSON);
 		
 		return builder.build();
 	}
@@ -368,7 +357,7 @@ public class UsuarioREST {
 			if(retorno==null)
 			{
 				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
-				builder=Response.status(Status.NOT_FOUND);
+				builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
 			}
 			else 
 			{
@@ -380,7 +369,7 @@ public class UsuarioREST {
 					
 					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ACTUALIZADA;
 					
-					builder = Response.ok();
+					builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
 				}
 				
 				catch(Exception ex)
@@ -389,7 +378,7 @@ public class UsuarioREST {
 				
 					logger.log(Level.SEVERE,msg);					
 					
-					builder=Response.status(Status.INTERNAL_SERVER_ERROR);
+					builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
 				}
 			}
 			
@@ -407,19 +396,52 @@ public class UsuarioREST {
 				msgs.add(msg);
 			}
 			
-			builder=Response.status(Status.INTERNAL_SERVER_ERROR);
+			builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
 			builder.entity(msgs);
 			
 		}
 		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN_VALUE);		
-		builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_HEADERS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS,ConstantesREST.REST_HEADER_ACCESS_CONTROL_ALLOW_METHODS_VALUE);
-        builder.header(ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE,ConstantesREST.REST_HEADER_ACCESS_CONTROL_MAX_AGE_VALUE);
-		
-		builder.type(MediaType.APPLICATION_JSON);
-		
+		return builder.build();
+	}
+	
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_FUNCION_ELIMINAR)
+	public Response eliminarUsuario(@PathParam("cedula") String cedula)
+	{
+		Response.ResponseBuilder builder = null;
+		String msg="";
+		Usuario retorno=repositorio.findByCedula(cedula);
+		if(retorno==null)
+		{
+			msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
+		}
+		else
+		{
+			try
+			{
+				retorno.setEstatusRegistro(EstatusRegistro.ELIMINADO);
+
+				registro.actualizarUsuario(retorno);
+
+				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ELIMINADA;
+
+				builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
+
+			}
+			catch(Exception ex)
+			{
+				msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
+				logger.log(Level.SEVERE,msg);
+				builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
+				
+			}
+			
+			builder.entity(msg);
+			
+		}
+	
 		return builder.build();
 	}
 

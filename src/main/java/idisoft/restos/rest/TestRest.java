@@ -115,7 +115,7 @@ public class TestRest {
 		//return usuarioRepository.findAll(); 
 		Response.ResponseBuilder builder = null;
 		
-		List<Usuario> usuarios=usuarioRepository.findAll();
+		List<Usuario> usuarios=usuarioRepository.findAllActive();
 		
 		if(usuarios!=null)
 		{

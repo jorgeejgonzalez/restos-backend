@@ -44,7 +44,7 @@ public class UsuarioRegistroTest {
 	
 	@Test
 	public void testRegistro() throws Exception {		
-		assertEquals(1,repositorio.findAll().size());
+		assertEquals(1,repositorio.findAllActive().size());
 	}
 
 }
