@@ -105,7 +105,7 @@ public class UsuarioJSON implements Serializable{
 	{
 		this.cedula=usuario.getCedula();
 		this.login =usuario.getLogin();
-		this.password=MensajesEntidades.HIDE_PASSSWORD;
+		this.password=MensajesEntidades.USUARIO_CLAVE_OCULTA;
 		this.email=usuario.getEmail();
 		this.nombre=usuario.getNombre();
 		this.apellido=usuario.getApellido();

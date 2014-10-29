@@ -19,6 +19,9 @@ import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @SuppressWarnings("serial")
 @Entity
 @Table(name="categorias_productos",catalog="restos")
@@ -38,6 +41,7 @@ public class CategoriaProducto implements Serializable{
 	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "categoria")
+	@Cascade(CascadeType.ALL)
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	
 	public int getId() {

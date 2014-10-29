@@ -2,8 +2,14 @@ package idisoft.restos.util;
 
 public abstract class MensajesEntidades {
 	
-	public static final String HIDE_PASSSWORD="*********";
+	/*
+	 * La mascara para las claves en el JASON de usuarios
+	 */	
+	public static final String USUARIO_CLAVE_OCULTA="*********";
 	
+	/*
+	 * Los mensajes que utilizan las entidades al validarse
+	 */
 	public static final String VALIDACION_STRING_VALOR_NULO="valor invalido, no puede ser nulo";	
 	public static final String VALIDACION_STRING_VALOR_LONGITUD="valor invalido, la longitud debe ser entre ";
 	public static final String VALIDACION_STRING_VALOR_NUMERICO="valor invalido, debe ser solamente numeros";

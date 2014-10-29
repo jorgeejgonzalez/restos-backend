@@ -1,6 +1,8 @@
 package idisoft.restos.services;
 
+import idisoft.restos.entities.CategoriaProducto;
 import idisoft.restos.entities.Producto;
+import idisoft.restos.entities.TipoProducto;
 
 import javax.ejb.Stateless;
 
@@ -15,6 +17,19 @@ public class ProductoRegistry extends Registry {
 	public void actualizar(Producto producto) throws Exception
 	{
 		merge(producto,"Actualizando el producto " + producto.getId());		
+	}
+	
+	public void adjuntarCategoria(CategoriaProducto categoria, Producto producto) throws Exception
+	{
+		producto.setCategoria(categoria);
+		categoria.getProductos().add(producto);
+		merge(categoria,"Agregando el producto "+producto.getId() + " a la categoria "+ categoria.getId());
+	}
+	
+	public void adjuntarTipo(TipoProducto tipo, Producto producto) throws Exception
+	{
+		tipo.getProductos().add(producto);
+		merge(tipo,"Agregando el producto "+producto.getId() + " al tipo "+ tipo.getId());
 	}
 
 }
