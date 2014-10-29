@@ -2,7 +2,7 @@ package idisoft.restos.entities.test.arquillian;
 
 import static org.junit.Assert.assertEquals;
 import idisoft.restos.data.UsuarioRepository;
-import idisoft.restos.services.UsuarioRegistro;
+import idisoft.restos.services.UsuarioRegistry;
 
 import java.util.logging.Logger;
 
@@ -37,7 +37,7 @@ public class UsuarioRegistroTest {
 	Logger log;
 	
 	@Inject
-	UsuarioRegistro usuarioRegistro;
+	UsuarioRegistry usuarioRegistro;
 	
 	@Inject
 	UsuarioRepository repositorio;

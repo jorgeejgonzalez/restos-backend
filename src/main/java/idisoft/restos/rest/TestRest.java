@@ -31,7 +31,7 @@ import idisoft.restos.entities.json.EmpresaJSON;
 import idisoft.restos.entities.json.SedeJSON;
 import idisoft.restos.entities.json.TipoProductoJSON;
 import idisoft.restos.entities.json.UsuarioJSON;
-import idisoft.restos.services.UsuarioRegistro;
+import idisoft.restos.services.UsuarioRegistry;
 
 
 
@@ -42,7 +42,7 @@ public class TestRest {
 	private UsuarioRepository usuarioRepository;
 
 	@Inject
-	UsuarioRegistro registration;
+	UsuarioRegistry registration;
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)	

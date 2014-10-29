@@ -4,7 +4,7 @@ import idisoft.restos.data.UsuarioRepository;
 import idisoft.restos.entities.EstatusRegistro;
 import idisoft.restos.entities.Usuario;
 import idisoft.restos.entities.json.UsuarioJSON;
-import idisoft.restos.services.UsuarioRegistro;
+import idisoft.restos.services.UsuarioRegistry;
 import idisoft.restos.util.ConstantesREST;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class UsuarioREST extends RestService{
 	private UsuarioRepository repositorio;
 	
 	@Inject
-	private UsuarioRegistro registro;
+	private UsuarioRegistry registro;
 	
 	private Response.ResponseBuilder listarUsuarios(List<Usuario> usuarios, String funcion)
 	{
@@ -237,7 +237,7 @@ public class UsuarioREST extends RestService{
 				try
 				{
 					usuario.setEstatusRegistro(EstatusRegistro.INACTIVO);
-					registro.registrarUsuario(usuario);			
+					registro.registrar(usuario);			
 					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_REGISTRADA;
 					builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
 				}
@@ -301,7 +301,7 @@ public class UsuarioREST extends RestService{
 					retorno.setLogin(usuario.getLogin());
 					retorno.setEmail(usuario.getEmail());
 					
-					registro.actualizarUsuario(retorno);			
+					registro.actualizar(retorno);			
 					
 					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ACTUALIZADA;
 					
@@ -365,7 +365,7 @@ public class UsuarioREST extends RestService{
 				{
 					retorno.setPassword(usuario.getPassword());
 					
-					registro.actualizarUsuario(retorno);			
+					registro.actualizar(retorno);			
 					
 					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ACTUALIZADA;
 					
@@ -428,7 +428,7 @@ public class UsuarioREST extends RestService{
 			{
 				retorno.setEstatusRegistro(EstatusRegistro.ELIMINADO);
 
-				registro.actualizarUsuario(retorno);
+				registro.actualizar(retorno);
 
 				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ELIMINADA;
 
@@ -474,7 +474,7 @@ public class UsuarioREST extends RestService{
 			{
 				retorno.setEstatusRegistro(EstatusRegistro.ACTIVO);
 
-				registro.actualizarUsuario(retorno);
+				registro.actualizar(retorno);
 
 				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ELIMINADA;
 
