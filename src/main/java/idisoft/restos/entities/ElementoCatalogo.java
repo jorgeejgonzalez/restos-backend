@@ -47,8 +47,7 @@ public class ElementoCatalogo implements Serializable {
 	@Column(name="estatus_registro")
 	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)	
 	@JoinColumn(name="catalogo")
 	private Catalogo catalogo;
 	

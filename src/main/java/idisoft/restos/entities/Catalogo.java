@@ -14,7 +14,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @SuppressWarnings("serial")
 @Entity
@@ -43,6 +50,7 @@ public class Catalogo implements Serializable{
 	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "catalogo")
+	@Cascade(CascadeType.ALL)
 	private Set<ElementoCatalogo> elementosCatalogo = new HashSet<ElementoCatalogo>(0);
 	
 	public int getId() {
@@ -84,6 +92,13 @@ public class Catalogo implements Serializable{
 	}
 	public void setElementosCatalogo(Set<ElementoCatalogo> elementosCatalogo) {
 		this.elementosCatalogo = elementosCatalogo;
+	}
+	
+	public Set<ConstraintViolation<Catalogo>> validarInstancia()
+	{
+		ValidatorFactory factory= Validation.buildDefaultValidatorFactory();
+		Validator validator=factory.getValidator();
+		return validator.validate(this);
 	}
 	
 }

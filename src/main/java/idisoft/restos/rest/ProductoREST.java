@@ -396,7 +396,9 @@ public class ProductoREST extends RestService {
 				{
 					try
 					{
-						registro.adjuntarCategoria(categoria, producto);
+						producto.setCategoria(categoria);
+						categoria.getProductos().add(producto);
+						registro.adjuntarCategoria(categoria,producto);
 						
 						builder=this.builderProvider(Status.OK,MediaType.APPLICATION_JSON);
 					}
@@ -414,6 +416,58 @@ public class ProductoREST extends RestService {
 		return builder.build();
 	}
 	
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_PRODUCTOS_TIPOS_FUNCION_ADJUNTAR)
+	public Response adjuntarProductoTipo(@PathParam("producto") int productoid, @PathParam("tipo") int tipoid)
+	{
+		Response.ResponseBuilder builder = null;
+		
+		String msg="";
+		Producto producto=repositorio.findProductoById(productoid);
+		
+		if(producto==null)
+		{
+			builder=this.builderProvider(Status.NOT_FOUND,MediaType.APPLICATION_JSON);
+		}
+		else
+		{
+			if(producto.getTipo().getId()==tipoid)
+			{
+				builder=this.builderProvider(Status.NOT_MODIFIED, MediaType.APPLICATION_JSON);
+			}
+			else
+			{
+				TipoProducto tipo=repositorio.findTipoProductoById(tipoid);
+				
+				if(tipo==null)
+				{
+					builder=this.builderProvider(Status.NOT_FOUND,MediaType.APPLICATION_JSON);
+				}
+				else
+				{
+					try
+					{
+						producto.setTipo(tipo);
+						tipo.getProductos().add(producto);
+						registro.adjuntarTipo(tipo,producto);
+						
+						builder=this.builderProvider(Status.OK,MediaType.APPLICATION_JSON);
+					}
+					catch(Exception ex)
+					{
+						msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
+						logger.log(Level.SEVERE,msg);
+						builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
+					}
+				}
+			}
+		}
+		
+		builder.entity(msg);
+		return builder.build();
+	}
 	
 		
 	

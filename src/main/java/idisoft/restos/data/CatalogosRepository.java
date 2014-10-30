@@ -1,6 +1,7 @@
 package idisoft.restos.data;
 
 import idisoft.restos.entities.Catalogo;
+import idisoft.restos.entities.ElementoCatalogo;
 import idisoft.restos.entities.EstatusRegistro;
 import idisoft.restos.entities.Sede;
 
@@ -18,6 +19,11 @@ public class CatalogosRepository extends Repository implements ListRecords {
 	public Sede findSedeById(int id)
 	{
 		return (Sede)findByIntKey(Sede.class, id);
+	}
+	
+	public ElementoCatalogo findElementoById(int id)
+	{
+		return (ElementoCatalogo)findByIntKey(ElementoCatalogo.class, id);
 	}
 	
 	@SuppressWarnings("unchecked")

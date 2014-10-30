@@ -69,6 +69,7 @@ public class ConstantesREST {
 	public static final String REST_PRODUCTOS_TIPOS_FUNCION_LISTAR=REST_PRODUCTOS_TIPOS+"/";
 	public static final String REST_PRODUCTOS_TIPOS_FUNCION_LISTAR_INACTIVOS=REST_PRODUCTOS_TIPOS_FUNCION_LISTAR+"inactivos";
 	public static final String REST_PRODUCTOS_TIPOS_FUNCION_LISTAR_ELIMINADOS=REST_PRODUCTOS_TIPOS_FUNCION_LISTAR+"eliminados";
+	public static final String REST_PRODUCTOS_TIPOS_FUNCION_ADJUNTAR="/{producto:[0-9]*}"+REST_PRODUCTOS_TIPOS+"/{tipo:[0-9]*}";
 	
 	/*
 	 * REST de manejo de catalogos
@@ -80,7 +81,13 @@ public class ConstantesREST {
 	public static final String REST_CATALOGOS_FUNCION_CREAR="/nuevo";
 	public static final String REST_CATALOGOS_FUNCION_ACTUALIZAR="/{id:[0-9]*}";
 	
-	public static final String REST_CATALOGOS_SEDE_FUNCION_LISTAR=REST_CATALOGOS_FUNCION_LISTAR+"sede/{id:[0-9]*}";
+	public static final String REST_CATALOGOS_ELEMENTOS="/elementos";
+	public static final String REST_CATALOGOS_ELEMENTOS_FUNCION_LISTAR=REST_CATALOGOS_ELEMENTOS+"/";
+	public static final String REST_CATALOGOS_ELEMENTOS_FUNCION_ADJUNTAR_NUEVO=REST_CATALOGOS_FUNCION_ACTUALIZAR+REST_CATALOGOS_ELEMENTOS+"/nuevo";
+	public static final String REST_CATALOGOS_ELEMENTOS_FUNCION_ADJUNTAR_EXISTENTE=REST_CATALOGOS_FUNCION_ACTUALIZAR+REST_CATALOGOS_ELEMENTOS+"/{elemento:[0-9]*}";
+	
+	public static final String REST_CATALOGOS_SEDE="/sede";
+	public static final String REST_CATALOGOS_SEDE_FUNCION_LISTAR=REST_CATALOGOS_SEDE+"/{id:[0-9]*}";
 	public static final String REST_CATALOGOS_SEDE_FUNCION_LISTAR_INACTIVOS=REST_CATALOGOS_SEDE_FUNCION_LISTAR+"/inactivos";
 	public static final String REST_CATALOGOS_SEDE_FUNCION_LISTAR_ELIMINADOS=REST_CATALOGOS_SEDE_FUNCION_LISTAR+"/eliminados";
 		
@@ -91,10 +98,12 @@ public class ConstantesREST {
 	public static final String REST_MENSAJE_ENTIDAD_REGISTRADA="Registro agregado exitosamente";
 	public static final String REST_MENSAJE_ENTIDAD_ACTUALIZADA="Registro actualizado exitosamente";
 	public static final String REST_MENSAJE_ENTIDAD_ELIMINADA="Registro eliminado exitosamente";
+	public static final String REST_MENSAJE_ENTIDAD_INTACTA="Registro no se modifico";
 	public static final String REST_MENSAJE_ENTIDAD_NULA="Registro no se encuentra en sistema";
 	public static final String REST_MENSAJE_ENTIDAD_DUPLICADA="Registro ya existe en sistema";
 	public static final String REST_MENSAJE_LISTA_VACIA="Lista no devolvio valores";
 	public static final String REST_MENSAJE_LISTA_NULA="Lista de valores es nula";
 
 }
+
 

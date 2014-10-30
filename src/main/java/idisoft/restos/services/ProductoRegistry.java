@@ -21,15 +21,12 @@ public class ProductoRegistry extends Registry {
 	
 	public void adjuntarCategoria(CategoriaProducto categoria, Producto producto) throws Exception
 	{
-		producto.setCategoria(categoria);
-		categoria.getProductos().add(producto);
+		
 		merge(categoria,"Agregando el producto "+producto.getId() + " a la categoria "+ categoria.getId());
 	}
 	
 	public void adjuntarTipo(TipoProducto tipo, Producto producto) throws Exception
 	{
-		producto.setTipo(tipo);
-		tipo.getProductos().add(producto);
 		merge(tipo,"Agregando el producto "+producto.getId() + " al tipo "+ tipo.getId());
 	}
 
