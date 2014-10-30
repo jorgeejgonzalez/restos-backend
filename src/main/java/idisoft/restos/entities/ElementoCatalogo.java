@@ -1,6 +1,7 @@
 package idisoft.restos.entities;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,12 +12,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotNull;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(name="catalogo_elementos",catalog="restos")
-public class ElementoCatalogo extends Registro implements Serializable {
+public class ElementoCatalogo implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -38,7 +43,10 @@ public class ElementoCatalogo extends Registro implements Serializable {
 	@NotNull
 	@Column
 	private EstatusCatalogo estatus;
-		
+	
+	@Column(name="estatus_registro")
+	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
 	@JoinColumn(name="catalogo")
@@ -84,6 +92,20 @@ public class ElementoCatalogo extends Registro implements Serializable {
 	}
 	public void setCatalogo(Catalogo catalogo) {
 		this.catalogo = catalogo;
+	}
+	
+	public EstatusRegistro getEstatusRegistro() {
+		return estatusRegistro;
+	}
+	public void setEstatusRegistro(EstatusRegistro estatusRegistro) {
+		this.estatusRegistro = estatusRegistro;
+	}
+	
+	public Set<ConstraintViolation<ElementoCatalogo>> validarInstancia()
+	{
+		ValidatorFactory factory= Validation.buildDefaultValidatorFactory();
+		Validator validator=factory.getValidator();
+		return validator.validate(this);
 	}
 	
 }

@@ -27,7 +27,7 @@ import org.hibernate.validator.constraints.Email;
 @SuppressWarnings("serial")
 @Entity
 @Table(name="sedes", catalog="restos")
-public class Sede extends Registro implements Serializable{
+public class Sede implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -67,7 +67,10 @@ public class Sede extends Registro implements Serializable{
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sede")
 	private Set<Catalogo> catalogos = new HashSet<Catalogo>(0);
-		
+	
+	@Column(name="estatus_registro")
+	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
+	
 	public int getId() {
 		return id;
 	}
@@ -123,6 +126,13 @@ public class Sede extends Registro implements Serializable{
 	public void setCatalogos(Set<Catalogo> catalogos) {
 		this.catalogos = catalogos;
 	}
+	public EstatusRegistro getEstatusRegistro() {
+		return estatusRegistro;
+	}
+	public void setEstatusRegistro(EstatusRegistro estatusRegistro) {
+		this.estatusRegistro = estatusRegistro;
+	}
+	
 	public Set<ConstraintViolation<Sede>> validarInstancia()
 	{
 		ValidatorFactory factory= Validation.buildDefaultValidatorFactory();

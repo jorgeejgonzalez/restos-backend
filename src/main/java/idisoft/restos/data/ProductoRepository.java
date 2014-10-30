@@ -18,21 +18,25 @@ public class ProductoRepository extends Repository implements ListRecords {
 		return (Producto)findByIntKey(Producto.class, id);		
 	}
 	
+	@Override
 	public List<Producto> findAll()
 	{
 		return (List<Producto>)findAll(Producto.class, "id");		
 	}
 	
+	@Override
 	public List<Producto> findAllActive()
 	{
 		return (List<Producto>)findAllFiltered(Producto.class, "id", EstatusRegistro.ACTIVO);		
 	}
 	
+	@Override
 	public List<Producto> findAllInactive()
 	{
 		return (List<Producto>)findAllFiltered(Producto.class, "id", EstatusRegistro.INACTIVO);		
 	}
 	
+	@Override
 	public List<Producto> findAllDeleted()
 	{
 		return (List<Producto>)findAllFiltered(Producto.class, "id", EstatusRegistro.ELIMINADO);		

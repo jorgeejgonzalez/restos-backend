@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 @SuppressWarnings("serial")
 @Entity
 @Table(name="catalogos",catalog="restos")
-public class Catalogo extends Registro implements Serializable{
+public class Catalogo implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -38,6 +38,9 @@ public class Catalogo extends Registro implements Serializable{
 	@NotNull
 	@JoinColumn(name="sede")
 	private Sede sede;
+	
+	@Column(name="estatus_registro")
+	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "catalogo")
 	private Set<ElementoCatalogo> elementosCatalogo = new HashSet<ElementoCatalogo>(0);
@@ -70,6 +73,12 @@ public class Catalogo extends Registro implements Serializable{
 		this.sede = sede;
 	}
 	
+	public EstatusRegistro getEstatusRegistro() {
+		return estatusRegistro;
+	}
+	public void setEstatusRegistro(EstatusRegistro estatusRegistro) {
+		this.estatusRegistro = estatusRegistro;
+	}
 	public Set<ElementoCatalogo> getElementosCatalogo() {
 		return elementosCatalogo;
 	}

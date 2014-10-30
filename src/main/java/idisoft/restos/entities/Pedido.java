@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 @SuppressWarnings("serial")
 @Entity
 @Table(name="pedidos",catalog="restos")
-public class Pedido extends Registro implements Serializable{
+public class Pedido implements Serializable{
 		
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -64,6 +64,9 @@ public class Pedido extends Registro implements Serializable{
 	
 	@Column
 	private EstatusPedido estatus;
+	
+	@Column(name="estatus_registro")
+	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "pedidos_elementos", catalog = "restos", joinColumns = { 
@@ -148,6 +151,13 @@ public class Pedido extends Registro implements Serializable{
 	}
 	public void setEstatus(EstatusPedido estatus) {
 		this.estatus = estatus;
+	}
+	
+	public EstatusRegistro getEstatusRegistro() {
+		return estatusRegistro;
+	}
+	public void setEstatusRegistro(EstatusRegistro estatusRegistro) {
+		this.estatusRegistro = estatusRegistro;
 	}
 	
 	public Set<ElementoCatalogo> getElementos() {

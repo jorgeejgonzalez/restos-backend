@@ -21,7 +21,7 @@ import javax.validation.constraints.Size;
 @SuppressWarnings("serial")
 @Entity
 @Table(name="empresas",catalog="restos")
-public class Empresa extends Registro implements Serializable {
+public class Empresa implements Serializable {
 	
 	@Id
 	@NotNull
@@ -39,6 +39,9 @@ public class Empresa extends Registro implements Serializable {
 	@Size(min=10,max=100)
 	@Column(name="direccion_fiscal")
 	private String direccionFiscal;
+	
+	@Column(name="estatus_registro")
+	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "empresa")
 	private Set<Sede> sedes = new HashSet<Sede>(0);
@@ -79,6 +82,14 @@ public class Empresa extends Registro implements Serializable {
 		this.direccionFiscal = direccionFiscal;
 	}
 	
+	public EstatusRegistro getEstatusRegistro() {
+		return estatusRegistro;
+	}
+
+	public void setEstatusRegistro(EstatusRegistro estatusRegistro) {
+		this.estatusRegistro = estatusRegistro;
+	}
+
 	public Set<Sede> getSedes() {
 		return sedes;
 	}
