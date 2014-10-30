@@ -95,8 +95,9 @@ public class ConstantesREST {
 	 * Mensajes genericos para el uso de mensajes en log
 	 */
 	public static final String REST_MENSAJE_EXCEPCION_GENERICA="Se disparo una excepcion: ";
-	public static final String REST_MENSAJE_ENTIDAD_REGISTRADA="Registro agregado exitosamente";
+	public static final String REST_MENSAJE_ENTIDAD_REGISTRADA="Registro agregado exitosamente";	
 	public static final String REST_MENSAJE_ENTIDAD_ACTUALIZADA="Registro actualizado exitosamente";
+	public static final String REST_MENSAJE_ENTIDAD_ACTIVADA="Registro activado exitosamente";
 	public static final String REST_MENSAJE_ENTIDAD_ELIMINADA="Registro eliminado exitosamente";
 	public static final String REST_MENSAJE_ENTIDAD_INTACTA="Registro no se modifico";
 	public static final String REST_MENSAJE_ENTIDAD_NULA="Registro no se encuentra en sistema";

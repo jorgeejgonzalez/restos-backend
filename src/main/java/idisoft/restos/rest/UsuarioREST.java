@@ -476,7 +476,7 @@ public class UsuarioREST extends RestService{
 
 				registro.actualizar(retorno);
 
-				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ELIMINADA;
+				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ACTIVADA;
 
 				builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
 
