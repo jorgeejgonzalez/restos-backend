@@ -71,6 +71,20 @@ public class ConstantesREST {
 	public static final String REST_PRODUCTOS_TIPOS_FUNCION_LISTAR_ELIMINADOS=REST_PRODUCTOS_TIPOS_FUNCION_LISTAR+"eliminados";
 	
 	/*
+	 * REST de manejo de catalogos
+	 */
+	public static final String REST_CATALOGOS="/catalogos";
+	public static final String REST_CATALOGOS_FUNCION_LISTAR="/";
+	public static final String REST_CATALOGOS_FUNCION_LISTAR_INACTIVOS=REST_CATALOGOS_FUNCION_LISTAR+"inactivos";
+	public static final String REST_CATALOGOS_FUNCION_LISTAR_ELIMINADOS=REST_CATALOGOS_FUNCION_LISTAR+"eliminados";	
+	public static final String REST_CATALOGOS_FUNCION_CREAR="/nuevo";
+	public static final String REST_CATALOGOS_FUNCION_ACTUALIZAR="/{id:[0-9]*}";
+	
+	public static final String REST_CATALOGOS_SEDE_FUNCION_LISTAR=REST_CATALOGOS_FUNCION_LISTAR+"sede/{id:[0-9]*}";
+	public static final String REST_CATALOGOS_SEDE_FUNCION_LISTAR_INACTIVOS=REST_CATALOGOS_SEDE_FUNCION_LISTAR+"/inactivos";
+	public static final String REST_CATALOGOS_SEDE_FUNCION_LISTAR_ELIMINADOS=REST_CATALOGOS_SEDE_FUNCION_LISTAR+"/eliminados";
+		
+	/*
 	 * Mensajes genericos para el uso de mensajes en log
 	 */
 	public static final String REST_MENSAJE_EXCEPCION_GENERICA="Se disparo una excepcion: ";

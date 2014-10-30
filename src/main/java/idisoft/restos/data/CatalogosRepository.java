@@ -15,6 +15,11 @@ public class CatalogosRepository extends Repository implements ListRecords {
 		return (Catalogo)findByIntKey(Catalogo.class, id);
 	}
 	
+	public Sede findSedeById(int id)
+	{
+		return (Sede)findByIntKey(Sede.class, id);
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Catalogo> findAll() {		
@@ -39,7 +44,7 @@ public class CatalogosRepository extends Repository implements ListRecords {
 		return (List<Catalogo>)findAllFiltered(Catalogo.class,"id",EstatusRegistro.ELIMINADO);
 	}
 	
-	public List<Catalogo> findAllActiveBySede(int sedeid) {		
+	private List<Catalogo> findAllFilteredBySede(int sedeid, EstatusRegistro estatus) {		
 		Sede sede=(Sede)findByIntKey(Sede.class, sedeid);
 		List<Catalogo> retorno=new ArrayList<Catalogo>();
 		
@@ -53,17 +58,13 @@ public class CatalogosRepository extends Repository implements ListRecords {
 			{
 				retorno=null;
 			}
-			else if(sede.getCatalogos().isEmpty())
-			{
-				retorno=null;				
-			}
-			else
+			else if(!sede.getCatalogos().isEmpty())
 			{
 				Iterator<Catalogo> iterator=sede.getCatalogos().iterator();
 				while(iterator.hasNext())
 				{
 					Catalogo catalogo=iterator.next();
-					if(catalogo.getEstatusRegistro()==EstatusRegistro.ACTIVO)
+					if(catalogo.getEstatusRegistro()==estatus)
 					{
 						retorno.add(catalogo);
 					}
@@ -72,6 +73,21 @@ public class CatalogosRepository extends Repository implements ListRecords {
 		}
 		
 		return retorno;
+	}
+	
+	public List<Catalogo> findAllActiveBySede(int sedeid)
+	{
+		return findAllFilteredBySede(sedeid, EstatusRegistro.ACTIVO);
+	}
+	
+	public List<Catalogo> findAllInactiveBySede(int sedeid)
+	{
+		return findAllFilteredBySede(sedeid, EstatusRegistro.INACTIVO);
+	}
+	
+	public List<Catalogo> findAllDeletedBySede(int sedeid)
+	{
+		return findAllFilteredBySede(sedeid, EstatusRegistro.ELIMINADO);
 	}
 
 }

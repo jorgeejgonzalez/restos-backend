@@ -109,6 +109,21 @@ public class SedeJSON implements Serializable{
 		}
 	}
 	
+	public void parseSedeFromCatalogo(Sede sede)
+	{
+		this.rif=sede.getRif();
+		this.nombre=sede.getNombre();
+		this.direccionFisica=sede.getDireccionFisica();
+		this.email=sede.getEmail();
+		this.telefono=sede.getTelefono();
+		
+		this.empresa=new EmpresaJSON();
+		this.empresa.parseEmpresaFromSede(sede.getEmpresa());
+		
+		this.catalogos=null;
+		
+	}
+	
 	public void parseSede(Sede sede)
 	{
 		this.rif=sede.getRif();

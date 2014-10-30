@@ -58,18 +58,52 @@ public class CatalogoJSON implements Serializable{
 		this.elementosCatalogo = elementosMenu;
 	}
 	
-	public void parseCatalogoFromSede(Catalogo menu)
+	public void parseCatalogo(Catalogo catalogo)
 	{
-		this.id=menu.getId();
-		this.nombre=menu.getNombre();
-		this.estatus=menu.getEstatus();
+		this.id=catalogo.getId();
+		this.nombre=catalogo.getNombre();
+		this.estatus=catalogo.getEstatus();
+		
+		this.sede=new SedeJSON();
+		this.sede.parseSedeFromCatalogo(catalogo.getSede());
+		
+		if(catalogo.getElementosCatalogo()!=null)
+		{
+			if(!catalogo.getElementosCatalogo().isEmpty())
+			{
+				Iterator<ElementoCatalogo> iterator=catalogo.getElementosCatalogo().iterator();
+				while(iterator.hasNext())
+				{
+					ElementoCatalogo em=iterator.next();
+					ElementoCatalogoJSON emj=new ElementoCatalogoJSON();
+					emj.parseElementoFromCatalogo(em);
+					this.elementosCatalogo.add(emj);
+				}
+			}
+			else
+			{
+				this.elementosCatalogo=null;
+			}
+			
+		}
+		else 
+		{
+			this.elementosCatalogo=null;
+		}
+	}
+	
+	public void parseCatalogoFromSede(Catalogo catalogo)
+	{
+		this.id=catalogo.getId();
+		this.nombre=catalogo.getNombre();
+		this.estatus=catalogo.getEstatus();
 		this.sede=null;
 		
-		if(menu.getElementosCatalogo()!=null)
+		if(catalogo.getElementosCatalogo()!=null)
 		{
-			if(menu.getElementosCatalogo().size()>0)
+			if(!catalogo.getElementosCatalogo().isEmpty())
 			{
-				Iterator<ElementoCatalogo> iterator=menu.getElementosCatalogo().iterator();
+				Iterator<ElementoCatalogo> iterator=catalogo.getElementosCatalogo().iterator();
 				while(iterator.hasNext())
 				{
 					ElementoCatalogo em=iterator.next();
