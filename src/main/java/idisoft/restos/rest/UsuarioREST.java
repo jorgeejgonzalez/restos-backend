@@ -1,13 +1,20 @@
 package idisoft.restos.rest;
 
+import idisoft.restos.data.CatalogosRepository;
+import idisoft.restos.data.PedidoRepository;
 import idisoft.restos.data.UsuarioRepository;
+import idisoft.restos.entities.ElementoCatalogo;
+import idisoft.restos.entities.EstatusPedido;
 import idisoft.restos.entities.EstatusRegistro;
+import idisoft.restos.entities.Pedido;
 import idisoft.restos.entities.Usuario;
+import idisoft.restos.entities.json.PedidoJSON;
 import idisoft.restos.entities.json.UsuarioJSON;
 import idisoft.restos.services.UsuarioRegistry;
 import idisoft.restos.util.ConstantesREST;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +38,12 @@ public class UsuarioREST extends RestService{
 	
 	@Inject
 	private UsuarioRepository repositorio;
+	
+	@Inject
+	private PedidoRepository repositorioPedidos;
+	
+	@Inject
+	private CatalogosRepository repositorioCatalogos;
 	
 	@Inject
 	private UsuarioRegistry registro;
@@ -493,6 +506,256 @@ public class UsuarioREST extends RestService{
 			
 		}
 				
+		return builder.build();
+	}
+	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_PEDIDOS_FUNCION_NUEVO)
+	public Response crearPedido(@PathParam("cedula") String cedula)
+	{
+		Response.ResponseBuilder builder=null;
+		
+		String msg="";
+		
+		Usuario usuario=repositorio.findByCedula(cedula);
+		
+		if(usuario==null)
+		{
+			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
+			msg=ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+			builder.entity(msg);
+		}
+		else if(usuario.getEstatusRegistro()==EstatusRegistro.INACTIVO || usuario.getEstatusRegistro()==EstatusRegistro.ELIMINADO)
+		{
+			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
+			msg=ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+			builder.entity(msg);
+		}
+		else
+		
+		{
+			Pedido pedido=new Pedido();
+			
+			pedido.setCliente(usuario);
+			
+			pedido.setDireccionEntrega(usuario.getDireccion());
+			pedido.setTelefonoEntrega(usuario.getTelefono());
+			
+			java.util.Date date=new java.util.Date();
+			
+			pedido.setFecha(new java.sql.Date(date.getTime()));
+			pedido.setHora(new java.sql.Time(date.getTime()));
+			
+			pedido.setSubTotal(0.0f);
+			pedido.setIvaPorcentaje(ConstantesREST.REST_USUARIOS_PEDIDOS_FLOAT_PORCENTAJE_IVA_VALUE);
+			pedido.setIvaMonto(0.0f);
+			pedido.setTotal(0.0f);
+			
+			pedido.setEstatus(EstatusPedido.CREADO);
+			pedido.setEstatusRegistro(EstatusRegistro.ACTIVO);
+			
+			try
+			{
+				pedido=registro.generarPedido(pedido);
+				
+				usuario.getPedidos().add(pedido);
+				
+				PedidoJSON pedidojson=new PedidoJSON();
+				pedidojson.parsePedidoFromUsuario(pedido);
+				
+				builder=this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
+				builder.entity(pedidojson);
+			}
+			catch(Exception ex)
+			{
+				msg=ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ex.getMessage();
+				builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
+				builder.entity(msg);
+			}
+		}		
+		
+		return builder.build();
+	}
+	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_PEDIDOS_FUNCION_PROCESAR)
+	public Response procesarPedido(@PathParam("cedula") String cedula, @PathParam("id") int pedidoid, Pedido pedido)
+	{
+		Response.ResponseBuilder builder=null;
+		
+		String msg="";
+		
+		Usuario usuario=repositorio.findByCedula(cedula);
+		Pedido actualizar=repositorioPedidos.findById(pedidoid);
+		
+		if(usuario==null || actualizar==null)
+		{
+			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
+			msg=ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+			builder.entity(msg);
+		}
+		else if(usuario.getEstatusRegistro()==EstatusRegistro.INACTIVO || usuario.getEstatusRegistro()==EstatusRegistro.ELIMINADO 
+				|| actualizar.getEstatusRegistro()==EstatusRegistro.INACTIVO || actualizar.getEstatusRegistro()==EstatusRegistro.ELIMINADO)
+		{
+			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
+			msg=ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+			builder.entity(msg);
+		}
+		else if(!actualizar.getCliente().getCedula().equals(usuario.getCedula()))
+		{
+			builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
+			//msg=ConstantesREST.RESTMENS;
+			builder.entity(msg);
+		}
+		else		
+		{
+			actualizar.setDireccionEntrega(pedido.getDireccionEntrega());
+			actualizar.setTelefonoEntrega(pedido.getTelefonoEntrega());
+			
+			actualizar.setFecha(pedido.getFecha());
+			actualizar.setHora(pedido.getHora());
+			
+			actualizar.setIvaPorcentaje(pedido.getIvaPorcentaje());
+			
+			if(actualizar.getElementos()==null)
+			{
+				actualizar.setSubTotal(0.0f);
+				actualizar.setIvaMonto(0.0f);
+				actualizar.setTotal(0.0f);
+			}
+			else if(actualizar.getElementos().isEmpty())
+			{
+				actualizar.setSubTotal(0.0f);
+				actualizar.setIvaMonto(0.0f);
+				actualizar.setTotal(0.0f);
+			}
+			else
+			{
+				Iterator<ElementoCatalogo> iterator=actualizar.getElementos().iterator();
+				float subtotal=0.0f;
+				
+				while(iterator.hasNext())
+				{
+					ElementoCatalogo elemento=iterator.next();
+					if(elemento.getEstatusRegistro()==EstatusRegistro.ACTIVO)
+					{
+						subtotal+=elemento.getPrecio();
+					}
+					
+				}
+				
+				actualizar.setSubTotal(subtotal);
+				actualizar.setIvaMonto(subtotal*(pedido.getIvaPorcentaje()/100.0f));
+				actualizar.setTotal(subtotal+actualizar.getIvaMonto());
+			}
+			
+			
+			actualizar.setEstatus(EstatusPedido.PROCESADO);			
+			
+			try
+			
+			{
+				actualizar=registro.actualizarPedido(actualizar);
+				
+				PedidoJSON pedidojson=new PedidoJSON();
+				pedidojson.parsePedidoFromUsuario(actualizar);
+				
+				builder=this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
+				builder.entity(pedidojson);
+			}
+			catch(Exception ex)
+			{
+				msg=ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ex.getMessage();
+				builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
+				builder.entity(msg);
+			}
+		}		
+		
+		return builder.build();
+	}
+	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_PEDIDOS_ELEMENTOS_FUNCION_ADJUNTAR)
+	public Response actualizarPedidoElementoAdjuntar(@PathParam("cedula") String cedula, @PathParam("id") int pedidoid, @PathParam("elemento") int elementoid)
+	{
+		Response.ResponseBuilder builder=null;
+		
+		String msg="";
+		
+		Usuario usuario=repositorio.findByCedula(cedula);
+		Pedido pedido=repositorioPedidos.findById(pedidoid);
+		ElementoCatalogo elemento=repositorioCatalogos.findElementoById(elementoid);
+		
+		if(usuario==null || pedido==null|| elemento==null)
+		{
+			builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
+			msg=ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+			builder.entity(msg);
+		}
+		else if(usuario.getEstatusRegistro()==EstatusRegistro.INACTIVO || usuario.getEstatusRegistro()==EstatusRegistro.ELIMINADO 
+				|| pedido.getEstatusRegistro()==EstatusRegistro.INACTIVO || pedido.getEstatusRegistro()==EstatusRegistro.ELIMINADO
+				|| elemento.getEstatusRegistro()==EstatusRegistro.INACTIVO || elemento.getEstatusRegistro()==EstatusRegistro.ELIMINADO)
+		{
+			builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
+			msg=ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+			builder.entity(pedido);
+		}
+		else if(!pedido.getCliente().getCedula().equals(usuario.getCedula()))
+		{
+			builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
+			//msg=ConstantesREST.RESTMENS;
+			builder.entity(msg);
+		}
+		else		
+		{
+			
+			if(pedido.getElementos()==null)
+			{
+				pedido.setElementos(new HashSet<ElementoCatalogo>(0));
+			}
+			
+			pedido.getElementos().add(elemento);
+			
+			Iterator<ElementoCatalogo> iterator=pedido.getElementos().iterator();
+			float subtotal=0.0f;
+			
+			while(iterator.hasNext())
+			{
+				ElementoCatalogo el=iterator.next();
+				if(elemento.getEstatusRegistro()==EstatusRegistro.ACTIVO)
+				{
+					subtotal+=el.getPrecio();
+				}
+				
+			}
+			
+			pedido.setSubTotal(subtotal);
+			pedido.setIvaMonto(subtotal*(pedido.getIvaPorcentaje()/100.0f));
+			pedido.setTotal(subtotal+pedido.getIvaMonto());
+			
+			try			
+			{
+				pedido=registro.actualizarPedido(pedido);
+				
+				PedidoJSON pedidojson=new PedidoJSON();
+				pedidojson.parsePedidoFromUsuario(pedido);
+				
+				builder=this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
+				builder.entity(pedidojson);
+			}
+			catch(Exception ex)
+			{
+				msg=ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ex.getMessage();
+				builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
+				builder.entity(msg);
+			}
+		}		
+		
 		return builder.build();
 	}
 

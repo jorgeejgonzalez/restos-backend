@@ -40,11 +40,35 @@ public class ConstantesREST {
 	public static final String REST_USUARIOS_FUNCION_ELIMINAR="/{cedula:[V,E][0-9]*}";
 	public static final String REST_USUARIOS_FUNCION_DISPONIBILIDAD_EMAIL="/disponible/email";
 	public static final String REST_USUARIOS_FUNCION_DISPONIBILIDAD_LOGIN="/disponible/login";
+	
 	public static final String REST_USUARIOS_MENSAJE_LOGIN_FALLIDO="Autenticacion fallida";
 	public static final String REST_USUARIOS_MENSAJE_LOGIN_DISPONIBLE="Login no se encuentra registrado en el sistema";
 	public static final String REST_USUARIOS_MENSAJE_LOGIN_DUPLICADO="Login ya se encuentra registrado en el sistema";
 	public static final String REST_USUARIOS_MENSAJE_EMAIL_DISPONIBLE="Email no se encuentra registrado en el sistema";
 	public static final String REST_USUARIOS_MENSAJE_EMAIL_DUPLICADO="Email ya se encuentra registrado en el sistema";
+	
+	/*
+	 * REST de manejo de los pedidos de un usuario
+	 */
+	
+	public static final String REST_USUARIOS_PEDIDOS=REST_USUARIOS_FUNCION_ACTUALIZAR+"/pedidos";
+	public static final String REST_USUARIOS_PEDIDOS_FUNCION_LISTAR=REST_USUARIOS_PEDIDOS+"/";
+	public static final String REST_USUARIOS_PEDIDOS_FUNCION_LISTAR_INACTIVOS=REST_USUARIOS_PEDIDOS_FUNCION_LISTAR+"inactivos";
+	public static final String REST_USUARIOS_PEDIDOS_FUNCION_LISTAR_ELIMINADOS=REST_USUARIOS_PEDIDOS_FUNCION_LISTAR+"eliminados";
+	public static final String REST_USUARIOS_PEDIDOS_FUNCION_NUEVO=REST_USUARIOS_PEDIDOS+"/nuevo";
+	public static final String REST_USUARIOS_PEDIDOS_FUNCION_ACTUALIZAR=REST_USUARIOS_PEDIDOS+"/{id:[0-9]*}";
+	public static final String REST_USUARIOS_PEDIDOS_FUNCION_PROCESAR=REST_USUARIOS_PEDIDOS_FUNCION_ACTUALIZAR+"/procesar";
+	
+	public static final float REST_USUARIOS_PEDIDOS_FLOAT_PORCENTAJE_IVA_VALUE=14.0f;
+	
+	/*
+	 * REST de manejo de los elementos de un pedido de usuario
+	 */
+	
+	public static final String REST_USUARIOS_PEDIDOS_ELEMENTOS=REST_USUARIOS_PEDIDOS_FUNCION_ACTUALIZAR+"/elementos";
+	public static final String REST_USUARIOS_PEDIDOS_ELEMENTOS_FUNCION_ADJUNTAR=REST_USUARIOS_PEDIDOS_ELEMENTOS+"/{elemento:[0-9]*}";
+	public static final String REST_USUARIOS_PEDIDOS_ELEMENTOS_FUNCION_ADJUNTAR_LISTA=REST_USUARIOS_PEDIDOS_ELEMENTOS+"/lista";
+	
 	
 	
 	/*

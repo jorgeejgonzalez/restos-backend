@@ -68,6 +68,17 @@ public class ElementoCatalogoJSON implements Serializable {
 		this.catalogo = catalogo;
 	}
 	
+	public void parseElemento(ElementoCatalogo elemento)
+	{
+		this.id=elemento.getId();
+		this.nombre=elemento.getNombre();
+		this.descripcion=elemento.getDescripcion();
+		this.precio=elemento.getPrecio();
+		this.estatus=elemento.getEstatus();
+		this.catalogo=new CatalogoJSON();
+		this.catalogo.parseCatalogoFromElemento(elemento.getCatalogo());
+	}
+	
 	public void parseElementoFromCatalogo(ElementoCatalogo elementocatalogo)
 	{
 		this.id=elementocatalogo.getId();

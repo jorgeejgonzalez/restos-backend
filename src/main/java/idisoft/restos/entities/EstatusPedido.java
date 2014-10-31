@@ -1,8 +1,8 @@
 package idisoft.restos.entities;
 
 public enum EstatusPedido {
-	PENDIENTE,
-	PROCESADO,
+	CREADO,
+	PROCESADO,	
 	PAGADO,
 	ENVIADO,
 	ENTREGADO

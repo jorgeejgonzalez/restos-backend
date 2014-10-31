@@ -125,5 +125,18 @@ public class CatalogoJSON implements Serializable{
 		
 	}
 	
+	public void parseCatalogoFromElemento(Catalogo catalogo)
+	{
+		this.id=catalogo.getId();
+		this.nombre=catalogo.getNombre();
+		this.estatus=catalogo.getEstatus();
+		
+		this.sede=new SedeJSON();
+		this.sede.parseSedeFromCatalogo(catalogo.getSede());
+		
+		this.elementosCatalogo=null;
+		
+	}
+	
 }
 

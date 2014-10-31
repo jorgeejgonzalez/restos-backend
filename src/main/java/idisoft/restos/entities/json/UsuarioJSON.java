@@ -1,15 +1,18 @@
 package idisoft.restos.entities.json;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
+import idisoft.restos.entities.EstatusRegistro;
+import idisoft.restos.entities.Pedido;
 import idisoft.restos.entities.TipoUsuario;
 import idisoft.restos.entities.Usuario;
 import idisoft.restos.util.MensajesEntidades;
 
 @SuppressWarnings("serial")
 public class UsuarioJSON implements Serializable{
-	
-	//private static final String HIDE_PASSWORD= "************";
 	
 	private String login;		
 	
@@ -28,6 +31,8 @@ public class UsuarioJSON implements Serializable{
 	private String direccion;
 	
 	private String telefono;
+	
+	private Set<PedidoJSON> pedidos = new HashSet<PedidoJSON>(0);
 
 	public String getLogin() {
 		return login;
@@ -101,6 +106,14 @@ public class UsuarioJSON implements Serializable{
 		this.telefono = telefono;
 	}
 	
+	public Set<PedidoJSON> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(Set<PedidoJSON> pedidos) {
+		this.pedidos = pedidos;
+	}
+
 	public void parseUsuario(Usuario usuario)
 	{
 		this.cedula=usuario.getCedula();
@@ -113,6 +126,46 @@ public class UsuarioJSON implements Serializable{
 		this.telefono=usuario.getTelefono();
 		this.tipo=usuario.getTipo();
 		
+		if(usuario.getPedidos()==null)
+		{
+			this.pedidos=null;
+		}
+		else if(usuario.getPedidos().isEmpty())
+		{
+			this.pedidos=null;
+		}
+		else
+		{
+			Iterator<Pedido> iterator=usuario.getPedidos().iterator();
+			while(iterator.hasNext())
+			{
+				Pedido p=iterator.next();
+				
+				if(p.getEstatusRegistro()==EstatusRegistro.ACTIVO)
+				{
+					PedidoJSON pej=new PedidoJSON();
+					
+					pej.parsePedidoFromUsuario(p);
+					
+					this.pedidos.add(pej);
+				}
+			}
+		}
+	}
+	
+	public void parseUsuarioFromPedidos(Usuario usuario)
+	{
+		this.cedula=usuario.getCedula();
+		this.login =usuario.getLogin();
+		this.password=MensajesEntidades.USUARIO_CLAVE_OCULTA;
+		this.email=usuario.getEmail();
+		this.nombre=usuario.getNombre();
+		this.apellido=usuario.getApellido();
+		this.direccion=usuario.getDireccion();
+		this.telefono=usuario.getTelefono();
+		this.tipo=usuario.getTipo();
+		
+		this.pedidos=null;
 	}
 
 }

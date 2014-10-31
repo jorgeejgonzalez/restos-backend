@@ -3,11 +3,14 @@ package idisoft.restos.entities;
 import idisoft.restos.util.MensajesEntidades;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.ConstraintViolation;
@@ -18,6 +21,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.Email;
 
 //import java.util.List;
@@ -80,6 +85,10 @@ public class Usuario implements Serializable {
 	
 	@Column(name="estatus_registro")
 	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente")
+	@Cascade(CascadeType.ALL)
+	private Set<Pedido> pedidos = new HashSet<Pedido>(0);
 	
 	public Usuario()
 	{	
@@ -180,6 +189,14 @@ public class Usuario implements Serializable {
 	
 	public EstatusRegistro getEstatusRegistro() {
 		return estatusRegistro;
+	}
+
+	public Set<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(Set<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 	public void setEstatusRegistro(EstatusRegistro estatusRegistro) {

@@ -13,16 +13,18 @@ public abstract class Registry {
 	@Inject
 	protected EntityManager em;
 	
-	protected void persist(Object obj, String log)
+	protected Object persist(Object obj, String log)
 	{
 		logger.info(log);
 		em.persist(obj);
+		return obj;
 	}
 	
-	protected void merge(Object obj, String log)
+	protected Object merge(Object obj, String log)
 	{
 		logger.info(log);
 		em.merge(obj);
+		return obj;
 	}
 
 }

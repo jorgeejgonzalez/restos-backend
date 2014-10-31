@@ -6,7 +6,6 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,6 +18,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @SuppressWarnings("serial")
 @Entity
@@ -68,11 +70,12 @@ public class Pedido implements Serializable{
 	@Column(name="estatus_registro")
 	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "pedidos_elementos", catalog = "restos", joinColumns = { 
 			@JoinColumn(name = "pedido", nullable = false, updatable = false) }, 
 			inverseJoinColumns = { @JoinColumn(name = "elemento", 
 					nullable = false, updatable = false) })
+	@Cascade(CascadeType.ALL)
 	private Set<ElementoCatalogo> elementos=new HashSet<ElementoCatalogo>(0);
 	
 	public int getId() {
