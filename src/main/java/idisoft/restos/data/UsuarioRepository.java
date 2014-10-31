@@ -36,6 +36,7 @@ public class UsuarioRepository extends Repository implements ListRecords{
 	@SuppressWarnings("unchecked")
 	public List<Usuario> findAllActive()
 	{
+		//un comentario
 		return findAllFiltered(Usuario.class, "cedula", EstatusRegistro.ACTIVO);
 	}
 	
