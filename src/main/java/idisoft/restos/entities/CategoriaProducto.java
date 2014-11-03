@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -40,6 +41,7 @@ public class CategoriaProducto implements Serializable{
 	@Column(name="estatus_registro")
 	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
 	
+	@Valid
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "categoria")
 	@Cascade(CascadeType.ALL)
 	private Set<Producto> productos = new HashSet<Producto>(0);

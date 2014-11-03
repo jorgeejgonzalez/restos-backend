@@ -1,5 +1,7 @@
 package idisoft.restos.entities;
 
+import idisoft.restos.util.MensajesEntidades;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,10 +17,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -33,22 +37,25 @@ public class Catalogo implements Serializable{
 	@Column(name="id")
 	private int id;
 	
-	@NotNull
+	@NotNull(message=MensajesEntidades.ENTIDAD_CATALOGO_NOMBRE+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=10,max=100,message=MensajesEntidades.ENTIDAD_CATALOGO_NOMBRE+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 100")
 	@Column
 	private String nombre;
 	
-	@NotNull
+	@NotNull(message=MensajesEntidades.ENTIDAD_CATALOGO_ESTATUS+MensajesEntidades.VALIDACION_VALOR_NULO)
 	@Column
 	private EstatusCatalogo estatus;
 	
+	@NotNull(message=MensajesEntidades.ENTIDAD_CATALOGO_SEDE+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@Valid
 	@ManyToOne(fetch = FetchType.LAZY)
-	@NotNull
-	@JoinColumn(name="sede")
+	@JoinColumn(name="sede")	
 	private Sede sede;
 	
 	@Column(name="estatus_registro")
 	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
 	
+	@Valid
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "catalogo")
 	@Cascade(CascadeType.ALL)
 	private Set<ElementoCatalogo> elementosCatalogo = new HashSet<ElementoCatalogo>(0);

@@ -1,5 +1,7 @@
 package idisoft.restos.entities;
 
+import idisoft.restos.util.MensajesEntidades;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -24,25 +27,26 @@ import javax.validation.constraints.Size;
 public class Empresa implements Serializable {
 	
 	@Id
-	@NotNull
-	@Size(min=10,max=10)
-	@Pattern(regexp="[J,V,E,G][0-9]*",message="debe cumplir el formato de rif sin guiones")
+	@NotNull(message=MensajesEntidades.ENTIDAD_EMPRESA_RIF+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=10,max=100,message=MensajesEntidades.ENTIDAD_EMPRESA_RIF+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 10")
+	@Pattern(regexp="[J,V,E,G][0-9]*",message=MensajesEntidades.ENTIDAD_EMPRESA_RIF+MensajesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO)
 	@Column
 	private String rif;
 	
-	@NotNull
-	@Size(min=10,max=100)
+	@NotNull(message=MensajesEntidades.ENTIDAD_EMPRESA_RAZON_SOCIAL+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=10,max=100,message=MensajesEntidades.ENTIDAD_EMPRESA_RAZON_SOCIAL+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 100")
 	@Column(name="razon_social")
 	private String razonSocial;
 	
-	@NotNull
-	@Size(min=10,max=100)
+	@NotNull(message=MensajesEntidades.ENTIDAD_EMPRESA_DIRECCION_FISCAL+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=10,max=100,message=MensajesEntidades.ENTIDAD_EMPRESA_DIRECCION_FISCAL+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 100")
 	@Column(name="direccion_fiscal")
 	private String direccionFiscal;
 	
 	@Column(name="estatus_registro")
 	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
 	
+	@Valid
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "empresa")
 	private Set<Sede> sedes = new HashSet<Sede>(0);
 		

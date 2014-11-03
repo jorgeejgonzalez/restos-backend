@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 @SuppressWarnings("serial")
-
 public class CatalogoJSON implements Serializable{
 	
 	private int id;
@@ -21,7 +20,7 @@ public class CatalogoJSON implements Serializable{
 	
 	private SedeJSON sede;
 	
-	private Set<ElementoCatalogoJSON> elementosCatalogo = new HashSet<ElementoCatalogoJSON>(0);
+	private Set<ElementoCatalogoJSON> elementos = new HashSet<ElementoCatalogoJSON>(0);
 	
 	public int getId() {
 		return id;
@@ -51,11 +50,11 @@ public class CatalogoJSON implements Serializable{
 		this.sede = sede;
 	}
 	
-	public Set<ElementoCatalogoJSON> getElementosCatalogo() {
-		return elementosCatalogo;
+	public Set<ElementoCatalogoJSON> getElementos() {
+		return elementos;
 	}
-	public void setElementosCatalogo(Set<ElementoCatalogoJSON> elementosMenu) {
-		this.elementosCatalogo = elementosMenu;
+	public void setElementos(Set<ElementoCatalogoJSON> elementos) {
+		this.elementos = elementos;
 	}
 	
 	public void parseCatalogo(Catalogo catalogo)
@@ -77,18 +76,18 @@ public class CatalogoJSON implements Serializable{
 					ElementoCatalogo em=iterator.next();
 					ElementoCatalogoJSON emj=new ElementoCatalogoJSON();
 					emj.parseElementoFromCatalogo(em);
-					this.elementosCatalogo.add(emj);
+					this.elementos.add(emj);
 				}
 			}
 			else
 			{
-				this.elementosCatalogo=null;
+				this.elementos=null;
 			}
 			
 		}
 		else 
 		{
-			this.elementosCatalogo=null;
+			this.elementos=null;
 		}
 	}
 	
@@ -109,18 +108,18 @@ public class CatalogoJSON implements Serializable{
 					ElementoCatalogo em=iterator.next();
 					ElementoCatalogoJSON emj=new ElementoCatalogoJSON();
 					emj.parseElementoFromCatalogo(em);
-					this.elementosCatalogo.add(emj);
+					this.elementos.add(emj);
 				}
 			}
 			else
 			{
-				this.elementosCatalogo=null;
+				this.elementos=null;
 			}
 			
 		}
 		else 
 		{
-			this.elementosCatalogo=null;
+			this.elementos=null;
 		}
 		
 	}
@@ -134,7 +133,7 @@ public class CatalogoJSON implements Serializable{
 		this.sede=new SedeJSON();
 		this.sede.parseSedeFromCatalogo(catalogo.getSede());
 		
-		this.elementosCatalogo=null;
+		this.elementos=null;
 		
 	}
 	

@@ -705,7 +705,7 @@ public class UsuarioREST extends RestService{
 			msg=ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
 			builder.entity(pedido);
 		}
-		else if(!pedido.getCliente().getCedula().equals(usuario.getCedula()))
+		else if(!pedido.isOfUsuario(usuario))
 		{
 			builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
 			//msg=ConstantesREST.RESTMENS;

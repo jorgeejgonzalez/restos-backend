@@ -7,7 +7,7 @@ import idisoft.restos.entities.Empresa;
 import javax.validation.ConstraintViolation;
 import org.junit.Test;
 
-public class RestauranteTest {
+public class EmpresaTest {
 	
 	/*
 	 * Datos para la prueba

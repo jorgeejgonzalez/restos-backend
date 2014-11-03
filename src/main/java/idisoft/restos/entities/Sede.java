@@ -1,5 +1,7 @@
 package idisoft.restos.entities;
 
+import idisoft.restos.util.MensajesEntidades;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -34,34 +37,35 @@ public class Sede implements Serializable{
 	@Column(name="id")
 	private int id;
 	
-	@NotNull
-	@Size(min=10,max=10)
-	@Pattern(regexp="[J,V,E,G][0-9]*",message="debe cumplir el formato de rif sin guiones")	
+	@NotNull(message=MensajesEntidades.ENTIDAD_SEDE_RIF+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=10,max=10,message=MensajesEntidades.ENTIDAD_SEDE_RIF+MensajesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO+"10 y 10")
+	@Pattern(regexp="[J,V,E,G][0-9]*",message=MensajesEntidades.ENTIDAD_SEDE_RIF+MensajesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO)	
 	@Column
 	private String rif;
 	
-	@NotNull
-	@Size(min=6,max=50)
+	@NotNull(message=MensajesEntidades.ENTIDAD_SEDE_NOMBRE+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=6,max=50,message=MensajesEntidades.ENTIDAD_SEDE_NOMBRE+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"6 y 50")
 	@Column
 	private String nombre;
 	
-	@NotNull
-	@Email
+	@NotNull(message=MensajesEntidades.ENTIDAD_SEDE_EMAIL+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@Email(message=MensajesEntidades.ENTIDAD_SEDE_EMAIL+MensajesEntidades.VALIDACION_STRING_FORMATO_EMAIL)
 	@Column
 	private String email;
 	
-	@NotNull
+	@NotNull(message=MensajesEntidades.ENTIDAD_SEDE_DIRECCION_FISICA+MensajesEntidades.VALIDACION_VALOR_NULO)
 	@Column(name="direccion_fisica")
 	private String direccionFisica;
 	
-	@NotNull
-	@Size(min=11,max=11)
-	@Pattern(regexp="[0-9]*",message="solo acepta numeros")
+	@NotNull(message=MensajesEntidades.ENTIDAD_SEDE_TELEFONO+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=11,max=11,message=MensajesEntidades.ENTIDAD_SEDE_TELEFONO+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"11 y 11")
+	@Pattern(regexp="[0-9]*",message=MensajesEntidades.ENTIDAD_SEDE_TELEFONO+MensajesEntidades.VALIDACION_STRING_VALOR_NUMERICO)
 	@Column
 	private String telefono;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@NotNull
+	@NotNull(message=MensajesEntidades.ENTIDAD_SEDE_EMPRESA+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@Valid
 	@JoinColumn(name="empresa")
 	private Empresa empresa;
 	
@@ -140,5 +144,9 @@ public class Sede implements Serializable{
 		return validator.validate(this);
 	}
 	
+	public boolean isOfEmpresa(Empresa empresa)
+	{
+		return this.empresa.getRif().equals(empresa.getRif());
+	}
 
 }

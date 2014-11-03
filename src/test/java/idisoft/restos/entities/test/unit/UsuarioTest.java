@@ -39,7 +39,7 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.cedula: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO;
+		String msgassert="usuario.cedula: "+MensajesEntidades.VALIDACION_VALOR_NULO;
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -115,10 +115,10 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.cedula: "+MensajesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO;
+		String msgassert=MensajesEntidades.ENTIDAD_USUARIO_CEDULA+MensajesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO;
 		
 		assertEquals(1,violaciones.size());
-		assertEquals(msgassert, violaciones.iterator().next().getMessage());
+		assertEquals(msgassert, violaciones.iterator().next().getMessage());		
 		
 	}
 	
@@ -136,7 +136,7 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.login: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO;
+		String msgassert="usuario.login: "+MensajesEntidades.VALIDACION_VALOR_NULO;
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -196,7 +196,7 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.password: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO;
+		String msgassert="usuario.password: "+MensajesEntidades.VALIDACION_VALOR_NULO;
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -254,7 +254,7 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.tipo: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO;
+		String msgassert="usuario.tipo: "+MensajesEntidades.VALIDACION_VALOR_NULO;
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -274,7 +274,7 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.email: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO;
+		String msgassert="usuario.email: "+MensajesEntidades.VALIDACION_VALOR_NULO;
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -314,7 +314,7 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.nombre: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO;
+		String msgassert="usuario.nombre: "+MensajesEntidades.VALIDACION_VALOR_NULO;
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -334,7 +334,7 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.apellido: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO;
+		String msgassert="usuario.apellido: "+MensajesEntidades.VALIDACION_VALOR_NULO;
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -354,7 +354,7 @@ public class UsuarioTest {
 				null);
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.telefono: "+MensajesEntidades.VALIDACION_STRING_VALOR_NULO;
+		String msgassert="usuario.telefono: "+MensajesEntidades.VALIDACION_VALOR_NULO;
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
