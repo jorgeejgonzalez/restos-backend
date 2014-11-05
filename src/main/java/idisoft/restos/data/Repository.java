@@ -1,6 +1,7 @@
 package idisoft.restos.data;
 
 import idisoft.restos.entities.EstatusRegistro;
+import idisoft.restos.util.ConstantesEntidades;
 
 import java.util.List;
 
@@ -155,7 +156,7 @@ public abstract class Repository {
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected List findAllFiltered(Class c, String order, EstatusRegistro status)
+	protected List findAllFiltered(Class c, String order, EstatusRegistro status) throws NoResultException
 	{
 		CriteriaBuilder cb=em.getCriteriaBuilder();
 		CriteriaQuery criteria=cb.createQuery(c);		
@@ -164,18 +165,14 @@ public abstract class Repository {
 		criteria.select(root)		
 		.where(cb.equal(root.get("estatusRegistro"), status))
 		.orderBy(cb.asc(root.get(order)));
-		
-		
 		try
 		{
 			return em.createQuery(criteria).getResultList();
 		}
 		catch(NoResultException ex)
 		{
-			//TO-DO
-			return null;
+			throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
 		}
-		
 	}
 	
 }

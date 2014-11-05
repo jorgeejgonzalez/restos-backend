@@ -1,6 +1,6 @@
 package idisoft.restos.entities;
 
-import idisoft.restos.util.MensajesEntidades;
+import idisoft.restos.util.ConstantesEntidades;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -24,6 +24,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.Email;
+import org.jboss.util.HashCode;
 
 //import java.util.List;
 
@@ -40,46 +41,46 @@ import org.hibernate.validator.constraints.Email;
 )
 public class Usuario implements Serializable {
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_USUARIO_LOGIN+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Size(min=6,max=20,message=MensajesEntidades.ENTIDAD_USUARIO_LOGIN+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "6 y 20")
+	@NotNull(message=ConstantesEntidades.ENTIDAD_USUARIO_LOGIN+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=6,max=20,message=ConstantesEntidades.ENTIDAD_USUARIO_LOGIN+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "6 y 20")
 	@Column
 	private String login;		
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_USUARIO_PASSWORD+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Size(min=8,max=20,message=MensajesEntidades.ENTIDAD_USUARIO_PASSWORD+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "8 y 20")
+	@NotNull(message=ConstantesEntidades.ENTIDAD_USUARIO_PASSWORD+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=8,max=20,message=ConstantesEntidades.ENTIDAD_USUARIO_PASSWORD+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "8 y 20")
 	@Column(name="clave")
 	private String password;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_USUARIO_TIPO+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_USUARIO_TIPO+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column
 	private TipoUsuario tipo;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_USUARIO_EMAIL+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Email(message=MensajesEntidades.ENTIDAD_USUARIO_EMAIL+MensajesEntidades.VALIDACION_STRING_FORMATO_EMAIL)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_USUARIO_EMAIL+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Email(message=ConstantesEntidades.ENTIDAD_USUARIO_EMAIL+ConstantesEntidades.VALIDACION_STRING_FORMATO_EMAIL)
 	@Column
 	private String email;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_USUARIO_NOMBRE+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_USUARIO_NOMBRE+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column
 	private String nombre;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_USUARIO_APELLIDO+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_USUARIO_APELLIDO+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column
 	private String apellido;
 	
 	@Id
-	@NotNull(message=MensajesEntidades.ENTIDAD_USUARIO_CEDULA+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Size(min=8,max=9,message=MensajesEntidades.ENTIDAD_USUARIO_CEDULA+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "8 y 9")
-	@Pattern(regexp="[V,E][0-9]*",message=MensajesEntidades.ENTIDAD_USUARIO_CEDULA+MensajesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_USUARIO_CEDULA+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=8,max=9,message=ConstantesEntidades.ENTIDAD_USUARIO_CEDULA+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "8 y 9")
+	@Pattern(regexp="[V,E][0-9]*",message=ConstantesEntidades.ENTIDAD_USUARIO_CEDULA+ConstantesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO)
 	@Column
 	private String cedula;
 	
 	@Column
 	private String direccion;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_USUARIO_TELEFONO+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Size(min=11,max=11,message=MensajesEntidades.ENTIDAD_USUARIO_TELEFONO+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "11 y 11")
-	@Pattern(regexp="[0-9]*",message=MensajesEntidades.ENTIDAD_USUARIO_TELEFONO+MensajesEntidades.VALIDACION_STRING_VALOR_NUMERICO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_USUARIO_TELEFONO+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=11,max=11,message=ConstantesEntidades.ENTIDAD_USUARIO_TELEFONO+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+ "11 y 11")
+	@Pattern(regexp="[0-9]*",message=ConstantesEntidades.ENTIDAD_USUARIO_TELEFONO+ConstantesEntidades.VALIDACION_STRING_VALOR_NUMERICO)
 	@Column
 	private String telefono;
 	
@@ -92,6 +93,17 @@ public class Usuario implements Serializable {
 	
 	public Usuario()
 	{	
+		this.cedula="V00000000";
+		this.login="";
+		this.password="";
+		this.email="";
+		this.tipo=TipoUsuario.USUARIO_FINAL;
+		this.nombre="";
+		this.apellido="";
+		this.direccion="";
+		this.telefono="";
+		this.estatusRegistro=EstatusRegistro.INACTIVO;
+		this.pedidos = new HashSet<Pedido>(0);		
 	}
 	
 	public Usuario(String login,
@@ -209,5 +221,39 @@ public class Usuario implements Serializable {
 		Validator validator=factory.getValidator();
 		return validator.validate(this);
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		boolean check=false;
+		if(o instanceof Usuario)
+		{
+			Usuario u=(Usuario) o;			
+			check=this.cedula.equals(u.getCedula()) &&
+					this.nombre.equals(u.getNombre()) &&
+					this.apellido.equals(u.getApellido()) &&
+					this.direccion.equals(u.getDireccion()) &&
+					this.telefono.equals(u.getTelefono()) &&
+					this.login.equals(u.getLogin()) &&
+					this.password.equals(u.getPassword()) &&
+					this.email.equals(u.getEmail()) &&
+					this.tipo==u.getTipo();			
+		}
+		return check;
+	}
+	
+	/*
+	@Override
+	public int hashCode()
+	{
+		HashCode hc=new HashCode(ConstantesEntidades.ENTIDAD_USUARIO_HASHCODE_PRIME);
+		hc.add(this.cedula);
+		hc.add(this.login);
+		hc.add(this.nombre);
+		hc.add(this.apellido);
+		hc.add(this.email);
+		return hc.hashCode();
+	}
+	*/
 	
 }

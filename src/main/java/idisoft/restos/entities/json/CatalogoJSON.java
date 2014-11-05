@@ -66,11 +66,11 @@ public class CatalogoJSON implements Serializable{
 		this.sede=new SedeJSON();
 		this.sede.parseSedeFromCatalogo(catalogo.getSede());
 		
-		if(catalogo.getElementosCatalogo()!=null)
+		if(catalogo.getElementos()!=null)
 		{
-			if(!catalogo.getElementosCatalogo().isEmpty())
+			if(!catalogo.getElementos().isEmpty())
 			{
-				Iterator<ElementoCatalogo> iterator=catalogo.getElementosCatalogo().iterator();
+				Iterator<ElementoCatalogo> iterator=catalogo.getElementos().iterator();
 				while(iterator.hasNext())
 				{
 					ElementoCatalogo em=iterator.next();
@@ -98,11 +98,11 @@ public class CatalogoJSON implements Serializable{
 		this.estatus=catalogo.getEstatus();
 		this.sede=null;
 		
-		if(catalogo.getElementosCatalogo()!=null)
+		if(catalogo.getElementos()!=null)
 		{
-			if(!catalogo.getElementosCatalogo().isEmpty())
+			if(!catalogo.getElementos().isEmpty())
 			{
-				Iterator<ElementoCatalogo> iterator=catalogo.getElementosCatalogo().iterator();
+				Iterator<ElementoCatalogo> iterator=catalogo.getElementos().iterator();
 				while(iterator.hasNext())
 				{
 					ElementoCatalogo em=iterator.next();

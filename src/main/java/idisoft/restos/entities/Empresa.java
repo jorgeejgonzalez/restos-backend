@@ -1,6 +1,6 @@
 package idisoft.restos.entities;
 
-import idisoft.restos.util.MensajesEntidades;
+import idisoft.restos.util.ConstantesEntidades;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -21,25 +21,27 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.jboss.util.HashCode;
+
 @SuppressWarnings("serial")
 @Entity
 @Table(name="empresas",catalog="restos")
 public class Empresa implements Serializable {
 	
 	@Id
-	@NotNull(message=MensajesEntidades.ENTIDAD_EMPRESA_RIF+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Size(min=10,max=100,message=MensajesEntidades.ENTIDAD_EMPRESA_RIF+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 10")
-	@Pattern(regexp="[J,V,E,G][0-9]*",message=MensajesEntidades.ENTIDAD_EMPRESA_RIF+MensajesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_EMPRESA_RIF+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=10,max=10,message=ConstantesEntidades.ENTIDAD_EMPRESA_RIF+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 10")
+	@Pattern(regexp="[J,V,E,G][0-9]*",message=ConstantesEntidades.ENTIDAD_EMPRESA_RIF+ConstantesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO)
 	@Column
 	private String rif;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_EMPRESA_RAZON_SOCIAL+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Size(min=10,max=100,message=MensajesEntidades.ENTIDAD_EMPRESA_RAZON_SOCIAL+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 100")
+	@NotNull(message=ConstantesEntidades.ENTIDAD_EMPRESA_RAZON_SOCIAL+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=10,max=100,message=ConstantesEntidades.ENTIDAD_EMPRESA_RAZON_SOCIAL+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 100")
 	@Column(name="razon_social")
 	private String razonSocial;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_EMPRESA_DIRECCION_FISCAL+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Size(min=10,max=100,message=MensajesEntidades.ENTIDAD_EMPRESA_DIRECCION_FISCAL+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 100")
+	@NotNull(message=ConstantesEntidades.ENTIDAD_EMPRESA_DIRECCION_FISCAL+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=10,max=100,message=ConstantesEntidades.ENTIDAD_EMPRESA_DIRECCION_FISCAL+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 100")
 	@Column(name="direccion_fiscal")
 	private String direccionFiscal;
 	
@@ -52,7 +54,11 @@ public class Empresa implements Serializable {
 		
 	public Empresa()
 	{
-		
+		this.rif="V000000000";
+		this.razonSocial="";
+		this.direccionFiscal="";
+		this.estatusRegistro=EstatusRegistro.INACTIVO;
+		this.sedes=new HashSet<Sede>(0);		
 	}
 	
 	public Empresa(String rif,
@@ -109,4 +115,27 @@ public class Empresa implements Serializable {
 		return validator.validate(this);
 	}
 	
+	@Override
+	public boolean equals(Object o)
+	{
+		boolean check=false;
+		if(o instanceof Empresa)
+		{
+			Empresa e=(Empresa) o;
+			check= this.rif.equals(e.getRif()) &&
+					this.razonSocial.equals(e.getRazonSocial()) &&
+					this.direccionFiscal.equals(e.getDireccionFiscal());
+		}
+		return check;
+	}
+	/*
+	@Override
+	public int hashCode()
+	{
+		HashCode hc=new HashCode(ConstantesEntidades.ENTIDAD_EMPRESA_HASHCODE_PRIME);
+		hc.add(this.rif);
+		hc.add(this.razonSocial);
+		return hc.hashCode();
+	}
+	*/
 }

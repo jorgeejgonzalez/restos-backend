@@ -1,5 +1,6 @@
 package idisoft.restos.rest;
 
+import idisoft.restos.controller.UsuarioController;
 import idisoft.restos.data.CatalogosRepository;
 import idisoft.restos.data.PedidoRepository;
 import idisoft.restos.data.UsuarioRepository;
@@ -11,6 +12,7 @@ import idisoft.restos.entities.Usuario;
 import idisoft.restos.entities.json.PedidoJSON;
 import idisoft.restos.entities.json.UsuarioJSON;
 import idisoft.restos.services.UsuarioRegistry;
+import idisoft.restos.util.ConstantesEntidades;
 import idisoft.restos.util.ConstantesREST;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolation;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -48,47 +51,22 @@ public class UsuarioREST extends RestService{
 	@Inject
 	private UsuarioRegistry registro;
 	
-	private Response.ResponseBuilder listarUsuarios(List<Usuario> usuarios, String funcion)
-	{
-		Response.ResponseBuilder builder = null;
-		
-		if(usuarios!=null)
-		{
-			if(usuarios.size()>0)
-			{
-				List<UsuarioJSON> usuariosjson=new ArrayList<UsuarioJSON>();
-				Iterator<Usuario> iterator=usuarios.iterator();
-				
-				builder=this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
-				
-				while(iterator.hasNext())
-				{
-					UsuarioJSON usj=new UsuarioJSON();
-					usj.parseUsuario(iterator.next());
-					usuariosjson.add(usj);
-				}
-				
-				builder.entity(usuariosjson);
-				
-			}
-			else
-			{
-				String msg=funcion+": "+ConstantesREST.REST_MENSAJE_LISTA_VACIA;
-				builder=this.builderProvider(Status.NOT_FOUND,MediaType.APPLICATION_JSON);
-				builder.entity(msg);
-				logger.log(Level.WARNING,msg);
-			}
-		}
-		else
-		{
-			String msg=funcion+": "+ConstantesREST.REST_MENSAJE_LISTA_NULA;
-			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);			
-			builder.entity(msg);
-			logger.log(Level.SEVERE,msg);
-		}
-		
-		return builder;
+	@Inject
+	private UsuarioController controller;
 	
+	private List<UsuarioJSON> usuariosParseJSON(List<Usuario> usuarios)
+	{
+		List<UsuarioJSON> usuariosjson=new ArrayList<UsuarioJSON>();
+		Iterator<Usuario> iterator=usuarios.iterator();
+		
+		while(iterator.hasNext())
+		{
+			UsuarioJSON usj=new UsuarioJSON();
+			usj.parseUsuario(iterator.next());
+			usuariosjson.add(usj);
+		}
+		
+		return usuariosjson;
 	}
 	
 	@POST
@@ -97,25 +75,50 @@ public class UsuarioREST extends RestService{
 	public Response listarUsuariosActivos()
 	{
 		Response.ResponseBuilder builder = null;
-		
-		List<Usuario> usuarios=repositorio.findAllActive();
-		
-		builder=listarUsuarios(usuarios, ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LISTAR);
-		
+		try
+		{
+			List<UsuarioJSON> usuarios= usuariosParseJSON(repositorio.findAllDeleted());
+			if(usuarios.isEmpty())
+			{
+				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
+			}
+			builder=builderProvider(Status.OK);
+			builder.entity(usuarios);
+		}
+		catch(NoResultException ex)
+		{
+			String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LISTAR+": "+ex.getMessage();
+			builder=builderProvider(Status.NO_CONTENT);
+			builder.entity(msg);
+			logger.warning(msg);
+		}
 		return builder.build();
 	}
 	
+		
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ConstantesREST.REST_USUARIOS_FUNCION_LISTAR_INACTIVOS)
 	public Response listarUsuariosInActivos()
 	{
 		Response.ResponseBuilder builder = null;
-		
-		List<Usuario> usuarios=repositorio.findAllInactive();
-		
-		builder=listarUsuarios(usuarios, ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LISTAR_INACTIVOS);
-		
+		try
+		{
+			List<UsuarioJSON> usuarios= usuariosParseJSON(repositorio.findAllDeleted());
+			if(usuarios.isEmpty())
+			{
+				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
+			}
+			builder=builderProvider(Status.OK);
+			builder.entity(usuarios);
+		}
+		catch(NoResultException ex)
+		{
+			String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LISTAR_INACTIVOS+": "+ex.getMessage();
+			builder=builderProvider(Status.NO_CONTENT);
+			builder.entity(msg);
+			logger.warning(msg);
+		}
 		return builder.build();
 	}
 	
@@ -125,11 +128,23 @@ public class UsuarioREST extends RestService{
 	public Response listarUsuariosEliminados()
 	{
 		Response.ResponseBuilder builder = null;
-		
-		List<Usuario> usuarios=repositorio.findAllInactive();
-		
-		builder=listarUsuarios(usuarios, ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LISTAR_ELIMINADOS);
-		
+		try
+		{
+			List<UsuarioJSON> usuarios= usuariosParseJSON(repositorio.findAllDeleted());
+			if(usuarios.isEmpty())
+			{
+				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
+			}
+			builder=builderProvider(Status.OK);
+			builder.entity(usuarios);
+		}
+		catch(NoResultException ex)
+		{
+			String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LISTAR_ELIMINADOS+": "+ex.getMessage();
+			builder=builderProvider(Status.NO_CONTENT);
+			builder.entity(msg);
+			logger.warning(msg);
+		}
 		return builder.build();
 	}
 	

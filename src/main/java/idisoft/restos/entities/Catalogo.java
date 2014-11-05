@@ -1,6 +1,6 @@
 package idisoft.restos.entities;
 
-import idisoft.restos.util.MensajesEntidades;
+import idisoft.restos.util.ConstantesEntidades;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -26,6 +26,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.jboss.util.HashCode;
 
 @SuppressWarnings("serial")
 @Entity
@@ -37,16 +38,16 @@ public class Catalogo implements Serializable{
 	@Column(name="id")
 	private int id;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_CATALOGO_NOMBRE+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Size(min=10,max=100,message=MensajesEntidades.ENTIDAD_CATALOGO_NOMBRE+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 100")
+	@NotNull(message=ConstantesEntidades.ENTIDAD_CATALOGO_NOMBRE+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=10,max=100,message=ConstantesEntidades.ENTIDAD_CATALOGO_NOMBRE+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 100")
 	@Column
 	private String nombre;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_CATALOGO_ESTATUS+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_CATALOGO_ESTATUS+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column
 	private EstatusCatalogo estatus;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_CATALOGO_SEDE+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_CATALOGO_SEDE+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Valid
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="sede")	
@@ -58,7 +59,16 @@ public class Catalogo implements Serializable{
 	@Valid
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "catalogo")
 	@Cascade(CascadeType.ALL)
-	private Set<ElementoCatalogo> elementosCatalogo = new HashSet<ElementoCatalogo>(0);
+	private Set<ElementoCatalogo> elementos = new HashSet<ElementoCatalogo>(0);
+	
+	public Catalogo()
+	{
+		this.nombre="";
+		this.estatus=EstatusCatalogo.NODISPONIBLE;
+		this.sede=new Sede();
+		this.estatusRegistro=EstatusRegistro.INACTIVO;
+		this.elementos = new HashSet<ElementoCatalogo>(0);
+	}
 	
 	public int getId() {
 		return id;
@@ -94,11 +104,11 @@ public class Catalogo implements Serializable{
 	public void setEstatusRegistro(EstatusRegistro estatusRegistro) {
 		this.estatusRegistro = estatusRegistro;
 	}
-	public Set<ElementoCatalogo> getElementosCatalogo() {
-		return elementosCatalogo;
+	public Set<ElementoCatalogo> getElementos() {
+		return elementos;
 	}
-	public void setElementosCatalogo(Set<ElementoCatalogo> elementosCatalogo) {
-		this.elementosCatalogo = elementosCatalogo;
+	public void setElementos(Set<ElementoCatalogo> elementos) {
+		this.elementos = elementos;
 	}
 	
 	public Set<ConstraintViolation<Catalogo>> validarInstancia()
@@ -107,6 +117,37 @@ public class Catalogo implements Serializable{
 		Validator validator=factory.getValidator();
 		return validator.validate(this);
 	}
+	
+	public boolean isOfSede(Sede sede)
+	{
+		return this.sede.equals(sede);
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		boolean check=false;
+		if(o instanceof Catalogo)
+		{
+			Catalogo c=(Catalogo) o;
+			check= this.id==c.getId() &&
+					this.nombre.equals(c.getNombre()) &&
+					this.estatus==c.getEstatus() &&
+					this.sede.equals(c.getSede());
+		}
+		return check;
+	}
+	
+	/*
+	@Override
+	public int hashCode()
+	{
+		HashCode hc=new HashCode(ConstantesEntidades.ENTIDAD_CATALOGO_HASHCODE_PRIME);
+		hc.add(this.nombre);
+		hc.add(this.sede.getNombre());
+		return hc.hashCode();
+	}
+	*/
 	
 }
 

@@ -1,4 +1,4 @@
-package idisoft.restos.entities.test.unit;
+package idisoft.restos.test.unit;
 
 import static org.junit.Assert.*;
 
@@ -6,7 +6,7 @@ import java.util.Set;
 
 import idisoft.restos.entities.TipoUsuario;
 import idisoft.restos.entities.Usuario;
-import idisoft.restos.util.MensajesEntidades;
+import idisoft.restos.util.ConstantesEntidades;
 
 import javax.validation.ConstraintViolation;
 
@@ -27,25 +27,6 @@ public class UsuarioTest {
 	 */
 
 	@Test
-	public void cedulaIsNull() {
-		Usuario u=new Usuario("jorgegonzalez",
-				"algoalgo",
-				TipoUsuario.MASTER,
-				"jorge@algo.com",
-				"jorge",
-				"gonzalez",
-				null,
-				"san francisco",
-				"04140675922");
-		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
-		
-		String msgassert="usuario.cedula: "+MensajesEntidades.VALIDACION_VALOR_NULO;
-		
-		assertEquals(1,violaciones.size());
-		assertEquals(msgassert, violaciones.iterator().next().getMessage());
-	}
-	
-	@Test
 	public void cedulaIsLessThanSize() {
 		Usuario u=new Usuario("jorgegonzalez",
 				"algoalgo",
@@ -58,7 +39,7 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.cedula: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"8 y 9";
+		String msgassert="usuario.cedula: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"8 y 9";
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -77,7 +58,7 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.cedula: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"8 y 9";
+		String msgassert="usuario.cedula: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"8 y 9";
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -96,7 +77,7 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.cedula: "+MensajesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO;
+		String msgassert="usuario.cedula: "+ConstantesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO;
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -115,33 +96,13 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert=MensajesEntidades.ENTIDAD_USUARIO_CEDULA+MensajesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO;
+		String msgassert=ConstantesEntidades.ENTIDAD_USUARIO_CEDULA+ConstantesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO;
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());		
 		
 	}
 	
-	@Test
-	public void loginIsNull()
-	{
-		Usuario u=new Usuario(null,
-				"algoalgoalgo",
-				TipoUsuario.MASTER,
-				"jorge@algo.com",
-				"jorge",
-				"gonzalez",
-				"V17230971",
-				"san francisco",
-				"04140675922");
-		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
-		
-		String msgassert="usuario.login: "+MensajesEntidades.VALIDACION_VALOR_NULO;
-		
-		assertEquals(1,violaciones.size());
-		assertEquals(msgassert, violaciones.iterator().next().getMessage());
-		
-	}
 	
 	@Test
 	public void loginIsLessThanSize() {
@@ -156,7 +117,7 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.login: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"6 y 20";
+		String msgassert="usuario.login: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"6 y 20";
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -175,33 +136,13 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.login: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"6 y 20";
+		String msgassert="usuario.login: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"6 y 20";
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
 		
 	}
 		
-	@Test
-	public void passwordIsNull()
-	{
-		Usuario u=new Usuario("jorgegonzalez",
-				null,
-				TipoUsuario.MASTER,
-				"jorge@algo.com",
-				"jorge",
-				"gonzalez",
-				"V17230971",
-				"san francisco",
-				"04140675922");
-		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
-		
-		String msgassert="usuario.password: "+MensajesEntidades.VALIDACION_VALOR_NULO;
-		
-		assertEquals(1,violaciones.size());
-		assertEquals(msgassert, violaciones.iterator().next().getMessage());
-	}
-	
 	@Test
 	public void passwordIsLessThanSize() {
 		Usuario u=new Usuario("jorgegonzalez",
@@ -215,7 +156,7 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.password: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"8 y 20";
+		String msgassert="usuario.password: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"8 y 20";
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -234,52 +175,12 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.password: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"8 y 20";
+		String msgassert="usuario.password: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"8 y 20";
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
 	}
 
-	@Test
-	public void tipoIsNull()
-	{
-		Usuario u=new Usuario("jorgegonzalez",
-				"algoalgoalgo",
-				null,
-				"jorge@algo.com",
-				"jorge",
-				"gonzalez",
-				"V17230971",
-				"san francisco",
-				"04140675922");
-		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
-		
-		String msgassert="usuario.tipo: "+MensajesEntidades.VALIDACION_VALOR_NULO;
-		
-		assertEquals(1,violaciones.size());
-		assertEquals(msgassert, violaciones.iterator().next().getMessage());
-	}
-
-	@Test
-	public void emailIsNull()
-	{
-		Usuario u=new Usuario("jorgegonzalez",
-				"algoalgoalgo",
-				TipoUsuario.MASTER,
-				null,
-				"jorge",
-				"gonzalez",
-				"V17230971",
-				"san francisco",
-				"04140675922");
-		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
-		
-		String msgassert="usuario.email: "+MensajesEntidades.VALIDACION_VALOR_NULO;
-		
-		assertEquals(1,violaciones.size());
-		assertEquals(msgassert, violaciones.iterator().next().getMessage());
-	}
-	
 	@Test
 	public void emailIsNotFormatted()
 	{
@@ -294,72 +195,12 @@ public class UsuarioTest {
 				"04140675922");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.email: "+MensajesEntidades.VALIDACION_STRING_FORMATO_EMAIL;
-		
-		assertEquals(1,violaciones.size());
-		assertEquals(msgassert, violaciones.iterator().next().getMessage());
-	}
-
-	@Test
-	public void nombreIsNull()
-	{
-		Usuario u=new Usuario("jorgegonzalez",
-				"algoalgoalgo",
-				TipoUsuario.MASTER,
-				"jorge@algo.com",
-				null,
-				"gonzalez",
-				"V17230971",
-				"san francisco",
-				"04140675922");
-		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
-		
-		String msgassert="usuario.nombre: "+MensajesEntidades.VALIDACION_VALOR_NULO;
+		String msgassert="usuario.email: "+ConstantesEntidades.VALIDACION_STRING_FORMATO_EMAIL;
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
 	}
 	
-	@Test
-	public void apellidoIsNull()
-	{
-		Usuario u=new Usuario("jorgegonzalez",
-				"algoalgoalgo",
-				TipoUsuario.MASTER,
-				"jorge@algo.com",
-				"jorge",
-				null,
-				"V17230971",
-				"san francisco",
-				"04140675922");
-		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
-		
-		String msgassert="usuario.apellido: "+MensajesEntidades.VALIDACION_VALOR_NULO;
-		
-		assertEquals(1,violaciones.size());
-		assertEquals(msgassert, violaciones.iterator().next().getMessage());
-	}
-	
-	@Test 
-	public void telefonoIsNull()
-	{
-		Usuario u=new Usuario("jorgegonzalez",
-				"algoalgoalgo",
-				TipoUsuario.MASTER,
-				"jorge@algo.com",
-				"jorge",
-				"gonzalez",
-				"V17230971",
-				"san francisco",
-				null);
-		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
-		
-		String msgassert="usuario.telefono: "+MensajesEntidades.VALIDACION_VALOR_NULO;
-		
-		assertEquals(1,violaciones.size());
-		assertEquals(msgassert, violaciones.iterator().next().getMessage());
-	}
-
 	@Test
 	public void telefonoIsLessThanSize()
 	{
@@ -374,7 +215,7 @@ public class UsuarioTest {
 				"0414067592");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.telefono: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"11 y 11";
+		String msgassert="usuario.telefono: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"11 y 11";
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -394,7 +235,7 @@ public class UsuarioTest {
 				"041406759222");
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.telefono: "+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"11 y 11";
+		String msgassert="usuario.telefono: "+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"11 y 11";
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
@@ -415,10 +256,47 @@ public class UsuarioTest {
 		
 		Set<ConstraintViolation<Usuario>> violaciones=u.validarInstancia();
 		
-		String msgassert="usuario.telefono: "+MensajesEntidades.VALIDACION_STRING_VALOR_NUMERICO;
+		String msgassert="usuario.telefono: "+ConstantesEntidades.VALIDACION_STRING_VALOR_NUMERICO;
 		
 		assertEquals(1,violaciones.size());
 		assertEquals(msgassert, violaciones.iterator().next().getMessage());
+	}
+	
+	@Test 
+	public void usuariosAreEqual()
+	{
+		Usuario u1=new Usuario("jorgegonzalez",
+				"algoalgoalgo",
+				TipoUsuario.MASTER,
+				"jorge@algo.com",
+				"jorge",
+				"gonzalez",
+				"V17230971",
+				"san francisco",
+				"0414 675922");
+		
+		Usuario u2=new Usuario("jorgegonzalez",
+				"algoalgoalgo",
+				TipoUsuario.MASTER,
+				"jorge@algo.com",
+				"jorge",
+				"gonzalez",
+				"V17230971",
+				"san francisco",
+				"0414 675922");
+		
+		Usuario u3=new Usuario("jorgegonzalez",
+				"agoalgoalgo",
+				TipoUsuario.MASTER,
+				"jorge@algo.com",
+				"jorge",
+				"gonzalez",
+				"V17230971",
+				"san francisco",
+				"0414 675922");
+		
+		assertEquals(true, u1.equals(u2));
+		assertEquals(false, u1.equals(u3));
 	}
 	
 }

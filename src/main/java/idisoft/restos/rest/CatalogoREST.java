@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolation;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -23,7 +24,9 @@ import idisoft.restos.entities.Catalogo;
 import idisoft.restos.entities.ElementoCatalogo;
 import idisoft.restos.entities.EstatusRegistro;
 import idisoft.restos.entities.json.CatalogoJSON;
+import idisoft.restos.entities.json.UsuarioJSON;
 import idisoft.restos.services.CatalogoRegistry;
+import idisoft.restos.util.ConstantesEntidades;
 import idisoft.restos.util.ConstantesREST;
 
 @Path(ConstantesREST.REST_CATALOGOS)
@@ -35,6 +38,23 @@ public class CatalogoREST extends RestService {
 	@Inject
 	private CatalogoRegistry registro;
 
+	private List<CatalogoJSON> catalogosParseJSON(List<Catalogo> catalogos)
+	{
+		List<CatalogoJSON> catalogosjson=new ArrayList<CatalogoJSON>();
+		Iterator<Catalogo> iterator=catalogos.iterator();
+		
+		while(iterator.hasNext())
+		{
+			Catalogo cat=iterator.next();
+			if(cat.getEstatusRegistro()==EstatusRegistro.ACTIVO)
+			{
+				CatalogoJSON caj=new CatalogoJSON();
+				caj.parseCatalogo(cat);
+				catalogosjson.add(caj);
+			}			
+		}
+		return catalogosjson;
+	}
 	
 	private Response.ResponseBuilder listarCatalogos(List<Catalogo> catalogos, String funcion)
 	{
@@ -82,10 +102,24 @@ public class CatalogoREST extends RestService {
 	@Path(ConstantesREST.REST_CATALOGOS_FUNCION_LISTAR)
 	public Response listarCatalogosActivos()
 	{
-		List<Catalogo> catalogos=repositorio.findAllActive();
-		
-		Response.ResponseBuilder builder=listarCatalogos(catalogos, ConstantesREST.REST_CATALOGOS+ConstantesREST.REST_CATALOGOS_FUNCION_LISTAR);
-		
+		Response.ResponseBuilder builder = null;
+		try
+		{
+			List<CatalogoJSON> catalogos= catalogosParseJSON(repositorio.findAllActive());
+			if(catalogos.isEmpty())
+			{
+				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
+			}
+			builder=builderProvider(Status.OK);
+			builder.entity(catalogos);
+		}
+		catch(NoResultException ex)
+		{
+			String msg=ConstantesREST.REST_CATALOGOS+ConstantesREST.REST_CATALOGOS_FUNCION_LISTAR+": "+ex.getMessage();
+			builder=builderProvider(Status.NO_CONTENT);
+			builder.entity(msg);
+			logger.warning(msg);
+		}
 		return builder.build();
 	}
 	
@@ -94,10 +128,24 @@ public class CatalogoREST extends RestService {
 	@Path(ConstantesREST.REST_CATALOGOS_FUNCION_LISTAR_INACTIVOS)
 	public Response listarCatalogosInactivos()
 	{
-		List<Catalogo> catalogos=repositorio.findAllInactive();
-		
-		Response.ResponseBuilder builder=listarCatalogos(catalogos, ConstantesREST.REST_CATALOGOS+ConstantesREST.REST_CATALOGOS_FUNCION_LISTAR_INACTIVOS);
-		
+		Response.ResponseBuilder builder = null;
+		try
+		{
+			List<CatalogoJSON> catalogos= catalogosParseJSON(repositorio.findAllInactive());
+			if(catalogos.isEmpty())
+			{
+				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
+			}
+			builder=builderProvider(Status.OK);
+			builder.entity(catalogos);
+		}
+		catch(NoResultException ex)
+		{
+			String msg=ConstantesREST.REST_CATALOGOS+ConstantesREST.REST_CATALOGOS_FUNCION_LISTAR_INACTIVOS+": "+ex.getMessage();
+			builder=builderProvider(Status.NO_CONTENT);
+			builder.entity(msg);
+			logger.warning(msg);
+		}
 		return builder.build();
 	}
 	
@@ -106,10 +154,24 @@ public class CatalogoREST extends RestService {
 	@Path(ConstantesREST.REST_CATALOGOS_FUNCION_LISTAR_ELIMINADOS)
 	public Response listarCatalogosEliminados()
 	{
-		List<Catalogo> catalogos=repositorio.findAllDeleted();
-		
-		Response.ResponseBuilder builder=listarCatalogos(catalogos, ConstantesREST.REST_CATALOGOS+ConstantesREST.REST_CATALOGOS_FUNCION_LISTAR_ELIMINADOS);
-		
+		Response.ResponseBuilder builder = null;
+		try
+		{
+			List<CatalogoJSON> catalogos= catalogosParseJSON(repositorio.findAllDeleted());
+			if(catalogos.isEmpty())
+			{
+				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
+			}
+			builder=builderProvider(Status.OK);
+			builder.entity(catalogos);
+		}
+		catch(NoResultException ex)
+		{
+			String msg=ConstantesREST.REST_CATALOGOS+ConstantesREST.REST_CATALOGOS_FUNCION_LISTAR_ELIMINADOS+": "+ex.getMessage();
+			builder=builderProvider(Status.NO_CONTENT);
+			builder.entity(msg);
+			logger.warning(msg);
+		}
 		return builder.build();
 	}
 	
@@ -119,10 +181,24 @@ public class CatalogoREST extends RestService {
 	@Path(ConstantesREST.REST_CATALOGOS_SEDE_FUNCION_LISTAR)
 	public Response listarCatalogosActivosPorSede(@PathParam("id") int sedeid)
 	{
-		List<Catalogo> catalogos=repositorio.findAllActiveBySede(sedeid);
-		
-		Response.ResponseBuilder builder=listarCatalogos(catalogos, ConstantesREST.REST_CATALOGOS+ConstantesREST.REST_CATALOGOS_SEDE_FUNCION_LISTAR);
-		
+		Response.ResponseBuilder builder = null;
+		try
+		{
+			List<CatalogoJSON> catalogos= catalogosParseJSON(repositorio.findAllActiveBySede(sedeid));
+			if(catalogos.isEmpty())
+			{
+				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
+			}
+			builder=builderProvider(Status.OK);
+			builder.entity(catalogos);
+		}
+		catch(NoResultException ex)
+		{
+			String msg=ConstantesREST.REST_CATALOGOS+ConstantesREST.REST_CATALOGOS_SEDE_FUNCION_LISTAR+": "+ex.getMessage();
+			builder=builderProvider(Status.NO_CONTENT);
+			builder.entity(msg);
+			logger.warning(msg);
+		}
 		return builder.build();
 	}
 	
@@ -132,10 +208,24 @@ public class CatalogoREST extends RestService {
 	@Path(ConstantesREST.REST_CATALOGOS_SEDE_FUNCION_LISTAR_INACTIVOS)
 	public Response listarCatalogosInactivosPorSede(@PathParam("id") int sedeid)
 	{
-		List<Catalogo> catalogos=repositorio.findAllInactiveBySede(sedeid);
-		
-		Response.ResponseBuilder builder=listarCatalogos(catalogos, ConstantesREST.REST_CATALOGOS+ConstantesREST.REST_CATALOGOS_SEDE_FUNCION_LISTAR_INACTIVOS);
-		
+		Response.ResponseBuilder builder = null;
+		try
+		{
+			List<CatalogoJSON> catalogos= catalogosParseJSON(repositorio.findAllInactiveBySede(sedeid));
+			if(catalogos.isEmpty())
+			{
+				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
+			}
+			builder=builderProvider(Status.OK);
+			builder.entity(catalogos);
+		}
+		catch(NoResultException ex)
+		{
+			String msg=ConstantesREST.REST_CATALOGOS+ConstantesREST.REST_CATALOGOS_SEDE_FUNCION_LISTAR+": "+ex.getMessage();
+			builder=builderProvider(Status.NO_CONTENT);
+			builder.entity(msg);
+			logger.warning(msg);
+		}
 		return builder.build();
 	}
 	
@@ -145,10 +235,24 @@ public class CatalogoREST extends RestService {
 	@Path(ConstantesREST.REST_CATALOGOS_SEDE_FUNCION_LISTAR_ELIMINADOS)
 	public Response listarCatalogosEliminadosPorSede(@PathParam("id") int sedeid)
 	{
-		List<Catalogo> catalogos=repositorio.findAllActiveBySede(sedeid);
-		
-		Response.ResponseBuilder builder=listarCatalogos(catalogos, ConstantesREST.REST_CATALOGOS+ConstantesREST.REST_CATALOGOS_SEDE_FUNCION_LISTAR_ELIMINADOS);
-		
+		Response.ResponseBuilder builder = null;
+		try
+		{
+			List<CatalogoJSON> catalogos= catalogosParseJSON(repositorio.findAllDeletedBySede(sedeid));
+			if(catalogos.isEmpty())
+			{
+				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
+			}
+			builder=builderProvider(Status.OK);
+			builder.entity(catalogos);
+		}
+		catch(NoResultException ex)
+		{
+			String msg=ConstantesREST.REST_CATALOGOS+ConstantesREST.REST_CATALOGOS_SEDE_FUNCION_LISTAR+": "+ex.getMessage();
+			builder=builderProvider(Status.NO_CONTENT);
+			builder.entity(msg);
+			logger.warning(msg);
+		}
 		return builder.build();
 	}
 	
@@ -235,7 +339,7 @@ public class CatalogoREST extends RestService {
 				{
 					elemento.setEstatusRegistro(EstatusRegistro.ACTIVO);
 					elemento.setCatalogo(catalogo);
-					catalogo.getElementosCatalogo().add(elemento);
+					catalogo.getElementos().add(elemento);
 					registro.adjuntarElemento(elemento, catalogo);
 					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_REGISTRADA;
 					builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
@@ -312,7 +416,7 @@ public class CatalogoREST extends RestService {
 			{
 				elemento.setEstatusRegistro(EstatusRegistro.ACTIVO);
 				elemento.setCatalogo(catalogo);
-				catalogo.getElementosCatalogo().add(elemento);
+				catalogo.getElementos().add(elemento);
 				registro.adjuntarElemento(elemento, catalogo);
 				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_REGISTRADA;
 				builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);

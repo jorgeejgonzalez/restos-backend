@@ -9,7 +9,7 @@ import idisoft.restos.entities.EstatusRegistro;
 import idisoft.restos.entities.Pedido;
 import idisoft.restos.entities.TipoUsuario;
 import idisoft.restos.entities.Usuario;
-import idisoft.restos.util.MensajesEntidades;
+import idisoft.restos.util.ConstantesEntidades;
 
 @SuppressWarnings("serial")
 public class UsuarioJSON implements Serializable{
@@ -118,7 +118,7 @@ public class UsuarioJSON implements Serializable{
 	{
 		this.cedula=usuario.getCedula();
 		this.login =usuario.getLogin();
-		this.password=MensajesEntidades.USUARIO_CLAVE_OCULTA;
+		this.password=ConstantesEntidades.USUARIO_CLAVE_OCULTA;
 		this.email=usuario.getEmail();
 		this.nombre=usuario.getNombre();
 		this.apellido=usuario.getApellido();
@@ -157,7 +157,7 @@ public class UsuarioJSON implements Serializable{
 	{
 		this.cedula=usuario.getCedula();
 		this.login =usuario.getLogin();
-		this.password=MensajesEntidades.USUARIO_CLAVE_OCULTA;
+		this.password=ConstantesEntidades.USUARIO_CLAVE_OCULTA;
 		this.email=usuario.getEmail();
 		this.nombre=usuario.getNombre();
 		this.apellido=usuario.getApellido();

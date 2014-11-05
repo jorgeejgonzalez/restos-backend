@@ -1,6 +1,6 @@
 package idisoft.restos.entities;
 
-import idisoft.restos.util.MensajesEntidades;
+import idisoft.restos.util.ConstantesEntidades;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -22,6 +22,8 @@ import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.jboss.util.HashCode;
+
 @SuppressWarnings("serial")
 @Entity
 @Table(name="catalogo_elementos",catalog="restos")
@@ -32,27 +34,27 @@ public class ElementoCatalogo implements Serializable {
 	@Column(name="id")
 	private int id;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_ELEMENTOCATALOGO_NOMBRE+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_ELEMENTOCATALOGO_NOMBRE+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column
 	private String nombre;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_ELEMENTOCATALOGO_DESCRIPCION+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Size(min=10,max=200,message=MensajesEntidades.ENTIDAD_ELEMENTOCATALOGO_DESCRIPCION+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 200")
+	@NotNull(message=ConstantesEntidades.ENTIDAD_ELEMENTOCATALOGO_DESCRIPCION+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=10,max=200,message=ConstantesEntidades.ENTIDAD_ELEMENTOCATALOGO_DESCRIPCION+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"10 y 200")
 	@Column
 	private String descripcion;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_ELEMENTOCATALOGO_PRECIO+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_ELEMENTOCATALOGO_PRECIO+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column
 	private float precio;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_ELEMENTOCATALOGO_ESTATUS+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_ELEMENTOCATALOGO_ESTATUS+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column
 	private EstatusCatalogo estatus;
 	
 	@Column(name="estatus_registro")
 	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_ELEMENTOCATALOGO_CATALOGO+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_ELEMENTOCATALOGO_CATALOGO+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Valid
 	@ManyToOne(fetch = FetchType.LAZY)	
 	@JoinColumn(name="catalogo")
@@ -119,4 +121,29 @@ public class ElementoCatalogo implements Serializable {
 		return this.catalogo.getId()==catalogo.getId();
 	}
 	
+	@Override
+	public boolean equals(Object o)
+	{
+		boolean check=false;
+		if(o instanceof ElementoCatalogo)
+		{
+			ElementoCatalogo e=(ElementoCatalogo) o;
+			check= this.id==e.getId() &&
+					this.nombre.equals(e.getNombre()) &&
+					this.descripcion.equals(e.getDescripcion()) &&
+					this.estatus==e.getEstatus() &&
+					this.precio==e.getPrecio() &&
+					this.catalogo.equals(e.getCatalogo());
+		}
+		return check;
+	}
+	/*
+	@Override
+	public int hashCode()
+	{
+		HashCode hc=new HashCode(ConstantesEntidades.ENTIDAD_ELEMENTOCATALOGO_HASHCODE_PRIME);
+		hc.add(this.id);
+		return hc.hashCode();
+	}
+	*/
 }

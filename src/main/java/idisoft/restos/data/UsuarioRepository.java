@@ -4,8 +4,11 @@ import java.util.List;
 
 import idisoft.restos.entities.EstatusRegistro;
 import idisoft.restos.entities.Usuario;
+import idisoft.restos.util.ConstantesEntidades;
+import idisoft.restos.util.ConstantesREST;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.NoResultException;
 
 
 @ApplicationScoped
@@ -34,9 +37,8 @@ public class UsuarioRepository extends Repository implements ListRecords{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Usuario> findAllActive()
+	public List<Usuario> findAllActive() throws NoResultException
 	{
-		//un comentario
 		return findAllFiltered(Usuario.class, "cedula", EstatusRegistro.ACTIVO);
 	}
 	

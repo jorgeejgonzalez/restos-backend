@@ -1,6 +1,6 @@
 package idisoft.restos.util;
 
-public class ConstantesREST {
+public abstract class ConstantesREST {
 	
 	/*
 	 * Entorno REST

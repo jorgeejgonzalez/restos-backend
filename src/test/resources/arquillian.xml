@@ -27,21 +27,22 @@
 
    <!-- Force the use of the Servlet 3.0 protocol with all containers, as it is the most mature -->
    <defaultProtocol type="Servlet 3.0" />
-
+   
     <!-- Example configuration for a remote JBoss Enterprise Application Platform 6 or AS 7 instance -->
-    <container qualifier="jboss-managed" default="true">
+    <container qualifier="jboss-managed"  default="true">
         <configuration>
-        	<property name="jbossHome">c:\Program Files\wildfly-8.1.0.Final</property>
-        	        	
+        	<property name="jbossHome">c:\restosapp\testenv\wildfly-8.1.0.Final</property>
+        	<property name="allowConnectingToRunningServer">true</property>
         </configuration>
     </container>
     
-    <container qualifier="jboss-remote">
+    <container qualifier="jboss-remote">    
       <configuration>
+      		<property name="allowConnectingToRunningServer">true</property>
         	<property name="username">jorge</property>
         	<property name="password">M0nd0ng0</property>
-        	<property name="managementAddress">127.0.0.1</property>
-        	<property name="managementPort">9990</property>        	
+        	<property name="managementAddress">192.168.15.116</property>
+        	<property name="managementPort">9999</property>        	
         </configuration>
     </container>
 

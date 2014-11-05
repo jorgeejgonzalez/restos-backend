@@ -27,5 +27,11 @@ public abstract class RestService {
 		
 		return builder;
 	}
+	
+	protected Response.ResponseBuilder builderProvider(Response.Status status)
+	{
+		return this.builderProvider(status, MediaType.APPLICATION_JSON);
+	}
+
 
 }

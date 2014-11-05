@@ -1,6 +1,6 @@
 package idisoft.restos.entities;
 
-import idisoft.restos.util.MensajesEntidades;
+import idisoft.restos.util.ConstantesEntidades;
 
 import java.io.Serializable;
 import java.sql.Time;
@@ -28,6 +28,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.jboss.util.HashCode;
 
 @SuppressWarnings("serial")
 @Entity
@@ -39,45 +40,45 @@ public class Pedido implements Serializable{
 	@Column(name="id")
 	private int id;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_PEDIDO_CLIENTE+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_PEDIDO_CLIENTE+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Valid
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="cliente")
 	private Usuario cliente;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_PEDIDO_DIRECCION_ENTREGA+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_PEDIDO_DIRECCION_ENTREGA+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column(name="direccion_entrega")
 	private String direccionEntrega;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_PEDIDO_TELEFONO_ENTREGA+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_PEDIDO_TELEFONO_ENTREGA+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column(name="telefono_entrega")
 	private String telefonoEntrega;	
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_PEDIDO_FECHA+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_PEDIDO_FECHA+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column
 	private Date fecha;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_PEDIDO_HORA+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_PEDIDO_HORA+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column
 	private Time hora;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_PEDIDO_SUBTOTAL+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_PEDIDO_SUBTOTAL+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column(name="sub_total")
 	private float subTotal;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_PEDIDO_IVA_PORCENTAJE+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_PEDIDO_IVA_PORCENTAJE+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column(name="iva_porcentaje")
 	private float ivaPorcentaje;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_PEDIDO_IVA_MONTO+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_PEDIDO_IVA_MONTO+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column(name="iva_monto")
 	private float ivaMonto;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_PEDIDO_TOTAL+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_PEDIDO_TOTAL+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column
 	private float total;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_PEDIDO_ESTATUS+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_PEDIDO_ESTATUS+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column
 	private EstatusPedido estatus;
 	
@@ -194,7 +195,38 @@ public class Pedido implements Serializable{
 	
 	public boolean isOfUsuario(Usuario usuario)
 	{
-		return this.cliente.getCedula().equals(usuario.getCedula());
+		return this.cliente.equals(usuario);
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		boolean check=false;
+		if(o instanceof Pedido)
+		{
+			Pedido p=(Pedido) o;
+			check= this.id==p.getId() &&
+					this.cliente.equals(p.getCliente()) &&
+					this.fecha.equals(p.getFecha()) &&
+					this.hora.equals(p.getHora()) &&
+					this.direccionEntrega.equals(p.getDireccionEntrega()) &&
+					this.telefonoEntrega.equals(p.getTelefonoEntrega()) &&
+					this.estatus==p.getEstatus();
+		}
+		return check;
+	}
+	
+	/*	
+	@Override
+	public int hashCode()
+	{
+		HashCode hc=new HashCode(ConstantesEntidades.ENTIDAD_PEDIDO_HASHCODE_PRIME);
+		hc.add(this.id);
+		hc.add(this.fecha);
+		hc.add(this.hora);
+		hc.add(this.cliente.getCedula());
+		return hc.hashCode();
+	}
+	*/
 
 }

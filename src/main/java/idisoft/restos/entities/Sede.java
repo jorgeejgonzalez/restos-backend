@@ -1,6 +1,6 @@
 package idisoft.restos.entities;
 
-import idisoft.restos.util.MensajesEntidades;
+import idisoft.restos.util.ConstantesEntidades;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -26,6 +26,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
+import org.jboss.util.HashCode;
 
 @SuppressWarnings("serial")
 @Entity
@@ -37,34 +38,34 @@ public class Sede implements Serializable{
 	@Column(name="id")
 	private int id;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_SEDE_RIF+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Size(min=10,max=10,message=MensajesEntidades.ENTIDAD_SEDE_RIF+MensajesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO+"10 y 10")
-	@Pattern(regexp="[J,V,E,G][0-9]*",message=MensajesEntidades.ENTIDAD_SEDE_RIF+MensajesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO)	
+	@NotNull(message=ConstantesEntidades.ENTIDAD_SEDE_RIF+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=10,max=10,message=ConstantesEntidades.ENTIDAD_SEDE_RIF+ConstantesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO+"10 y 10")
+	@Pattern(regexp="[J,V,E,G][0-9]*",message=ConstantesEntidades.ENTIDAD_SEDE_RIF+ConstantesEntidades.VALIDACION_STRING_FORMATO_VENEZOLANO)	
 	@Column
 	private String rif;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_SEDE_NOMBRE+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Size(min=6,max=50,message=MensajesEntidades.ENTIDAD_SEDE_NOMBRE+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"6 y 50")
+	@NotNull(message=ConstantesEntidades.ENTIDAD_SEDE_NOMBRE+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=6,max=50,message=ConstantesEntidades.ENTIDAD_SEDE_NOMBRE+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"6 y 50")
 	@Column
 	private String nombre;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_SEDE_EMAIL+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Email(message=MensajesEntidades.ENTIDAD_SEDE_EMAIL+MensajesEntidades.VALIDACION_STRING_FORMATO_EMAIL)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_SEDE_EMAIL+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Email(message=ConstantesEntidades.ENTIDAD_SEDE_EMAIL+ConstantesEntidades.VALIDACION_STRING_FORMATO_EMAIL)
 	@Column
 	private String email;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_SEDE_DIRECCION_FISICA+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_SEDE_DIRECCION_FISICA+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Column(name="direccion_fisica")
 	private String direccionFisica;
 	
-	@NotNull(message=MensajesEntidades.ENTIDAD_SEDE_TELEFONO+MensajesEntidades.VALIDACION_VALOR_NULO)
-	@Size(min=11,max=11,message=MensajesEntidades.ENTIDAD_SEDE_TELEFONO+MensajesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"11 y 11")
-	@Pattern(regexp="[0-9]*",message=MensajesEntidades.ENTIDAD_SEDE_TELEFONO+MensajesEntidades.VALIDACION_STRING_VALOR_NUMERICO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_SEDE_TELEFONO+ConstantesEntidades.VALIDACION_VALOR_NULO)
+	@Size(min=11,max=11,message=ConstantesEntidades.ENTIDAD_SEDE_TELEFONO+ConstantesEntidades.VALIDACION_STRING_VALOR_LONGITUD+"11 y 11")
+	@Pattern(regexp="[0-9]*",message=ConstantesEntidades.ENTIDAD_SEDE_TELEFONO+ConstantesEntidades.VALIDACION_STRING_VALOR_NUMERICO)
 	@Column
 	private String telefono;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@NotNull(message=MensajesEntidades.ENTIDAD_SEDE_EMPRESA+MensajesEntidades.VALIDACION_VALOR_NULO)
+	@NotNull(message=ConstantesEntidades.ENTIDAD_SEDE_EMPRESA+ConstantesEntidades.VALIDACION_VALOR_NULO)
 	@Valid
 	@JoinColumn(name="empresa")
 	private Empresa empresa;
@@ -74,6 +75,18 @@ public class Sede implements Serializable{
 	
 	@Column(name="estatus_registro")
 	private EstatusRegistro estatusRegistro=EstatusRegistro.INACTIVO;
+	
+	public Sede()
+	{
+		this.nombre="";
+		this.direccionFisica="";
+		this.rif="";
+		this.email="";
+		this.telefono="";
+		this.empresa=new Empresa();
+		this.catalogos=new HashSet<Catalogo>(0);
+		this.estatusRegistro=EstatusRegistro.INACTIVO;		
+	}
 	
 	public int getId() {
 		return id;
@@ -146,7 +159,35 @@ public class Sede implements Serializable{
 	
 	public boolean isOfEmpresa(Empresa empresa)
 	{
-		return this.empresa.getRif().equals(empresa.getRif());
+		return this.empresa.equals(empresa);
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		boolean check=false;
+		if(o instanceof Sede)
+		{
+			Sede s=(Sede) o;
+			check= this.id==s.getId() &&
+					this.nombre.equals(s.getNombre()) &&
+					this.rif.equals(s.getRif()) &&
+					this.direccionFisica.equals(s.getDireccionFisica()) &&
+					this.email.equals(s.getEmail()) &&
+					this.telefono.equals(s.getTelefono()) &&
+					this.empresa.equals(s.getEmpresa());
+		}
+		return check;
+	}
+	/*
+	@Override
+	public int hashCode()
+	{
+		HashCode hc=new HashCode(ConstantesEntidades.ENTIDAD_SEDE_HASHCODE_PRIME);
+		hc.add(this.nombre);
+		hc.add(this.empresa.getRif());
+		return hc.hashCode();
+	}
+	*/
 
 }
