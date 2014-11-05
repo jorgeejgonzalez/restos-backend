@@ -31,7 +31,7 @@
     <!-- Example configuration for a remote JBoss Enterprise Application Platform 6 or AS 7 instance -->
     <container qualifier="jboss-managed"  default="true">
         <configuration>
-        	<property name="jbossHome">c:\restosapp\testenv\wildfly-8.1.0.Final</property>
+        	<property name="jbossHome">c:\Users\CFO\jbdevstudio\runtimes\jboss-eap</property>
         	<property name="allowConnectingToRunningServer">true</property>
         </configuration>
     </container>
@@ -40,8 +40,8 @@
       <configuration>
       		<property name="allowConnectingToRunningServer">true</property>
         	<property name="username">jorge</property>
-        	<property name="password">M0nd0ng0</property>
-        	<property name="managementAddress">192.168.15.116</property>
+        	<property name="password">Squall_mon2910</property>
+        	<property name="managementAddress">127.0.0.1</property>
         	<property name="managementPort">9999</property>        	
         </configuration>
     </container>

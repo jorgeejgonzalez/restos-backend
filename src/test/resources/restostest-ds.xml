@@ -23,7 +23,7 @@
    xsi:schemaLocation="http://www.jboss.org/ironjacamar/schema http://docs.jboss.org/ironjacamar/schema/datasources_1_0.xsd">
    <!-- The datasource is bound into JNDI at this location. We reference
       this in META-INF/test-persistence.xml -->
-   <datasource jndi-name="java:jboss/datasources/restostestDS"
+   <datasource jndi-name="java:jboss/datasources/MySQLDS"
       pool-name="restos-test" enabled="true"
       use-java-context="true">
       <connection-url>jdbc:mysql://localhost:3306/restos?autoReconnect=true</connection-url>

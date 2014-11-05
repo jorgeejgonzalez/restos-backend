@@ -1,6 +1,7 @@
 package idisoft.restos.test.integration;
 
-import idisoft.restos.controller.UsuarioController;
+import idisoft.restos.entities.*;
+import idisoft.restos.entities.json.*;
 
 import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
@@ -27,10 +28,6 @@ public class UsuarioControlTests {
 	{
 		return UsuarioControlTests.archivoWeb(); 
 	}
-	
-	@Inject
-	private UsuarioController controller;
-	
 	
 	@Test(expected=NoResultException.class)
 	public void  listaUsuariosActivosIsEmpty()
@@ -71,16 +68,43 @@ public class UsuarioControlTests {
 	private static WebArchive archivoWeb()
 	{
 		WebArchive war=ShrinkWrap.create(WebArchive.class,"test.war")
-				.addClass(UsuarioController.class)
+				//.addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
 				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 		System.out.println(war.toString(true));
-		return null;
+		
+		war.addClasses(
+				Catalogo.class,
+				CategoriaProducto.class,
+				ElementoCatalogo.class,
+				Empresa.class,
+				EstatusCatalogo.class,
+				EstatusPedido.class,
+				EstatusRegistro.class,
+				Pedido.class,
+				Producto.class,
+				Sede.class,
+				TipoProducto.class,
+				TipoUsuario.class,
+				Usuario.class);
+		
+		
+		war.addClasses(
+				CatalogoJSON.class,
+				CategoriaProductoJSON.class,
+				ElementoCatalogoJSON.class,
+				EmpresaJSON.class,
+				PedidoJSON.class,
+				SedeJSON.class,
+				TipoProductoJSON.class,
+				ProductoJSON.class,
+				UsuarioJSON.class);
+		System.out.println(war.toString(true));
+		return war;
 	}
 	
 	private static JavaArchive archivoJar()
 	{
 		JavaArchive jar=ShrinkWrap.create(JavaArchive.class,"test.jar")
-				.addClass(UsuarioController.class)
 				.addAsManifestResource(EmptyAsset.INSTANCE,"beans.xml");
 		System.out.println(jar.toString(true));
 		return jar;

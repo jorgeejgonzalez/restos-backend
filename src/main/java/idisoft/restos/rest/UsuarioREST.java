@@ -1,6 +1,5 @@
 package idisoft.restos.rest;
 
-import idisoft.restos.controller.UsuarioController;
 import idisoft.restos.data.CatalogosRepository;
 import idisoft.restos.data.PedidoRepository;
 import idisoft.restos.data.UsuarioRepository;
@@ -50,9 +49,6 @@ public class UsuarioREST extends RestService{
 	
 	@Inject
 	private UsuarioRegistry registro;
-	
-	@Inject
-	private UsuarioController controller;
 	
 	private List<UsuarioJSON> usuariosParseJSON(List<Usuario> usuarios)
 	{
