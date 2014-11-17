@@ -1,5 +1,10 @@
 package idisoft.restos.test.util;
 
+import idisoft.restos.data.CatalogosRepository;
+import idisoft.restos.data.ListRecords;
+import idisoft.restos.data.PedidoRepository;
+import idisoft.restos.data.Repository;
+import idisoft.restos.data.UsuarioRepository;
 import idisoft.restos.entities.Catalogo;
 import idisoft.restos.entities.CategoriaProducto;
 import idisoft.restos.entities.ElementoCatalogo;
@@ -64,6 +69,13 @@ public class Archiver {
 				TipoProductoJSON.class,
 				ProductoJSON.class,
 				UsuarioJSON.class);
+		
+		war.addClasses(
+				ListRecords.class,
+				Repository.class,
+				UsuarioRepository.class,
+				CatalogosRepository.class,
+				PedidoRepository.class);
 		
 		war.addClass(Resources.class);
 		

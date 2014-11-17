@@ -94,20 +94,15 @@ public abstract class Repository {
 		
 		criteria.select(root).where(cb.equal(root.get(attribute), value));
 		
-		try
+		List l=em.createQuery(criteria).getResultList();
+			
+		if(l.size()==0)
 		{
-			List l=em.createQuery(criteria).getResultList();
-			if(l.size()==0)
-			{
-				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
-			}
-				
-			return l;
+			throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
 		}
-		catch(NoResultException ex)
-		{
-			throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
-		}
+		
+		return l;
+		
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -122,20 +117,13 @@ public abstract class Repository {
 		
 		criteria.select(root).where(conditionsQuery);
 		
-		try
+		List l=em.createQuery(criteria).getResultList();
+		if(l.size()==0)
 		{
-			List l=em.createQuery(criteria).getResultList();
-			if(l.size()==0)
-			{
-				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
-			}
-				
-			return l;
+			throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
 		}
-		catch(NoResultException ex)
-		{
-			throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
-		}
+			
+		return l;
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -147,20 +135,13 @@ public abstract class Repository {
 		
 		criteria.select(root).orderBy(cb.asc(root.get(order)));
 		
-		try
+		List l=em.createQuery(criteria).getResultList();
+		if(l.size()==0)
 		{
-			List l=em.createQuery(criteria).getResultList();
-			if(l.size()==0)
-			{
-				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
-			}
-				
-			return l;
+			throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
 		}
-		catch(NoResultException ex)
-		{
-			throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
-		}
+			
+		return l;
 		
 	}
 	
@@ -174,20 +155,27 @@ public abstract class Repository {
 		criteria.select(root)		
 		.where(cb.equal(root.get("estatusRegistro"), status))
 		.orderBy(cb.asc(root.get(order)));
-		try
+		
+		List l=em.createQuery(criteria).getResultList();
+		if(l.size()==0)
 		{
-			List l=em.createQuery(criteria).getResultList();
-			if(l.size()==0)
-			{
-				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
-			}
-				
-			return l;
+			throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
 		}
-		catch(NoResultException ex)
+			
+		return l;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected List findAllFiltered(CriteriaQuery criteria) throws NoResultException
+	{
+		List l=em.createQuery(criteria).getResultList();
+		
+		if(l.size()==0)
 		{
-			throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
+			throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
 		}
+			
+		return l;
 	}
 	
 }

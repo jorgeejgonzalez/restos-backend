@@ -10,21 +10,33 @@ import idisoft.restos.data.Repository;
 import idisoft.restos.data.UsuarioRepository;
 import idisoft.restos.entities.Usuario;
 import idisoft.restos.test.util.Archiver;
+import idisoft.restos.test.util.ConstantesPruebas;
 
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
 
 
+
+
+
+
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.persistence.Cleanup;
+import org.jboss.arquillian.persistence.CleanupStrategy;
+import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.jboss.arquillian.persistence.UsingDataSet;
+import org.jboss.arquillian.transaction.api.annotation.TransactionMode;
+import org.jboss.arquillian.transaction.api.annotation.Transactional;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
+@Transactional(TransactionMode.ROLLBACK)
 public class UsuarioRepositoryTests {
 	
 	@Inject
@@ -34,9 +46,7 @@ public class UsuarioRepositoryTests {
 	public static Archive<?> createTestArchive()
 	{
 		WebArchive war=Archiver.archivoWeb();
-		war.addClass(ListRecords.class);
-		war.addClass(Repository.class);
-		war.addClass(UsuarioRepository.class);
+		
 		return  war;
 	}
 	
@@ -90,7 +100,9 @@ public class UsuarioRepositoryTests {
 	}
 	
 	@Test
-	@UsingDataSet("usuarios.yml")
+	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_JSON)
+	@Transactional(TransactionMode.ROLLBACK)
+	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void busquedaPorCedulaDevuelveUsuario()
 	{
 		Usuario usuario=repositorio.findByCedula("V17230971");
@@ -98,7 +110,9 @@ public class UsuarioRepositoryTests {
 	}
 	
 	@Test
-	@UsingDataSet("usuarios.yml")
+	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_JSON)
+	@Transactional(TransactionMode.ROLLBACK)
+	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void busquedaPorLoginDevuelveUsuario()
 	{
 		Usuario usuario=repositorio.findByLogin("jorgeejgonzalez");
@@ -106,7 +120,9 @@ public class UsuarioRepositoryTests {
 	}
 	
 	@Test
-	@UsingDataSet("usuarios.yml")
+	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_JSON)
+	@Transactional(TransactionMode.ROLLBACK)
+	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void busquedaPorEmailDevuelveUsuario()
 	{
 		Usuario usuario=repositorio.findByEmail("jorge@algo.com");
@@ -114,7 +130,9 @@ public class UsuarioRepositoryTests {
 	}
 	
 	@Test
-	@UsingDataSet("usuarios.yml")
+	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_JSON)
+	@Transactional(TransactionMode.ROLLBACK)
+	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void listaUsuariosRetornaList()
 	{
 		List<Usuario> usuarios=repositorio.findAll();

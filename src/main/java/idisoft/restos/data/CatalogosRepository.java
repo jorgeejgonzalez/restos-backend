@@ -11,20 +11,26 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.Criteria;
 
 public class CatalogosRepository extends Repository implements ListRecords {
 
-	public Catalogo findById(int id)
+	public Catalogo findById(int id) throws NoResultException 
 	{
 		return (Catalogo)findByIntKey(Catalogo.class, id);
 	}
 	
-	public Sede findSedeById(int id)
+	public Sede findSedeById(int id) throws NoResultException 
 	{
 		return (Sede)findByIntKey(Sede.class, id);
 	}
 	
-	public ElementoCatalogo findElementoById(int id)
+	public ElementoCatalogo findElementoById(int id) throws NoResultException 
 	{
 		return (ElementoCatalogo)findByIntKey(ElementoCatalogo.class, id);
 	}
@@ -57,8 +63,37 @@ public class CatalogosRepository extends Repository implements ListRecords {
 		return (List<Catalogo>)findAllFiltered(Catalogo.class,"id",EstatusRegistro.ELIMINADO);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private List<Catalogo> findAllFilteredBySede(int sedeid, EstatusRegistro estatus) throws NoResultException 
-	{		
+	{
+		
+		Sede sede=(Sede)findByIntKey(Sede.class, sedeid);
+		
+		if(sede.getEstatusRegistro()!=EstatusRegistro.ACTIVO)
+		{
+			throw new NoResultException(ConstantesEntidades.MENSAJE_ENTIDAD_NULA);
+		}
+		else
+		{
+			CriteriaBuilder cb=em.getCriteriaBuilder();
+			CriteriaQuery<Catalogo> criteria=cb.createQuery(Catalogo.class);		
+			Root<Catalogo> root=criteria.from(Catalogo.class);
+			
+			Predicate condition1=cb.equal(root.get("sede"), sede);
+			Predicate condition2=cb.equal(root.get("estatusRegistro"), estatus);
+			Predicate conditionsQuery=cb.and(condition1,condition2);
+			
+			criteria.select(root).where(conditionsQuery);
+			
+			List<Catalogo> retorno=(List<Catalogo>)findAllFiltered(criteria);
+			
+			return retorno;
+		}
+		
+		
+		
+		
+		/*	
 		Sede sede=(Sede)findByIntKey(Sede.class, sedeid);
 		List<Catalogo> retorno=new ArrayList<Catalogo>();
 		
@@ -93,8 +128,8 @@ public class CatalogosRepository extends Repository implements ListRecords {
 				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
 			}
 		}
+		*/
 		
-		return retorno;
 	}
 	
 	public List<Catalogo> findAllActiveBySede(int sedeid) throws NoResultException
