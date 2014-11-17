@@ -30,7 +30,7 @@ import org.jboss.util.HashCode;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name="catalogos",catalog="restos")
+@Table(name="catalogos")
 public class Catalogo implements Serializable{
 	
 	@Id

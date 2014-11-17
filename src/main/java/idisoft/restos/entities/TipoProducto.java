@@ -24,7 +24,7 @@ import org.hibernate.annotations.CascadeType;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name="tipos_productos",catalog="restos")
+@Table(name="tipos_productos")
 public class TipoProducto implements Serializable {
 	
 	@Id

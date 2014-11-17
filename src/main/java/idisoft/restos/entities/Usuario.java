@@ -32,7 +32,7 @@ import org.jboss.util.HashCode;
 @SuppressWarnings("serial")
 @Entity
 @Table(
-		name = "usuarios",catalog="restos",
+		name = "usuarios",
 		uniqueConstraints=
 		{
 				@UniqueConstraint(columnNames="email"),

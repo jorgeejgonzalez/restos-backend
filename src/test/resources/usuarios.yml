@@ -1,0 +1,31 @@
+usuarios:
+- cedula: "V17230971"
+  login: "jorgeejgonzalez"
+  clave: "algoalgo"
+  tipo: 0
+  email: "jorge@algo.com"
+  nombre: "jorge"
+  apellido: "gonzalez"
+  direccion: "san francisco"
+  telefono: "02617623790"
+  estatus_registro: 0
+- cedula: "V15000000"
+  login: "paulmoody"
+  clave: "algoalgo"
+  tipo: 0
+  email: "paul@algo.com"
+  nombre: "paul"
+  apellido: "moody"
+  direccion: "lagoazul"
+  telefono: "02617000000"
+  estatus_registro: 1
+- cedula: "V15000001"
+  login: "paulomoody"
+  clave: "algoalgo"
+  tipo: 0
+  email: "paul@moody.com"
+  nombre: "paul"
+  apellido: "moody"
+  direccion: "lagoazul"
+  telefono: "02617000000"
+  estatus_registro: 2

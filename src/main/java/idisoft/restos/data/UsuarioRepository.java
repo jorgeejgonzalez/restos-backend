@@ -15,23 +15,23 @@ import javax.persistence.NoResultException;
 public class UsuarioRepository extends Repository implements ListRecords{
 	
 	
-	public Usuario findByCedula(String cedula)
+	public Usuario findByCedula(String cedula) throws NoResultException
 	{
 		return (Usuario)findByStringKey(Usuario.class, cedula);
 	}
 	
-	public Usuario findByEmail(String email)
+	public Usuario findByEmail(String email)  throws NoResultException
 	{
 		return (Usuario)findSingleByString(Usuario.class, "email", email);
 	}
 	
-	public Usuario findByLogin(String login)
+	public Usuario findByLogin(String login)  throws NoResultException
 	{
 		return (Usuario)findSingleByString(Usuario.class, "login", login);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Usuario> findAll()
+	public List<Usuario> findAll()  throws NoResultException
 	{
 		return findAll(Usuario.class, "cedula");
 	}
@@ -43,16 +43,15 @@ public class UsuarioRepository extends Repository implements ListRecords{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Usuario> findAllInactive()
+	public List<Usuario> findAllInactive() throws NoResultException
 	{
 		return findAllFiltered(Usuario.class, "cedula", EstatusRegistro.INACTIVO);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Usuario> findAllDeleted()
+	public List<Usuario> findAllDeleted() throws NoResultException
 	{
 		return findAllFiltered(Usuario.class, "cedula", EstatusRegistro.ELIMINADO);
 	}
-	
 	
 }

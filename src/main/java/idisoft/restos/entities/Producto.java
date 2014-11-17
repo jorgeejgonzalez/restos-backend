@@ -21,7 +21,7 @@ import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name="productos",catalog="restos")
+@Table(name="productos")
 public class Producto implements Serializable{
 	
 	@Id

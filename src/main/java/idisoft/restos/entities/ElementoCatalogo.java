@@ -26,7 +26,7 @@ import org.jboss.util.HashCode;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name="catalogo_elementos",catalog="restos")
+@Table(name="catalogo_elementos")
 public class ElementoCatalogo implements Serializable {
 	
 	@Id

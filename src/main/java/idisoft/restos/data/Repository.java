@@ -21,35 +21,31 @@ public abstract class Repository {
 	protected EntityManager em;
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected Object findByStringKey(Class c, String s)
+	protected Object findByStringKey(Class c, String s) throws NoResultException
 	{
-		try
-		{			
-			return em.find(c,s);
-		}
-		catch(NoResultException ex)
+		
+		Object r= em.find(c,s);
+		if(r==null)
 		{
-			//TO-DO
-			return null;
+			throw new NoResultException(ConstantesEntidades.MENSAJE_ENTIDAD_NULA);
 		}
+		return r;		
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected Object findByIntKey(Class c, int i)
+	protected Object findByIntKey(Class c, int i) throws NoResultException
 	{
-		try
-		{			
-			return em.find(c,i);
-		}
-		catch(NoResultException ex)
+		Object r= em.find(c,i);
+		if(r==null)
 		{
-			//TO-DO
-			return null;
+			throw new NoResultException(ConstantesEntidades.MENSAJE_ENTIDAD_NULA);
 		}
+		return r;
+		
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected Object findSingleByString(Class c, String attribute,String value)
+	protected Object findSingleByString(Class c, String attribute,String value) throws NoResultException
 	{
 		CriteriaBuilder cb=em.getCriteriaBuilder();
 		CriteriaQuery criteria=cb.createQuery(c);		
@@ -63,13 +59,12 @@ public abstract class Repository {
 		}
 		catch(NoResultException ex)
 		{
-			//TO-DO
-			return null;
+			throw new NoResultException(ConstantesEntidades.MENSAJE_ENTIDAD_NULA);
 		}
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected Object findSingleByStringAndStatus(Class c, String attribute,String value, EstatusRegistro status)
+	protected Object findSingleByStringAndStatus(Class c, String attribute,String value, EstatusRegistro status) throws NoResultException
 	{
 		CriteriaBuilder cb=em.getCriteriaBuilder();
 		CriteriaQuery criteria=cb.createQuery(c);		
@@ -86,13 +81,12 @@ public abstract class Repository {
 		}
 		catch(NoResultException ex)
 		{
-			//TO-DO
-			return null;
+			throw new NoResultException(ConstantesEntidades.MENSAJE_ENTIDAD_NULA);
 		}
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected List findListByString(Class c, String attribute,String value)
+	protected List findListByString(Class c, String attribute,String value) throws NoResultException
 	{
 		CriteriaBuilder cb=em.getCriteriaBuilder();
 		CriteriaQuery criteria=cb.createQuery(c);		
@@ -102,17 +96,22 @@ public abstract class Repository {
 		
 		try
 		{
-			return em.createQuery(criteria).getResultList();
+			List l=em.createQuery(criteria).getResultList();
+			if(l.size()==0)
+			{
+				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
+			}
+				
+			return l;
 		}
 		catch(NoResultException ex)
 		{
-			//TO-DO
-			return null;
+			throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
 		}
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected List findListByStringAndStatus(Class c, String attribute,String value, EstatusRegistro status)
+	protected List findListByStringAndStatus(Class c, String attribute,String value, EstatusRegistro status) throws NoResultException
 	{
 		CriteriaBuilder cb=em.getCriteriaBuilder();
 		CriteriaQuery criteria=cb.createQuery(c);		
@@ -125,17 +124,22 @@ public abstract class Repository {
 		
 		try
 		{
-			return em.createQuery(criteria).getResultList();
+			List l=em.createQuery(criteria).getResultList();
+			if(l.size()==0)
+			{
+				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
+			}
+				
+			return l;
 		}
 		catch(NoResultException ex)
 		{
-			//TO-DO
-			return null;
+			throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
 		}
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected List findAll(Class c, String order)
+	protected List findAll(Class c, String order) throws NoResultException
 	{
 		CriteriaBuilder cb=em.getCriteriaBuilder();
 		CriteriaQuery criteria=cb.createQuery(c);		
@@ -145,12 +149,17 @@ public abstract class Repository {
 		
 		try
 		{
-			return em.createQuery(criteria).getResultList();
+			List l=em.createQuery(criteria).getResultList();
+			if(l.size()==0)
+			{
+				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
+			}
+				
+			return l;
 		}
 		catch(NoResultException ex)
 		{
-			//TO-DO
-			return null;
+			throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
 		}
 		
 	}
@@ -167,7 +176,13 @@ public abstract class Repository {
 		.orderBy(cb.asc(root.get(order)));
 		try
 		{
-			return em.createQuery(criteria).getResultList();
+			List l=em.createQuery(criteria).getResultList();
+			if(l.size()==0)
+			{
+				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_NULA);
+			}
+				
+			return l;
 		}
 		catch(NoResultException ex)
 		{
