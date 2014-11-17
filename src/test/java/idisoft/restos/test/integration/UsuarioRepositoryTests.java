@@ -36,7 +36,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-@Transactional(TransactionMode.ROLLBACK)
 public class UsuarioRepositoryTests {
 	
 	@Inject
@@ -61,7 +60,7 @@ public class UsuarioRepositoryTests {
 	public void  listaUsuariosActivosVaciaRetornaExcepcion()
 	{
 		List<Usuario> usuarios=repositorio.findAllActive();
-		assertEquals(0,usuarios.size());		
+		assertEquals(0,usuarios.size());
 	}
 	
 	@Test(expected=NoResultException.class)

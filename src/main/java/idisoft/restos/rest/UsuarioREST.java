@@ -1,6 +1,7 @@
 package idisoft.restos.rest;
 
 import idisoft.restos.data.CatalogosRepository;
+import idisoft.restos.data.EntitiesFactoryJSON;
 import idisoft.restos.data.PedidoRepository;
 import idisoft.restos.data.UsuarioRepository;
 import idisoft.restos.entities.ElementoCatalogo;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolation;
@@ -50,19 +52,12 @@ public class UsuarioREST extends RestService{
 	@Inject
 	private UsuarioRegistry registro;
 	
+	@Inject 
+	private EntitiesFactoryJSON factoryJSON;
+	
 	private List<UsuarioJSON> usuariosParseJSON(List<Usuario> usuarios)
 	{
-		List<UsuarioJSON> usuariosjson=new ArrayList<UsuarioJSON>();
-		Iterator<Usuario> iterator=usuarios.iterator();
-		
-		while(iterator.hasNext())
-		{
-			UsuarioJSON usj=new UsuarioJSON();
-			usj.parseUsuario(iterator.next());
-			usuariosjson.add(usj);
-		}
-		
-		return usuariosjson;
+		return factoryJSON.usuariosParseJSON(usuarios);
 	}
 	
 	@POST
@@ -73,7 +68,8 @@ public class UsuarioREST extends RestService{
 		Response.ResponseBuilder builder = null;
 		try
 		{
-			List<UsuarioJSON> usuarios= usuariosParseJSON(repositorio.findAllDeleted());
+			List<UsuarioJSON> usuarios= usuariosParseJSON(repositorio.findAllActive());
+			
 			if(usuarios.isEmpty())
 			{
 				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
@@ -100,7 +96,8 @@ public class UsuarioREST extends RestService{
 		Response.ResponseBuilder builder = null;
 		try
 		{
-			List<UsuarioJSON> usuarios= usuariosParseJSON(repositorio.findAllDeleted());
+			List<UsuarioJSON> usuarios= usuariosParseJSON(repositorio.findAllInactive());
+			
 			if(usuarios.isEmpty())
 			{
 				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
@@ -127,6 +124,7 @@ public class UsuarioREST extends RestService{
 		try
 		{
 			List<UsuarioJSON> usuarios= usuariosParseJSON(repositorio.findAllDeleted());
+			
 			if(usuarios.isEmpty())
 			{
 				throw new NoResultException(ConstantesEntidades.MENSAJE_LISTA_VACIA);
@@ -151,14 +149,13 @@ public class UsuarioREST extends RestService{
 	{
 		Response.ResponseBuilder builder = null;
 		
-		Usuario	retorno=repositorio.findByLogin(usuario.getLogin());
-		
-		if(retorno!=null)
+		try
 		{
+			Usuario	retorno=repositorio.findByLogin(usuario.getLogin());
+			
 			if(usuario.getPassword().equals(retorno.getPassword()))
 			{
-				UsuarioJSON retornoJSON=new UsuarioJSON();
-				retornoJSON.parseUsuario(retorno);
+				UsuarioJSON retornoJSON=factoryJSON.parseUsuario(retorno);
 				
 				builder=this.builderProvider(Status.OK,MediaType.APPLICATION_JSON);
 				builder.entity(retornoJSON);
@@ -166,14 +163,14 @@ public class UsuarioREST extends RestService{
 			else
 			{
 				String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LOGIN+": "+ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_FALLIDO;
-				builder=this.builderProvider(Status.NOT_FOUND,MediaType.APPLICATION_JSON);
+				builder=this.builderProvider(Status.UNAUTHORIZED,MediaType.APPLICATION_JSON);
 				builder.entity(msg);
 				logger.log(Level.WARNING,msg);
 			}
 		}
-		else
+		catch(NoResultException ex)
 		{
-			String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LOGIN+": "+ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
+			String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LOGIN+": "+ex.getMessage();
 			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);		
 			builder.entity(msg);
 			logger.log(Level.SEVERE,msg);

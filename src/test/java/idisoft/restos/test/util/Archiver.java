@@ -1,6 +1,7 @@
 package idisoft.restos.test.util;
 
 import idisoft.restos.data.CatalogosRepository;
+import idisoft.restos.data.EntitiesFactoryJSON;
 import idisoft.restos.data.ListRecords;
 import idisoft.restos.data.PedidoRepository;
 import idisoft.restos.data.Repository;
@@ -27,6 +28,12 @@ import idisoft.restos.entities.json.ProductoJSON;
 import idisoft.restos.entities.json.SedeJSON;
 import idisoft.restos.entities.json.TipoProductoJSON;
 import idisoft.restos.entities.json.UsuarioJSON;
+import idisoft.restos.rest.RestService;
+import idisoft.restos.rest.UsuarioREST;
+import idisoft.restos.services.CatalogoRegistry;
+import idisoft.restos.services.ProductoRegistry;
+import idisoft.restos.services.Registry;
+import idisoft.restos.services.UsuarioRegistry;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -75,7 +82,18 @@ public class Archiver {
 				Repository.class,
 				UsuarioRepository.class,
 				CatalogosRepository.class,
-				PedidoRepository.class);
+				PedidoRepository.class,
+				EntitiesFactoryJSON.class);
+		
+		war.addClasses(
+				Registry.class,
+				UsuarioRegistry.class,
+				CatalogoRegistry.class,
+				ProductoRegistry.class);
+		
+		war.addClasses(
+				UsuarioREST.class,
+				RestService.class);
 		
 		war.addClass(Resources.class);
 		
