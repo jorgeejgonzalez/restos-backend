@@ -2,7 +2,9 @@ package idisoft.restos.test.integration;
 
 import static org.junit.Assert.*;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
@@ -12,6 +14,8 @@ import idisoft.restos.data.ListRecords;
 import idisoft.restos.data.Repository;
 import idisoft.restos.data.UsuarioRepository;
 import idisoft.restos.entities.Catalogo;
+import idisoft.restos.entities.ElementoCatalogo;
+import idisoft.restos.entities.EstatusCatalogo;
 import idisoft.restos.test.util.Archiver;
 import idisoft.restos.test.util.ConstantesPruebas;
 
@@ -102,7 +106,16 @@ public class CatalogoRepositoryTest {
 	{
 		Catalogo catalogo=repositorio.findById(1);
 		assertEquals("catalogo de prueba", catalogo.getNombre());
-		assertEquals(2, catalogo.getElementos().size());
+		
+		Set<ElementoCatalogo> elementos=catalogo.getElementos();		
+		assertEquals(2, elementos.size());		
+		
+		Iterator<ElementoCatalogo> iterator=elementos.iterator();
+		while(iterator.hasNext())
+		{
+			ElementoCatalogo elemento=iterator.next();
+			assertEquals(EstatusCatalogo.DISPONIBLE, elemento.getEstatus());
+		}
 	}
 	
 	@Test

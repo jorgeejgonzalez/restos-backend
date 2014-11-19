@@ -57,7 +57,7 @@ public class UsuarioREST extends RestService{
 	
 	private List<UsuarioJSON> usuariosParseJSON(List<Usuario> usuarios)
 	{
-		return factoryJSON.usuariosParseJSON(usuarios);
+		return factoryJSON.parseListaUsuarios(usuarios);
 	}
 	
 	@POST

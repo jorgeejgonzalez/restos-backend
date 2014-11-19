@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.sql.Time;
 import java.sql.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -186,6 +187,34 @@ public class Pedido implements Serializable{
 		this.elementos = elementos;
 	}
 	
+	public void calcularMontos()
+	{
+		if(elementos.isEmpty())
+		{
+			this.subTotal=0.0f;
+			this.ivaMonto=0.0f;
+			this.total=0.0f;
+		}
+		else
+		{
+			Iterator<ElementoCatalogo> iterator=this.elementos.iterator();
+			float subtotal=0.0f;		
+			
+			while(iterator.hasNext())
+			{
+				ElementoCatalogo elemento=iterator.next();
+				if(elemento.getEstatusRegistro()==EstatusRegistro.ACTIVO)
+				{
+					subtotal+=elemento.getPrecio();
+				}			
+			}
+			
+			this.subTotal=subtotal;
+			this.ivaMonto=subtotal*(this.ivaPorcentaje/100.0f);
+			this.total=subtotal+this.ivaMonto;
+		}		
+	}
+	
 	public Set<ConstraintViolation<Pedido>> validarInstancia()
 	{
 		ValidatorFactory factory= Validation.buildDefaultValidatorFactory();
@@ -216,17 +245,22 @@ public class Pedido implements Serializable{
 		return check;
 	}
 	
-	/*	
+		
 	@Override
 	public int hashCode()
 	{
 		HashCode hc=new HashCode(ConstantesEntidades.ENTIDAD_PEDIDO_HASHCODE_PRIME);
 		hc.add(this.id);
+		if(this.cliente!=null)
+		{
+			hc.add(this.cliente.hashCode());
+		}
 		hc.add(this.fecha);
 		hc.add(this.hora);
-		hc.add(this.cliente.getCedula());
+		hc.add(this.direccionEntrega);
+		hc.add(this.telefonoEntrega);
 		return hc.hashCode();
 	}
-	*/
+	
 
 }

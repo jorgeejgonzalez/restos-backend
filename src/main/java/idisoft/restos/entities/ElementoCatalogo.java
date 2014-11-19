@@ -137,13 +137,21 @@ public class ElementoCatalogo implements Serializable {
 		}
 		return check;
 	}
-	/*
+	
 	@Override
 	public int hashCode()
 	{
 		HashCode hc=new HashCode(ConstantesEntidades.ENTIDAD_ELEMENTOCATALOGO_HASHCODE_PRIME);
 		hc.add(this.id);
+		hc.add(this.nombre);
+		hc.add(this.descripcion);
+		hc.add(this.precio);
+		hc.add(this.estatus);
+		if(this.catalogo!=null)
+		{
+			hc.add(this.catalogo.hashCode());
+		}
 		return hc.hashCode();
 	}
-	*/
+	
 }

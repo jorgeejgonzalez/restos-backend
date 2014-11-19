@@ -1,0 +1,66 @@
+{
+	"empresas":
+	[
+		{
+	   		"rif":"J123456789",
+	   		"razon_social":"empresa de prueba",
+	   		"direccion_fiscal":"direccion falsa",
+	   		"estatus_registro":0
+		}
+	],	
+	"sedes":
+	[
+		{
+    		"id":1,
+	   		"rif":"J123456789",
+	   		"nombre":"sede de prueba",
+	   		"email":"falso@empresa.com",
+	   		"direccion_fisica":"direccion falsa",
+	   		"telefono":"02617000000",
+	   		"empresa": "J123456789",
+	   		"estatus_registro":0
+	    		
+		}
+	],	
+	"catalogos":
+	[
+		{
+    		"id":1,
+    		"nombre":"catalogo de prueba",
+    		"estatus":0,    		
+    		"sede": 1,
+    		"estatus_registro":0		
+		},
+		{
+			"id":2,
+    		"nombre":"catalogo de prueba 2",
+    		"estatus":1,
+    		"sede": 1,
+    		"estatus_registro":2
+    	}
+	],
+	"catalogo_elementos":
+	[
+		{
+		    "id":1,
+		    "nombre":"elemento de prueba",
+		    "descripcion":"descripcion falsa",
+		    "precio":100.5,
+		    "estatus":1,
+		    "estatus_registro":0,
+		    "catalogo":1
+		    
+		},
+		{
+		    "id":2,
+		    "nombre":"elemento de prueba 2",
+		    "descripcion":"descripcion falsa 2",
+		    "precio":2900.56,
+		    "estatus":1,
+		    "estatus_registro":0,
+		    "catalogo":1	
+		}
+		
+	]
+	
+}

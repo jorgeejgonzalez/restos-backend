@@ -96,6 +96,7 @@ public class Archiver {
 				RestService.class);
 		
 		war.addClass(Resources.class);
+		war.addClass(org.jboss.util.HashCode.class);
 		
 		System.out.println(war.toString(true));
 		return war;

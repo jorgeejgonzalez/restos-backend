@@ -63,11 +63,7 @@ public class Catalogo implements Serializable{
 	
 	public Catalogo()
 	{
-		this.nombre="";
-		this.estatus=EstatusCatalogo.NODISPONIBLE;
-		this.sede=new Sede();
-		this.estatusRegistro=EstatusRegistro.INACTIVO;
-		this.elementos = new HashSet<ElementoCatalogo>(0);
+		
 	}
 	
 	public int getId() {
@@ -138,16 +134,21 @@ public class Catalogo implements Serializable{
 		return check;
 	}
 	
-	/*
 	@Override
 	public int hashCode()
 	{
 		HashCode hc=new HashCode(ConstantesEntidades.ENTIDAD_CATALOGO_HASHCODE_PRIME);
+		hc.add(this.id);
 		hc.add(this.nombre);
-		hc.add(this.sede.getNombre());
+		hc.add(this.estatus);		
+		if(this.sede!=null)
+		{
+			hc.add(this.sede.hashCode());
+		}
+				
 		return hc.hashCode();
 	}
-	*/
+	
 	
 }
 

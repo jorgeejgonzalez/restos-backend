@@ -54,11 +54,7 @@ public class Empresa implements Serializable {
 		
 	public Empresa()
 	{
-		this.rif="V000000000";
-		this.razonSocial="";
-		this.direccionFiscal="";
-		this.estatusRegistro=EstatusRegistro.INACTIVO;
-		this.sedes=new HashSet<Sede>(0);		
+				
 	}
 	
 	public Empresa(String rif,
@@ -128,14 +124,15 @@ public class Empresa implements Serializable {
 		}
 		return check;
 	}
-	/*
+	
 	@Override
 	public int hashCode()
 	{
 		HashCode hc=new HashCode(ConstantesEntidades.ENTIDAD_EMPRESA_HASHCODE_PRIME);
 		hc.add(this.rif);
 		hc.add(this.razonSocial);
+		hc.add(this.direccionFiscal);
 		return hc.hashCode();
 	}
-	*/
+	
 }

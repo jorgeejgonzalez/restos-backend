@@ -78,14 +78,7 @@ public class Sede implements Serializable{
 	
 	public Sede()
 	{
-		this.nombre="";
-		this.direccionFisica="";
-		this.rif="";
-		this.email="";
-		this.telefono="";
-		this.empresa=new Empresa();
-		this.catalogos=new HashSet<Catalogo>(0);
-		this.estatusRegistro=EstatusRegistro.INACTIVO;		
+			
 	}
 	
 	public int getId() {
@@ -179,15 +172,22 @@ public class Sede implements Serializable{
 		}
 		return check;
 	}
-	/*
+	
 	@Override
 	public int hashCode()
 	{
 		HashCode hc=new HashCode(ConstantesEntidades.ENTIDAD_SEDE_HASHCODE_PRIME);
+		hc.add(this.id);
+		hc.add(this.rif);
 		hc.add(this.nombre);
-		hc.add(this.empresa.getRif());
+		hc.add(this.direccionFisica);
+		hc.add(this.email);
+		hc.add(this.telefono);
+		if(this.empresa!=null)
+		{
+			hc.add(this.empresa.hashCode());
+		}		
 		return hc.hashCode();
-	}
-	*/
+	}	
 
 }

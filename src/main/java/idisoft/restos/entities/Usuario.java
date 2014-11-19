@@ -92,18 +92,7 @@ public class Usuario implements Serializable {
 	private Set<Pedido> pedidos = new HashSet<Pedido>(0);
 	
 	public Usuario()
-	{	
-		this.cedula="V00000000";
-		this.login="";
-		this.password="";
-		this.email="";
-		this.tipo=TipoUsuario.USUARIO_FINAL;
-		this.nombre="";
-		this.apellido="";
-		this.direccion="";
-		this.telefono="";
-		this.estatusRegistro=EstatusRegistro.INACTIVO;
-		this.pedidos = new HashSet<Pedido>(0);		
+	{					
 	}
 	
 	public Usuario(String login,
@@ -242,7 +231,7 @@ public class Usuario implements Serializable {
 		return check;
 	}
 	
-	/*
+	
 	@Override
 	public int hashCode()
 	{
@@ -252,8 +241,9 @@ public class Usuario implements Serializable {
 		hc.add(this.nombre);
 		hc.add(this.apellido);
 		hc.add(this.email);
+		hc.add(this.tipo);
 		return hc.hashCode();
 	}
-	*/
+	
 	
 }
