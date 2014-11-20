@@ -1,6 +1,7 @@
 package idisoft.restos.test.util;
 
 import idisoft.restos.data.CatalogosRepository;
+import idisoft.restos.data.EntitiesFactory;
 import idisoft.restos.data.EntitiesFactoryJSON;
 import idisoft.restos.data.ListRecords;
 import idisoft.restos.data.PedidoRepository;
@@ -83,6 +84,7 @@ public class Archiver {
 				UsuarioRepository.class,
 				CatalogosRepository.class,
 				PedidoRepository.class,
+				EntitiesFactory.class,
 				EntitiesFactoryJSON.class);
 		
 		war.addClasses(
@@ -98,7 +100,7 @@ public class Archiver {
 		war.addClass(Resources.class);
 		war.addClass(org.jboss.util.HashCode.class);
 		
-		System.out.println(war.toString(true));
+		//System.out.println(war.toString(true));
 		return war;
 	}
 	
@@ -106,7 +108,7 @@ public class Archiver {
 	{
 		JavaArchive jar=ShrinkWrap.create(JavaArchive.class,"test.jar")
 				.addAsManifestResource(EmptyAsset.INSTANCE,"beans.xml");
-		System.out.println(jar.toString(true));
+		//System.out.println(jar.toString(true));
 		return jar;
 	}
 

@@ -187,15 +187,16 @@ public class UsuarioREST extends RestService{
 	{
 		Response.ResponseBuilder builder = null;
 		
-		if(repositorio.findByEmail(usuario.getEmail())==null)
+		try
 		{
-			builder=this.builderProvider(Status.OK,MediaType.APPLICATION_JSON);
-			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_EMAIL_DISPONIBLE);
-		}
-		else
-		{
+			Usuario retorno=repositorio.findByEmail(usuario.getEmail());
 			builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
-			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_EMAIL_DUPLICADO);
+			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_EMAIL_DUPLICADO+": "+retorno.getEmail());
+		}
+		catch(NoResultException ex)
+		{
+			builder=this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
+			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_DISPONIBLE);
 		}
 		
 		return builder.build();
@@ -209,15 +210,16 @@ public class UsuarioREST extends RestService{
 	{
 		Response.ResponseBuilder builder = null;
 		
-		if(repositorio.findByLogin(usuario.getLogin())==null)
+		try
+		{
+			Usuario retorno=repositorio.findByLogin(usuario.getLogin());
+			builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
+			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_DUPLICADO+": "+retorno.getLogin());
+		}
+		catch(NoResultException ex)
 		{
 			builder=this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
 			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_DISPONIBLE);
-		}
-		else
-		{
-			builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
-			builder.entity(ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_DUPLICADO);
 		}
 		
 		return builder.build();

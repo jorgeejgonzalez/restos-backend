@@ -1,14 +1,17 @@
 package idisoft.restos.test.integration;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
+import idisoft.restos.data.EntitiesFactory;
 import idisoft.restos.entities.TipoUsuario;
+import idisoft.restos.entities.Usuario;
 import idisoft.restos.entities.json.UsuarioJSON;
 import idisoft.restos.rest.UsuarioREST;
 import idisoft.restos.test.util.Archiver;
@@ -33,13 +36,15 @@ public class UsuarioRestTest {
 	@Deployment
 	public static Archive<?> createTestArchive()
 	{
-		WebArchive war=Archiver.archivoWeb();
-		
+		WebArchive war=Archiver.archivoWeb();		
 		return  war;
 	}
 	
 	@Inject
-	private UsuarioREST rest;	
+	private UsuarioREST rest;
+	
+	@Inject
+	private EntitiesFactory factory;
 	
 	@Test
 	public void listaUsuariosVaciaDevuelveNoContent()
@@ -50,7 +55,7 @@ public class UsuarioRestTest {
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_JSON)
+	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_USUARIOS_JSON)
 	@Transactional(TransactionMode.ROLLBACK)
 	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void listaUsuariosDevuelveJSON()
@@ -67,6 +72,66 @@ public class UsuarioRestTest {
 			UsuarioJSON ujs=iterator.next();
 			assertEquals(TipoUsuario.MASTER, ujs.getTipo());
 		}
+	}
+	
+	@Test
+	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_USUARIOS_JSON)
+	@Transactional(TransactionMode.ROLLBACK)
+	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
+	public void validaDisponibilidadDeLogin()
+	{
+		Usuario usuario=factory.crearUsuarioFinal();
+		
+		usuario.setLogin("jorgegonzalez");
+		
+		Response respuesta=rest.disponibilidadLogin(usuario);
+		
+		assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
+		
+		usuario.setLogin("jorgeejgonzalez");
+		respuesta=rest.disponibilidadLogin(usuario);
+		
+		assertEquals(Status.CONFLICT.getStatusCode(), respuesta.getStatus());
+	}
+	
+	@Test
+	public void validaDisponibilidadDeEmail()
+	{
+		Usuario usuario=factory.crearUsuarioFinal();
+		
+		usuario.setEmail("moody@web.com");
+		
+		Response respuesta=rest.disponibilidadEmail(usuario);
+		
+		assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
+		
+		usuario.setEmail("paul@algo.com");
+		respuesta=rest.disponibilidadEmail(usuario);
+		
+		assertEquals(Status.CONFLICT.getStatusCode(), respuesta.getStatus());
+	}
+	
+	@Test
+	public void creaUsuarioNuevoSiPasaValidacion()
+	{
+		fail("not yet implemented");
+	}
+	
+	@Test
+	public void modificaDatosDeUsuarioSiPasaValidacion()
+	{
+		fail("not yet implemented");
+	}
+	
+	@Test
+	public void activaUsuariosInactivos()
+	{
+		fail("not yet implemented");
+	}
+	
+	public void realizaLoginAlSistema()
+	{
+		fail("not yet implemented");
 	}
 
 }
