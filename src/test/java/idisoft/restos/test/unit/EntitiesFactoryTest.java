@@ -5,8 +5,6 @@ import static org.junit.Assert.*;
 import java.util.List;
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-
 import idisoft.restos.data.EntitiesFactory;
 import idisoft.restos.entities.Catalogo;
 import idisoft.restos.entities.ElementoCatalogo;
@@ -19,7 +17,6 @@ import idisoft.restos.entities.TipoUsuario;
 import idisoft.restos.entities.Usuario;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class EntitiesFactoryTest {

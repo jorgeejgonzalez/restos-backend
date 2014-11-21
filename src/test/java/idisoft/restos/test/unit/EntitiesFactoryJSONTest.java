@@ -9,10 +9,8 @@ import idisoft.restos.data.EntitiesFactoryJSON;
 import idisoft.restos.entities.Catalogo;
 import idisoft.restos.entities.ElementoCatalogo;
 import idisoft.restos.entities.Empresa;
-import idisoft.restos.entities.EstatusRegistro;
 import idisoft.restos.entities.Pedido;
 import idisoft.restos.entities.Sede;
-import idisoft.restos.entities.TipoUsuario;
 import idisoft.restos.entities.Usuario;
 import idisoft.restos.entities.json.CatalogoJSON;
 import idisoft.restos.entities.json.ElementoCatalogoJSON;
@@ -23,7 +21,6 @@ import idisoft.restos.entities.json.UsuarioJSON;
 import idisoft.restos.util.ConstantesEntidades;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class EntitiesFactoryJSONTest {

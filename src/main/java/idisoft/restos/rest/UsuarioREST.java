@@ -456,6 +456,7 @@ public class UsuarioREST extends RestService{
 			}
 			
 			usuario=registro.eliminar(usuario);
+			
 			if(usuario.getEstatusRegistro()==EstatusRegistro.ELIMINADO)
 			{
 				msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_ACTIVAR+": "+ConstantesREST.REST_MENSAJE_ENTIDAD_ELIMINADA;

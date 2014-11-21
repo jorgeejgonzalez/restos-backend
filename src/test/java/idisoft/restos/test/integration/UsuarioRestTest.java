@@ -41,10 +41,11 @@ public class UsuarioRestTest {
 	}
 	
 	@Inject
-	private UsuarioREST rest;
+	private EntitiesFactory factory;
 	
 	@Inject
-	private EntitiesFactory factory;
+	private UsuarioREST rest;
+	
 	
 	@Test
 	public void listaUsuariosVaciaDevuelveNoContent()
@@ -59,14 +60,25 @@ public class UsuarioRestTest {
 	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void debePermitirBusquedaPorCedula()
 	{
-		Usuario usuario=factory.crearUsuarioFinal();
-		usuario.setCedula("V17230971");
+		/*
+		 * las busquedas exitosas devuelven OK
+		 * las busquedas fallidas devuelven NOT_FOUND
+		 */		
 		
-		Response respuesta=rest.busquedaActivo(usuario.getCedula());
+		Usuario usuario=null;
+		Response respuesta=null;
 		
+		usuario=factory.crearUsuarioFinal();
+		
+		usuario.setCedula("V17230972");		
+		respuesta=rest.busquedaActivo(usuario.getCedula());
+		assertEquals(Status.NOT_FOUND.getStatusCode(),respuesta.getStatus());
+		
+		usuario.setCedula("V17230971");		
+		respuesta=rest.busquedaActivo(usuario.getCedula());		
 		assertEquals(Status.OK.getStatusCode(),respuesta.getStatus());
-		UsuarioJSON usuariojson=(UsuarioJSON) respuesta.getEntity();
 		
+		UsuarioJSON usuariojson=(UsuarioJSON) respuesta.getEntity();		
 		assertEquals(true,usuariojson.getCedula().equals(usuario.getCedula()));
 		
 	}
@@ -91,17 +103,22 @@ public class UsuarioRestTest {
 	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void debeValidarDisponibilidadDeLogin()
 	{
-		Usuario usuario=factory.crearUsuarioFinal();
+		/*
+		 * si el login esta disponible devuelve OK
+		 * si el login ya esta usado devuelve CONFLICT
+		 */
 		
-		usuario.setLogin("jorgegonzalez");
+		Usuario usuario=null;
+		Response respuesta=null;
 		
-		Response respuesta=rest.disponibilidadLogin(usuario);
+		usuario=factory.crearUsuarioFinal();
 		
+		usuario.setLogin("jorgegonzalez");		
+		respuesta=rest.disponibilidadLogin(usuario);		
 		assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
 		
 		usuario.setLogin("jorgeejgonzalez");
-		respuesta=rest.disponibilidadLogin(usuario);
-		
+		respuesta=rest.disponibilidadLogin(usuario);		
 		assertEquals(Status.CONFLICT.getStatusCode(), respuesta.getStatus());
 	}
 	
@@ -111,17 +128,22 @@ public class UsuarioRestTest {
 	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void debeValidarDisponibilidadDeEmail()
 	{
-		Usuario usuario=factory.crearUsuarioFinal();
+		/*
+		 * si el email esta disponible devuelve OK
+		 * si el email ya esta usado devuelve CONFLICT
+		 */
+		
+		Usuario usuario=null;
+		Response respuesta=null;
+		
+		usuario=factory.crearUsuarioFinal();
 		
 		usuario.setEmail("moody@web.com");
-		
-		Response respuesta=rest.disponibilidadEmail(usuario);
-		
+		respuesta=rest.disponibilidadEmail(usuario);
 		assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
 		
 		usuario.setEmail("paul@algo.com");
 		respuesta=rest.disponibilidadEmail(usuario);
-		
 		assertEquals(Status.CONFLICT.getStatusCode(), respuesta.getStatus());
 	}
 	
@@ -131,6 +153,13 @@ public class UsuarioRestTest {
 	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void debeCrearUsuariosNuevoSiPasanValidacion()
 	{
+		/*
+		 * si la beanValidation del usuario falla, devuelve INTERNAL_SERVER_ERROR
+		 * si la cedula, el login o el email no estan disponibles, devuelve CONFLICT
+		 * Si ocurre alguna excepcion no controlada, devuelve INTERNAL_SERVER_ERROR
+		 * la operacion es exitosa devuelve OK
+		 */
+		
 		Usuario usuario=factory.crearUsuarioFinal();
 		Response respuesta=rest.crearUsuarioFinal(usuario);
 		assertEquals(Status.INTERNAL_SERVER_ERROR.getStatusCode(), respuesta.getStatus());
@@ -171,6 +200,13 @@ public class UsuarioRestTest {
 	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void debeModificarDatosDeUsuarioSiPasanValidacion()
 	{
+		/*
+		 * si la beanValidation del usuario falla, devuelve INTERNAL_SERVER_ERROR		 * 
+		 * si la cedula del usuario no existe devuelve NOT_FOUND
+		 * Si ocurre alguna excepcion no controlada, devuelve INTERNAL_SERVER_ERROR
+		 * la operacion es exitosa devuelve OK
+		 */
+		
 		Usuario usuario=null;
 		Response respuesta=null;
 		
@@ -187,7 +223,19 @@ public class UsuarioRestTest {
 		
 		respuesta=rest.actualizarUsuario(usuario.getCedula(), usuario);
 		assertEquals(Status.INTERNAL_SERVER_ERROR.getStatusCode(), respuesta.getStatus());
-				
+		
+		usuario.setCedula("V17230970");
+		usuario.setLogin("jorgegonzalez");
+		usuario.setPassword("abcd1234");
+		usuario.setEmail("jorge@algo.com");
+		usuario.setNombre("jorge enrique");
+		usuario.setApellido("gonzalez");
+		usuario.setDireccion("san francisco");
+		usuario.setTelefono("02617000000");
+		
+		respuesta=rest.actualizarUsuario(usuario.getCedula(), usuario);
+		assertEquals(Status.NOT_FOUND.getStatusCode(), respuesta.getStatus());
+						
 		usuario.setCedula("V17230971");
 		usuario.setLogin("jorgegonzalez");
 		usuario.setPassword("abcd1234");
@@ -212,6 +260,13 @@ public class UsuarioRestTest {
 	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void debeEliminarUsuarios()
 	{
+		/*
+		 * Si la cedula del usuario no existe o ya fue eliminado, devuelve NOT_FOUND
+		 * Si ocurre alguna excepcion no controlada, devuelve INTERNAL_SERVER_ERROR
+		 * Si el registro no cambia su estatus, devuelve NOT_MODIFIED
+		 * Si se elimina correctamente, devuelve OK
+		 */
+		
 		Response respuesta=null;
 		List<UsuarioJSON> lista=null;
 		Iterator<UsuarioJSON> iterator=null;
@@ -253,6 +308,12 @@ public class UsuarioRestTest {
 	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void debeActivarUsuariosInactivos()
 	{
+		/*
+		 * Si el usuario no existe o esta eliminado devuelve NOT_FOUND
+		 * Si el usuario ya se encuentra activo devuelve NOT_MODIFIED
+		 * Si se activa correctamente devuelve OK 
+		 */
+		
 		Response respuesta=null;
 		List<UsuarioJSON> lista=null;
 		Iterator<UsuarioJSON> iterator=null;
@@ -291,8 +352,7 @@ public class UsuarioRestTest {
 		{
 			respuesta=rest.activarUsuario(iterator.next().getCedula());
 			assertEquals(Status.NOT_FOUND.getStatusCode(), respuesta.getStatus());
-		}
-		
+		}		
 				
 	}
 	
@@ -302,6 +362,11 @@ public class UsuarioRestTest {
 	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void debeRealizarLoginAlSistema()
 	{
+		/*
+		 * Si el login no se encuentra o esta eliminado devuelve NOT_FOUND
+		 * Si el password es incorrecto devuelve UNAUTHORIZED
+		 * Si se se autentica correctamente devuelve OK 
+		 */
 		Usuario usuario=null;
 		Response respuesta=null;
 		
