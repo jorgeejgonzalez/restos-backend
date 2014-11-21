@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityExistsException;
 import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolation;
 import javax.ws.rs.Consumes;
@@ -168,20 +168,58 @@ public class UsuarioREST extends RestService{
 			else
 			{
 				String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LOGIN+": "+ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_FALLIDO;
-				builder=this.builderProvider(Status.UNAUTHORIZED,MediaType.APPLICATION_JSON);
-				builder.entity(msg);
-				logger.log(Level.WARNING,msg);
+				builder=this.builderProvider(Status.UNAUTHORIZED);
+				builder.entity(msg);				
 			}
 		}
 		catch(NoResultException ex)
 		{
 			String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_LOGIN+": "+ex.getMessage();
-			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);		
+			builder=this.builderProvider(Status.NOT_FOUND);		
 			builder.entity(msg);
-			logger.log(Level.SEVERE,msg);
+			logger.severe(msg);
 		}
 		
 		return builder.build();
+	}
+	
+	public Response busquedaCedula(String cedula, EstatusRegistro estatus)
+	{
+		Response.ResponseBuilder builder = null;
+		
+		try
+		{
+			Usuario	usuario=repositorio.findByCedula(cedula);
+			
+			if(usuario.getEstatusRegistro()==estatus)
+			{
+				UsuarioJSON usuariojson=factoryJSON.parseUsuario(usuario);				
+				builder=this.builderProvider(Status.OK);
+				builder.entity(usuariojson);
+			}
+			else
+			{
+				throw new NoResultException(ConstantesREST.REST_MENSAJE_ENTIDAD_NULA);				
+			}
+		}
+		catch(NoResultException ex)
+		{
+			String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_BUSCAR+": "+ex.getMessage();
+			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);		
+			builder.entity(msg);
+			logger.warning(msg);;
+		}
+		
+		return builder.build();
+	}
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_FUNCION_BUSCAR)
+	public Response busquedaActivo(@PathParam("cedula") String cedula)
+	{
+		return busquedaCedula(cedula, EstatusRegistro.ACTIVO);
 	}
 	
 	@POST
@@ -230,18 +268,7 @@ public class UsuarioREST extends RestService{
 		return builder.build();
 	
 	}
-	
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path(ConstantesREST.REST_USUARIOS_FUNCION_CREAR)
-	public Response crearUsuarioFinal(Usuario usuario)
-	{
-		Usuario nuevo=factory.crearUsuarioFinal(usuario);
-		
-		return crearUsuario(nuevo);
-	}
-		
+
 	public Response crearUsuario(Usuario usuario)
 	{
 		Response.ResponseBuilder builder = null;
@@ -293,7 +320,6 @@ public class UsuarioREST extends RestService{
 			try
 			{
 				UsuarioJSON usuariojson=factoryJSON.parseUsuario(usuario);			
-				//String msg=ConstantesREST.REST_MENSAJE_ENTIDAD_REGISTRADA;
 				builder = this.builderProvider(Status.OK);
 				builder.entity(usuariojson);				
 			}
@@ -325,53 +351,44 @@ public class UsuarioREST extends RestService{
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ConstantesREST.REST_USUARIOS_FUNCION_CREAR)
+	public Response crearUsuarioFinal(Usuario usuario)
+	{
+		Usuario nuevo=factory.crearUsuarioFinal(usuario);
+		
+		return crearUsuario(nuevo);
+	}
+	
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ConstantesREST.REST_USUARIOS_FUNCION_ACTUALIZAR)
 	public Response actualizarUsuario(@PathParam("cedula") String cedula, Usuario usuario)
 	{
-		Response.ResponseBuilder builder = null;
+		Response.ResponseBuilder builder = null;		
+		Set<ConstraintViolation<Usuario>> violaciones=factory.validarUsuario(usuario);
 		
-		Set<ConstraintViolation<Usuario>> violaciones=usuario.validarInstancia();
-		
-		if(violaciones.size()==0)
+		if(violaciones.isEmpty())
 		{
-			String msg="";
-			Usuario retorno=repositorio.findByCedula(cedula);
-			if(retorno==null)
+			try
 			{
-				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
-				builder= this.builderProvider(Status.NOT_FOUND,MediaType.APPLICATION_JSON);
+				Usuario retorno=repositorio.findByCedula(cedula);
+				UsuarioJSON retornoJSON=factoryJSON.parseUsuario(registro.modificar(retorno, usuario));
+				builder=this.builderProvider(Status.OK);
+				builder.entity(retornoJSON);
 			}
-			else 
+			catch(NoResultException ex)
 			{
-				try
-				{
-					retorno.setNombre(usuario.getNombre());
-					retorno.setApellido(usuario.getApellido());
-					retorno.setDireccion(usuario.getDireccion());
-					retorno.setTelefono(usuario.getTelefono());
-					retorno.setTipo(usuario.getTipo());
-					retorno.setLogin(usuario.getLogin());
-					retorno.setEmail(usuario.getEmail());
-					
-					registro.actualizar(retorno);			
-					
-					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ACTUALIZADA;
-					
-					builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
-				}
-				
-				catch(Exception ex)
-				{
-					msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
-				
-					logger.log(Level.SEVERE,msg);					
-					
-					builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
-				}
+				String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_ACTIVAR+": "+ex.getMessage();
+				builder= this.builderProvider(Status.NOT_FOUND);
+				builder.entity(msg);
 			}
-			
-			builder.entity(msg);
-			
+			catch(Exception ex)
+			{
+				String msg=ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
+				logger.severe(msg);
+				builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR);
+			}
 		}
 		else
 		{
@@ -383,10 +400,8 @@ public class UsuarioREST extends RestService{
 				logger.log(Level.SEVERE,msg);
 				msgs.add(msg);
 			}
-			
-			builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
+			builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR);
 			builder.entity(msgs);
-			
 		}
 		
 		return builder.build();
@@ -398,59 +413,26 @@ public class UsuarioREST extends RestService{
 	@Path(ConstantesREST.REST_USUARIOS_FUNCION_ACTUALIZAR_PASSWORD)
 	public Response actualizarPasswordUsuario(@PathParam("cedula") String cedula, Usuario usuario)
 	{
-		Response.ResponseBuilder builder = null;
-		
-		Set<ConstraintViolation<Usuario>> violaciones=usuario.validarInstancia();
-		
-		if(violaciones.size()==0)
+		Response.ResponseBuilder builder = null;		
+
+		try
 		{
-			String msg="";
 			Usuario retorno=repositorio.findByCedula(cedula);
-			if(retorno==null)
-			{
-				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
-				builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
-			}
-			else 
-			{
-				try
-				{
-					retorno.setPassword(usuario.getPassword());
-					
-					registro.actualizar(retorno);			
-					
-					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ACTUALIZADA;
-					
-					builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
-				}
-				
-				catch(Exception ex)
-				{
-					msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
-				
-					logger.log(Level.SEVERE,msg);					
-					
-					builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
-				}
-			}
-			
-			builder.entity(msg);
-			
+			UsuarioJSON retornoJSON=factoryJSON.parseUsuario(registro.modificarPassword(retorno, usuario));
+			builder=this.builderProvider(Status.OK);
+			builder.entity(retornoJSON);
 		}
-		else
+		catch(NoResultException ex)
 		{
-			List<String> msgs=new ArrayList<String>();
-			Iterator<ConstraintViolation<Usuario>> iterator=violaciones.iterator(); 
-			while(iterator.hasNext())
-			{
-				String msg=iterator.next().getMessage();
-				logger.log(Level.SEVERE,msg);
-				msgs.add(msg);
-			}
-			
-			builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
-			builder.entity(msgs);
-			
+			String msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_ACTIVAR+": "+ex.getMessage();
+			builder= this.builderProvider(Status.NOT_FOUND);
+			builder.entity(msg);
+		}
+		catch(Exception ex)
+		{
+			String msg=ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
+			logger.severe(msg);
+			builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR);
 		}
 		
 		return builder.build();
@@ -463,41 +445,47 @@ public class UsuarioREST extends RestService{
 	{
 		Response.ResponseBuilder builder = null;
 		String msg="";
-		Usuario retorno=repositorio.findByCedula(cedula);
-		if(retorno==null)
+		
+		try
 		{
-			msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
-			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
-		}
-		else if(retorno.getEstatusRegistro()==EstatusRegistro.ELIMINADO)
-		{
-			msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
-			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
-		}
-		else
-		{
-			try
+			Usuario usuario=repositorio.findByCedula(cedula);
+			
+			if(usuario.getEstatusRegistro()==EstatusRegistro.ELIMINADO)
 			{
-				retorno.setEstatusRegistro(EstatusRegistro.ELIMINADO);
-
-				registro.actualizar(retorno);
-
-				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ELIMINADA;
-
-				builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
-
-			}
-			catch(Exception ex)
-			{
-				msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
-				logger.log(Level.SEVERE,msg);
-				builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
-				
+				throw new NoResultException(ConstantesREST.REST_MENSAJE_ENTIDAD_NULA);
 			}
 			
+			usuario=registro.eliminar(usuario);
+			if(usuario.getEstatusRegistro()==EstatusRegistro.ELIMINADO)
+			{
+				msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_ACTIVAR+": "+ConstantesREST.REST_MENSAJE_ENTIDAD_ELIMINADA;
+				builder=this.builderProvider(Status.OK);
+				builder.entity(msg);
+			}
+			else
+			{
+				throw new EntityExistsException(ConstantesREST.REST_MENSAJE_ENTIDAD_INTACTA);
+			}
+		}
+		catch(EntityExistsException ex)
+		{
+			msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_ACTIVAR+": "+ex.getMessage();
+			builder=this.builderProvider(Status.NOT_MODIFIED);
 			builder.entity(msg);
-			
 		}
+		catch(NoResultException ex)
+		{
+			msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_ELIMINAR+": "+ex.getMessage();
+			builder=this.builderProvider(Status.NOT_FOUND);
+			builder.entity(msg);
+		}
+		catch(Exception ex)
+		{
+			msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_ELIMINAR+": "+ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ex.getMessage();
+			builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR);
+			logger.severe(msg);
+			builder.entity(msg);
+		}		
 				
 		return builder.build();
 	}
@@ -509,40 +497,43 @@ public class UsuarioREST extends RestService{
 	{
 		Response.ResponseBuilder builder = null;
 		String msg="";
-		Usuario retorno=repositorio.findByCedula(cedula);
-		if(retorno==null)
+		try
 		{
-			msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
-			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
-		}
-		else if(retorno.getEstatusRegistro()==EstatusRegistro.ELIMINADO)
-		{
-			msg= ConstantesREST.REST_MENSAJE_ENTIDAD_NULA;
-			builder=this.builderProvider(Status.NOT_FOUND, MediaType.APPLICATION_JSON);
-		}
-		else
-		{
-			try
-			{
-				retorno.setEstatusRegistro(EstatusRegistro.ACTIVO);
-
-				registro.actualizar(retorno);
-
-				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_ACTIVADA;
-
-				builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
-
-			}
-			catch(Exception ex)
-			{
-				msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
-				logger.log(Level.SEVERE,msg);
-				builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
-				
-			}
+			Usuario retorno=repositorio.findByCedula(cedula);
 			
+			if(retorno.getEstatusRegistro()==EstatusRegistro.ACTIVO)
+			{
+				throw new EntityExistsException(ConstantesREST.REST_MENSAJE_ENTIDAD_INTACTA);
+			}
+			else if(retorno.getEstatusRegistro()==EstatusRegistro.ELIMINADO)
+			{
+				throw new NoResultException(ConstantesREST.REST_MENSAJE_ENTIDAD_NULA);
+			}
+			else
+			{
+				UsuarioJSON usuariojson=factoryJSON.parseUsuario(registro.actualizar(retorno));
+				builder=this.builderProvider(Status.OK);
+				builder.entity(usuariojson);
+			}
+		}		
+		catch(EntityExistsException ex)
+		{
+			msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_ACTIVAR+": "+ex.getMessage();
+			builder=this.builderProvider(Status.NOT_MODIFIED);
 			builder.entity(msg);
-			
+		}
+		catch(NoResultException ex)
+		{
+			msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_ACTIVAR+": "+ex.getMessage();
+			builder=this.builderProvider(Status.NOT_FOUND);
+			builder.entity(msg);
+		}
+		catch(Exception ex)
+		{
+			msg=ConstantesREST.REST_USUARIOS+ConstantesREST.REST_USUARIOS_FUNCION_ACTIVAR+": "+ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ex.getMessage();
+			builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR);
+			logger.severe(msg);
+			builder.entity(msg);
 		}
 				
 		return builder.build();

@@ -32,6 +32,7 @@ public abstract class ConstantesREST {
 	public static final String REST_USUARIOS_FUNCION_LISTAR="/";
 	public static final String REST_USUARIOS_FUNCION_LISTAR_INACTIVOS=REST_USUARIOS_FUNCION_LISTAR+"inactivos";
 	public static final String REST_USUARIOS_FUNCION_LISTAR_ELIMINADOS=REST_USUARIOS_FUNCION_LISTAR+"eliminados";
+	public static final String REST_USUARIOS_FUNCION_BUSCAR="/{cedula:[V,E][0-9]*}";
 	public static final String REST_USUARIOS_FUNCION_LOGIN="/entrada";
 	public static final String REST_USUARIOS_FUNCION_CREAR="/nuevo";
 	public static final String REST_USUARIOS_FUNCION_ACTUALIZAR="/{cedula:[V,E][0-9]*}";

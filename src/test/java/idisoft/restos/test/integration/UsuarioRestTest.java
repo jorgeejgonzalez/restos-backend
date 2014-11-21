@@ -50,7 +50,25 @@ public class UsuarioRestTest {
 	public void listaUsuariosVaciaDevuelveNoContent()
 	{
 		Response respuesta=rest.listarUsuariosActivos();
-		assertEquals(204,respuesta.getStatus());
+		assertEquals(Status.NO_CONTENT.getStatusCode(),respuesta.getStatus());
+	}
+	
+	@Test
+	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_USUARIOS_JSON)
+	@Transactional(TransactionMode.ROLLBACK)
+	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
+	public void debePermitirBusquedaPorCedula()
+	{
+		Usuario usuario=factory.crearUsuarioFinal();
+		usuario.setCedula("V17230971");
+		
+		Response respuesta=rest.busquedaActivo(usuario.getCedula());
+		
+		assertEquals(Status.OK.getStatusCode(),respuesta.getStatus());
+		UsuarioJSON usuariojson=(UsuarioJSON) respuesta.getEntity();
+		
+		assertEquals(true,usuariojson.getCedula().equals(usuario.getCedula()));
+		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -61,24 +79,17 @@ public class UsuarioRestTest {
 	public void listaUsuariosDevuelveJSON()
 	{
 		Response respuesta=rest.listarUsuariosInActivos();
-		assertEquals(200, respuesta.getStatus());
+		assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
 		assertEquals(true, respuesta.getEntity() instanceof List<?>);
 		List<UsuarioJSON> lista=(List<UsuarioJSON>)respuesta.getEntity();
-		
-		Iterator<UsuarioJSON> iterator=lista.iterator();
-		
-		while(iterator.hasNext())
-		{
-			UsuarioJSON ujs=iterator.next();
-			assertEquals(TipoUsuario.MASTER, ujs.getTipo());
-		}
+		assertEquals(1,lista.size());
 	}
 	
 	@Test
 	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_USUARIOS_JSON)
 	@Transactional(TransactionMode.ROLLBACK)
 	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
-	public void validaDisponibilidadDeLogin()
+	public void debeValidarDisponibilidadDeLogin()
 	{
 		Usuario usuario=factory.crearUsuarioFinal();
 		
@@ -98,7 +109,7 @@ public class UsuarioRestTest {
 	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_USUARIOS_JSON)
 	@Transactional(TransactionMode.ROLLBACK)
 	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
-	public void validaDisponibilidadDeEmail()
+	public void debeValidarDisponibilidadDeEmail()
 	{
 		Usuario usuario=factory.crearUsuarioFinal();
 		
@@ -118,9 +129,9 @@ public class UsuarioRestTest {
 	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_USUARIOS_JSON)
 	@Transactional(TransactionMode.ROLLBACK)
 	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
-	public void creaUsuarioNuevoSiPasaValidacion()
+	public void debeCrearUsuariosNuevoSiPasanValidacion()
 	{
-		Usuario usuario=factory.crearUsuarioMaster();
+		Usuario usuario=factory.crearUsuarioFinal();
 		Response respuesta=rest.crearUsuarioFinal(usuario);
 		assertEquals(Status.INTERNAL_SERVER_ERROR.getStatusCode(), respuesta.getStatus());
 		
@@ -156,20 +167,161 @@ public class UsuarioRestTest {
 	}
 	
 	@Test
-	public void modificaDatosDeUsuarioSiPasaValidacion()
+	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_USUARIOS_JSON)
+	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
+	public void debeModificarDatosDeUsuarioSiPasanValidacion()
 	{
-		fail("not yet implemented");
+		Usuario usuario=null;
+		Response respuesta=null;
+		
+		usuario=factory.crearUsuarioFinal();		
+		
+		usuario.setCedula("V17230971");
+		usuario.setLogin("");
+		usuario.setPassword("");
+		usuario.setEmail("jorgealgo.com");
+		usuario.setNombre("jorge");
+		usuario.setApellido("gonzalez");
+		usuario.setDireccion("san francisco");
+		usuario.setTelefono("02617000000");
+		
+		respuesta=rest.actualizarUsuario(usuario.getCedula(), usuario);
+		assertEquals(Status.INTERNAL_SERVER_ERROR.getStatusCode(), respuesta.getStatus());
+				
+		usuario.setCedula("V17230971");
+		usuario.setLogin("jorgegonzalez");
+		usuario.setPassword("abcd1234");
+		usuario.setEmail("jorge@algo.com");
+		usuario.setNombre("jorge enrique");
+		usuario.setApellido("gonzalez");
+		usuario.setDireccion("san francisco");
+		usuario.setTelefono("02617000000");
+		
+		respuesta=rest.actualizarUsuario(usuario.getCedula(), usuario);
+		assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
+		
+		UsuarioJSON usuariojson=(UsuarioJSON)respuesta.getEntity();
+		
+		assertEquals(true, usuario.getNombre().equals(usuariojson.getNombre()));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_USUARIOS_JSON)
+	@Transactional(TransactionMode.ROLLBACK)
+	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
+	public void debeEliminarUsuarios()
+	{
+		Response respuesta=null;
+		List<UsuarioJSON> lista=null;
+		Iterator<UsuarioJSON> iterator=null;
+		
+		respuesta=rest.listarUsuariosActivos();
+		assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
+		
+		lista=(List<UsuarioJSON>)respuesta.getEntity();
+		assertEquals(false, lista.isEmpty());
+		
+		iterator=lista.iterator();
+		
+		while(iterator.hasNext())
+		{
+			respuesta=rest.eliminarUsuario(iterator.next().getCedula());
+			assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
+		}
+		
+		respuesta=rest.listarUsuariosEliminados();
+		assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
+		
+		lista=(List<UsuarioJSON>)respuesta.getEntity();
+		assertEquals(false, lista.isEmpty());
+		
+		iterator=lista.iterator();
+		
+		while(iterator.hasNext())
+		{
+			respuesta=rest.eliminarUsuario(iterator.next().getCedula());
+			assertEquals(Status.NOT_FOUND.getStatusCode(), respuesta.getStatus());
+		}
+		
+	}	
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_USUARIOS_JSON)
+	@Transactional(TransactionMode.ROLLBACK)
+	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
+	public void debeActivarUsuariosInactivos()
+	{
+		Response respuesta=null;
+		List<UsuarioJSON> lista=null;
+		Iterator<UsuarioJSON> iterator=null;
+		
+		respuesta=rest.listarUsuariosActivos();
+		assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
+		
+		lista=(List<UsuarioJSON>)respuesta.getEntity();
+		iterator=lista.iterator();
+		
+		while(iterator.hasNext())
+		{
+			respuesta=rest.activarUsuario(iterator.next().getCedula());
+			assertEquals(Status.NOT_MODIFIED.getStatusCode(), respuesta.getStatus());
+		}		
+		
+		respuesta=rest.listarUsuariosInActivos();
+		assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
+		
+		lista=(List<UsuarioJSON>)respuesta.getEntity();
+		iterator=lista.iterator();
+		
+		while(iterator.hasNext())
+		{
+			respuesta=rest.activarUsuario(iterator.next().getCedula());
+			assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
+		}
+		
+		respuesta=rest.listarUsuariosEliminados();
+		assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
+		
+		lista=(List<UsuarioJSON>)respuesta.getEntity();
+		iterator=lista.iterator();
+		
+		while(iterator.hasNext())
+		{
+			respuesta=rest.activarUsuario(iterator.next().getCedula());
+			assertEquals(Status.NOT_FOUND.getStatusCode(), respuesta.getStatus());
+		}
+		
+				
 	}
 	
 	@Test
-	public void activaUsuariosInactivos()
+	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_USUARIOS_JSON)
+	@Transactional(TransactionMode.ROLLBACK)
+	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
+	public void debeRealizarLoginAlSistema()
 	{
-		fail("not yet implemented");
-	}
-	
-	public void realizaLoginAlSistema()
-	{
-		fail("not yet implemented");
+		Usuario usuario=null;
+		Response respuesta=null;
+		
+		usuario=factory.crearUsuarioFinal();
+		usuario.setLogin("jorge");
+		usuario.setPassword("abcd1234");
+		
+		respuesta=rest.realizarLogin(usuario);
+		assertEquals(Status.NOT_FOUND.getStatusCode(),respuesta.getStatus());
+		
+		usuario.setLogin("jorgeejgonzalez");
+		
+		respuesta=rest.realizarLogin(usuario);
+		assertEquals(Status.UNAUTHORIZED.getStatusCode(),respuesta.getStatus());
+		
+		usuario.setLogin("jorgeejgonzalez");
+		usuario.setPassword("algoalgo");
+		
+		respuesta=rest.realizarLogin(usuario);
+		assertEquals(Status.OK.getStatusCode(),respuesta.getStatus());
 	}
 
 }
