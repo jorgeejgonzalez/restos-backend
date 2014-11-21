@@ -1,6 +1,7 @@
 package idisoft.restos.rest;
 
 import idisoft.restos.data.CatalogosRepository;
+import idisoft.restos.data.EntitiesFactory;
 import idisoft.restos.data.EntitiesFactoryJSON;
 import idisoft.restos.data.PedidoRepository;
 import idisoft.restos.data.UsuarioRepository;
@@ -53,7 +54,11 @@ public class UsuarioREST extends RestService{
 	private UsuarioRegistry registro;
 	
 	@Inject 
+	private EntitiesFactory factory;
+	
+	@Inject 
 	private EntitiesFactoryJSON factoryJSON;
+	
 	
 	private List<UsuarioJSON> usuariosParseJSON(List<Usuario> usuarios)
 	{
@@ -230,49 +235,74 @@ public class UsuarioREST extends RestService{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ConstantesREST.REST_USUARIOS_FUNCION_CREAR)
+	public Response crearUsuarioFinal(Usuario usuario)
+	{
+		Usuario nuevo=factory.crearUsuarioFinal(usuario);
+		
+		return crearUsuario(nuevo);
+	}
+		
 	public Response crearUsuario(Usuario usuario)
 	{
 		Response.ResponseBuilder builder = null;
 		
-		Set<ConstraintViolation<Usuario>> violaciones=usuario.validarInstancia();
+		Set<ConstraintViolation<Usuario>> violaciones=factory.validarUsuario(usuario);
 		
-		if(violaciones.size()==0)
+		if(violaciones.isEmpty())
 		{
-			String msg="";
+			Usuario validador=null;
+			try
+			{
+				validador=repositorio.findByCedula(usuario.getCedula());
+				String msg= ConstantesREST.REST_MENSAJE_ENTIDAD_DUPLICADA+": "+validador.getCedula();
+				builder=this.builderProvider(Status.CONFLICT);
+				builder.entity(msg);
+				return builder.build();
+			}
+			catch(NoResultException ex)
+			{
+				validador=null;
+			}
 			
-			if(repositorio.findByCedula(usuario.getCedula())!=null)
+			try
 			{
-				msg= ConstantesREST.REST_MENSAJE_ENTIDAD_DUPLICADA;
-				builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
+				validador=repositorio.findByLogin(usuario.getLogin());
+				String msg= ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_DUPLICADO+": "+validador.getLogin();
+				builder=this.builderProvider(Status.CONFLICT);
+				builder.entity(msg);
+				return builder.build();
 			}
-			else if(repositorio.findByLogin(usuario.getLogin())!=null)
+			catch(NoResultException ex)
 			{
-				msg= ConstantesREST.REST_USUARIOS_MENSAJE_LOGIN_DUPLICADO;
-				builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
+				validador=null;
 			}
-			else if(repositorio.findByEmail(usuario.getEmail())!=null)
+			
+			try
 			{
-				msg= ConstantesREST.REST_USUARIOS_MENSAJE_EMAIL_DUPLICADO;
-				builder=this.builderProvider(Status.CONFLICT, MediaType.APPLICATION_JSON);
+				validador=repositorio.findByEmail(usuario.getEmail());
+				String msg= ConstantesREST.REST_USUARIOS_MENSAJE_EMAIL_DUPLICADO+": "+validador.getEmail();
+				builder=this.builderProvider(Status.CONFLICT);
+				builder.entity(msg);
+				return builder.build();
 			}
-			else
+			catch(NoResultException ex)
 			{
-				try
-				{
-					usuario.setEstatusRegistro(EstatusRegistro.INACTIVO);
-					registro.registrar(usuario);			
-					msg= ConstantesREST.REST_MENSAJE_ENTIDAD_REGISTRADA;
-					builder = this.builderProvider(Status.OK, MediaType.APPLICATION_JSON);
-				}
-				
-				catch(Exception ex)
-				{
-					msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
-					logger.log(Level.SEVERE,msg);					
-					builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
-				}
+				validador=null;
 			}
-			builder.entity(msg);
+			
+			try
+			{
+				UsuarioJSON usuariojson=factoryJSON.parseUsuario(usuario);			
+				//String msg=ConstantesREST.REST_MENSAJE_ENTIDAD_REGISTRADA;
+				builder = this.builderProvider(Status.OK);
+				builder.entity(usuariojson);				
+			}
+			catch(Exception ex)
+			{
+				String msg= ConstantesREST.REST_MENSAJE_EXCEPCION_GENERICA+ ex.getMessage();
+				logger.log(Level.SEVERE,msg);					
+				builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR);				
+			}
 		}
 		else
 		{
@@ -285,9 +315,8 @@ public class UsuarioREST extends RestService{
 				msgs.add(msg);
 			}
 			
-			builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR, MediaType.APPLICATION_JSON);
-			builder.entity(msgs);
-			
+			builder=this.builderProvider(Status.INTERNAL_SERVER_ERROR);
+			builder.entity(msgs);			
 		}
 		
 		return builder.build();

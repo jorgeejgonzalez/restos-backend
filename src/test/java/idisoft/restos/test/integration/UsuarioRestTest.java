@@ -95,6 +95,9 @@ public class UsuarioRestTest {
 	}
 	
 	@Test
+	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_USUARIOS_JSON)
+	@Transactional(TransactionMode.ROLLBACK)
+	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void validaDisponibilidadDeEmail()
 	{
 		Usuario usuario=factory.crearUsuarioFinal();
@@ -112,9 +115,44 @@ public class UsuarioRestTest {
 	}
 	
 	@Test
+	@UsingDataSet(ConstantesPruebas.ARCHIVO_DATOS_USUARIOS_JSON)
+	@Transactional(TransactionMode.ROLLBACK)
+	@Cleanup(phase = TestExecutionPhase.AFTER, strategy = CleanupStrategy.USED_ROWS_ONLY)
 	public void creaUsuarioNuevoSiPasaValidacion()
 	{
-		fail("not yet implemented");
+		Usuario usuario=factory.crearUsuarioMaster();
+		Response respuesta=rest.crearUsuarioFinal(usuario);
+		assertEquals(Status.INTERNAL_SERVER_ERROR.getStatusCode(), respuesta.getStatus());
+		
+		usuario.setCedula("V17230971");
+		usuario.setLogin("jorgeejgonzalez");
+		usuario.setPassword("abcd1234");
+		usuario.setEmail("jorge@algo.com");
+		usuario.setNombre("jorge");
+		usuario.setApellido("gonzalez");
+		usuario.setDireccion("san francisco");
+		usuario.setTelefono("02617000000");
+		
+		respuesta=rest.crearUsuarioFinal(usuario);
+		assertEquals(Status.CONFLICT.getStatusCode(), respuesta.getStatus());
+		
+		usuario.setCedula("V17230972");
+		
+		respuesta=rest.crearUsuarioFinal(usuario);
+		assertEquals(Status.CONFLICT.getStatusCode(), respuesta.getStatus());
+		
+		usuario.setLogin("jorgegonzalez");
+		
+		respuesta=rest.crearUsuarioFinal(usuario);
+		assertEquals(Status.CONFLICT.getStatusCode(), respuesta.getStatus());
+		
+		usuario.setEmail("jorge@gonzalez.com");
+		
+		respuesta=rest.crearUsuarioFinal(usuario);
+		assertEquals(Status.OK.getStatusCode(), respuesta.getStatus());
+		
+		UsuarioJSON retorno=(UsuarioJSON)respuesta.getEntity();		
+		assertEquals(TipoUsuario.FINAL, retorno.getTipo());
 	}
 	
 	@Test

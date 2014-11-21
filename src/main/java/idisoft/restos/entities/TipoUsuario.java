@@ -4,5 +4,5 @@ public enum TipoUsuario {
 	MASTER,
 	ADMINISTRADOR,	
 	DESPACHO,
-	USUARIO_FINAL
+	FINAL
 }

@@ -19,77 +19,93 @@ import idisoft.restos.entities.Usuario;
 import idisoft.restos.util.ConstantesREST;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 @ApplicationScoped
 public class EntitiesFactory {
 	
-	public Usuario crearUsuarioFinal()
+	@Inject
+	private ValidatorFactory validationFactory;
+	
+	public Usuario crearUsuario(TipoUsuario tipo)
 	{
 		Usuario usuario=new Usuario();
 		usuario.setCedula("V00000000");
 		usuario.setLogin("");
 		usuario.setPassword("");
 		usuario.setEmail("");
-		usuario.setTipo(TipoUsuario.USUARIO_FINAL);
 		usuario.setNombre("");
 		usuario.setApellido("");
 		usuario.setDireccion("");
 		usuario.setTelefono("");
+		usuario.setTipo(tipo);
 		usuario.setEstatusRegistro(EstatusRegistro.INACTIVO);
 		usuario.setPedidos(setPedidos());
 		return usuario;
 	}
 	
-	public Usuario crearUsuarioAdministrador()
+	public Usuario crearUsuario(TipoUsuario tipo,Usuario nuevo)
 	{
 		Usuario usuario=new Usuario();
-		usuario.setCedula("V00000000");
-		usuario.setLogin("");
-		usuario.setPassword("");
-		usuario.setEmail("");
-		usuario.setTipo(TipoUsuario.ADMINISTRADOR);
-		usuario.setNombre("");
-		usuario.setApellido("");
-		usuario.setDireccion("");
-		usuario.setTelefono("");
-		usuario.setEstatusRegistro(EstatusRegistro.ACTIVO);
-		usuario.setPedidos(setPedidos());
+		usuario.setCedula(nuevo.getCedula());
+		usuario.setLogin(nuevo.getLogin());
+		usuario.setPassword(nuevo.getPassword());
+		usuario.setEmail(nuevo.getEmail());
+		usuario.setNombre(nuevo.getNombre());
+		usuario.setApellido(nuevo.getApellido());
+		usuario.setDireccion(nuevo.getDireccion());
+		usuario.setTelefono(nuevo.getTelefono());
+		usuario.setTipo(tipo);
+		usuario.setEstatusRegistro(EstatusRegistro.INACTIVO);
+		usuario.setPedidos(setPedidos());		
 		return usuario;
 	}
 	
-	public Usuario crearUsuarioMaster()
+	public Usuario crearUsuarioFinal()
 	{
-		Usuario usuario=new Usuario();
-		usuario.setCedula("V00000000");
-		usuario.setLogin("");
-		usuario.setPassword("");
-		usuario.setEmail("");
-		usuario.setTipo(TipoUsuario.MASTER);
-		usuario.setNombre("");
-		usuario.setApellido("");
-		usuario.setDireccion("");
-		usuario.setTelefono("");
-		usuario.setEstatusRegistro(EstatusRegistro.ACTIVO);
-		usuario.setPedidos(setPedidos());
-		return usuario;
+		return crearUsuario(TipoUsuario.FINAL);
+	}
+	
+	public Usuario crearUsuarioFinal(Usuario usuario)
+	{
+		return crearUsuario(TipoUsuario.FINAL,usuario);
 	}
 	
 	public Usuario crearUsuarioDespacho()
 	{
-		Usuario usuario=new Usuario();
-		usuario.setCedula("V00000000");
-		usuario.setLogin("");
-		usuario.setPassword("");
-		usuario.setEmail("");
-		usuario.setTipo(TipoUsuario.DESPACHO);
-		usuario.setNombre("");
-		usuario.setApellido("");
-		usuario.setDireccion("");
-		usuario.setTelefono("");
-		usuario.setEstatusRegistro(EstatusRegistro.ACTIVO);
-		usuario.setPedidos(setPedidos());
-		return usuario;
+		return crearUsuario(TipoUsuario.DESPACHO);
 	}
+	
+	public Usuario crearUsuarioDespacho(Usuario usuario)
+	{
+		return crearUsuario(TipoUsuario.DESPACHO,usuario);
+	}
+	
+	
+	public Usuario crearUsuarioAdministrador()
+	{
+		return crearUsuario(TipoUsuario.ADMINISTRADOR);
+	}
+	
+	public Usuario crearUsuarioAdministrador(Usuario usuario)
+	{
+		return crearUsuario(TipoUsuario.ADMINISTRADOR,usuario);
+	}
+	
+	public Usuario crearUsuarioMaster()
+	{
+		return crearUsuario(TipoUsuario.MASTER);
+	}
+	
+	public Usuario crearUsuarioMaster(Usuario usuario)
+	{
+		return crearUsuario(TipoUsuario.MASTER,usuario);
+	}
+	
 		
 	public Empresa crearEmpresa()
 	{
@@ -330,6 +346,42 @@ public class EntitiesFactory {
 	{
 		List<Pedido> pedidos=new ArrayList<Pedido>(0);
 		return pedidos;
+	}
+	
+	public Set<ConstraintViolation<Usuario>> validarUsuario(Usuario entidad)
+	{
+		Validator validator=validationFactory.getValidator();
+		return validator.validate(entidad);
+	}
+	
+	public Set<ConstraintViolation<Empresa>> validarEmpresa(Empresa entidad)
+	{
+		Validator validator=validationFactory.getValidator();
+		return validator.validate(entidad);
+	}
+	
+	public Set<ConstraintViolation<Sede>> validarSede(Sede entidad)
+	{
+		Validator validator=validationFactory.getValidator();
+		return validator.validate(entidad);
+	}
+	
+	public Set<ConstraintViolation<Catalogo>> validarCatalogo(Catalogo entidad)
+	{
+		Validator validator=validationFactory.getValidator();
+		return validator.validate(entidad);
+	}
+	
+	public Set<ConstraintViolation<ElementoCatalogo>> validarElemento(ElementoCatalogo entidad)
+	{
+		Validator validator=validationFactory.getValidator();
+		return validator.validate(entidad);
+	}
+	
+	public Set<ConstraintViolation<Pedido>> validarPedido(Pedido entidad)
+	{
+		Validator validator=validationFactory.getValidator();
+		return validator.validate(entidad);
 	}
 	
 	

@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.ConstraintViolation;
+
 import idisoft.restos.data.EntitiesFactory;
 import idisoft.restos.entities.Catalogo;
 import idisoft.restos.entities.ElementoCatalogo;
@@ -36,10 +38,23 @@ public class EntitiesFactoryTest {
 		Usuario usuarioadministrador=factory.crearUsuarioAdministrador();
 		Usuario usuariomaster=factory.crearUsuarioMaster();
 		
-		assertEquals(TipoUsuario.USUARIO_FINAL, usuariofinal.getTipo());
+		assertEquals(TipoUsuario.FINAL, usuariofinal.getTipo());
 		assertEquals(TipoUsuario.DESPACHO, usuariodespacho.getTipo());
 		assertEquals(TipoUsuario.ADMINISTRADOR, usuarioadministrador.getTipo());
-		assertEquals(TipoUsuario.MASTER, usuariomaster.getTipo());		
+		assertEquals(TipoUsuario.MASTER, usuariomaster.getTipo());
+		
+		usuariofinal.setCedula("V17230971");
+		usuariofinal.setLogin("jorgeejgonzalez");
+		usuariofinal.setPassword("abcd1234");
+		usuariofinal.setEmail("jorge@algo.com");
+		usuariofinal.setNombre("jorge");
+		usuariofinal.setApellido("gonzalez");
+		usuariofinal.setDireccion("san francisco");
+		usuariofinal.setTelefono("02617000000");
+		
+		Usuario repetido=factory.crearUsuarioFinal(usuariofinal);
+		assertEquals(true, repetido.equals(usuariofinal));
+		
 	}
 	
 	@Test

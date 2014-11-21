@@ -12,9 +12,9 @@ public class UsuarioRegistry extends Registry {
 	
 	
 	
-	public void registrar(Usuario usuario) throws Exception
+	public Usuario registrar(Usuario usuario) throws Exception
 	{
-		persist(usuario,"Registrando a " + usuario.getNombre()+ " "+usuario.getApellido());		
+		return (Usuario)persist(usuario,"Registrando a " + usuario.getNombre()+ " "+usuario.getApellido());		
 	}
 	
 	public void actualizar(Usuario usuario) throws Exception
